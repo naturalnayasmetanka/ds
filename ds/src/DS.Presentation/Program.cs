@@ -1,4 +1,7 @@
-﻿namespace DS.Presentation;
+﻿using DS.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+
+namespace DS.Presentation;
 public class Program
 {
     public static void Main(string[] args)
@@ -8,6 +11,8 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddScoped<DsDbContext>();
 
         var app = builder.Build();
 
