@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using TimeZoneConverter;
 
-namespace DS.Domain.Locations;
+namespace DS.Domain.Models.Locations;
 
 public record Timezone
 {

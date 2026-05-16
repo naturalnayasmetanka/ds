@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Domain.DepartmentsPositions;
+using DS.Domain.Models.DepartmentsPositions;
 
-namespace DS.Domain.Positions;
+namespace DS.Domain.Models.Positions;
 
 public class Position
 {

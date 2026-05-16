@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace DS.Domain.Departments;
+namespace DS.Domain.Models.Departments;
 
 public record Path
 {

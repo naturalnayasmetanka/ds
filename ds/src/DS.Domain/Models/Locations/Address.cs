@@ -2,11 +2,11 @@
 using DS.Domain.Attributes;
 using DS.Domain.Extentions;
 
-namespace DS.Domain.Locations;
+namespace DS.Domain.Models.Locations;
 
-public record Adress
+public record Address
 {
-    private Adress(
+    private Address(
         string country,
         string region,
         string settlementName,
@@ -67,7 +67,7 @@ public record Adress
     public string FullAddress { get; }
     public string? Comment { get; }
 
-    public static Result<Adress, List<string>> Create(
+    public static Result<Address, List<string>> Create(
         string country,
         string region,
         string settlementName,
@@ -83,7 +83,7 @@ public record Adress
         string fullAddress,
         string? comment)
     {
-        var adress = new Adress(
+        var adress = new Address(
                country,
                region,
                settlementName,
@@ -102,8 +102,8 @@ public record Adress
         List<string> errors = Validator.ValidateRequired(adress);
 
         if (errors.Any())
-            return Result.Failure<Adress, List<string>>(errors);
+            return Result.Failure<Address, List<string>>(errors);
 
-        return Result.Success<Adress, List<string>>(adress);
+        return Result.Success<Address, List<string>>(adress);
     }
 }

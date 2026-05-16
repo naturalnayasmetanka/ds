@@ -1,20 +1,23 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Domain.DepartmentsLocations;
+using DS.Domain.Models.DepartmentsLocations;
 
-namespace DS.Domain.Locations;
+namespace DS.Domain.Models.Locations;
 
 public class Location
 {
     private List<DepartmentLocation> _departmentsLocations = [];
 
+    //ef
+    private Location() { }
+
     private Location(
         Name name,
-        Adress adress,
+        Address address,
         Timezone timezone)
     {
         Id = Guid.NewGuid();
         Name = name;
-        Adress = adress;
+        Address = address;
         Timezone = timezone;
         IsActive = true;
         CreatedAt = DateTime.UtcNow;
@@ -23,7 +26,7 @@ public class Location
 
     public Guid Id { get; private set; }
     public Name Name { get; private set; }
-    public Adress Adress { get; private set; }
+    public Address Address { get; private set; }
     public Timezone Timezone { get; private set; }
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
@@ -32,7 +35,7 @@ public class Location
 
     public static Result<Location, string> Create(
         Name name,
-        Adress adress,
+        Address adress,
         Timezone timezone)
     {
         return Result.Success<Location, string>(new Location(
