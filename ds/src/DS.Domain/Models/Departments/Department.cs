@@ -1,13 +1,17 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Domain.DepartmentsLocations;
-using DS.Domain.DepartmentsPositions;
+using DS.Domain.Models.DepartmentsLocations;
+using DS.Domain.Models.DepartmentsPositions;
 
-namespace DS.Domain.Departments;
+namespace DS.Domain.Models.Departments;
 
 public class Department
 {
+    private List<Department> _childrens = [];
     private List<DepartmentPosition> _departmentsPositions = [];
     private List<DepartmentLocation> _departmentsLocations = [];
+
+    //ef
+    private Department() { }
 
     private Department(
         Name name,
@@ -40,6 +44,10 @@ public class Department
 
     public IReadOnlyList<DepartmentPosition> DepartmentsPositions => _departmentsPositions;
     public IReadOnlyList<DepartmentLocation> DepartmentsLocations => _departmentsLocations;
+
+    public Department Parent { get; private set; }
+
+    public IReadOnlyList<Department> Childrens => _childrens;
 
     public static Result<Department, string> Create(
         Name name,

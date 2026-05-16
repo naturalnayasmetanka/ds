@@ -1,10 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace DS.Domain.Locations;
+namespace DS.Domain.Models.Locations;
 
 public record Name
 {
-    private Name(string Value)
+    public Name(string Value)
     {
         this.Value = Value;
     }

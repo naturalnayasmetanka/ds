@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DS.Domain.Models.Departments;
+using DS.Domain.Models.Locations;
+using DS.Domain.Models.Positions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace DS.Infrastructure;
@@ -14,10 +17,17 @@ public class DsDbContext : DbContext
         _configuration = configuration;
     }
 
+    public DbSet<Department> Departments { get; set; }
+    public DbSet<Location> Locations { get; set; }
+    public DbSet<Position> Positions { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        base.OnConfiguring(optionsBuilder);
-
         optionsBuilder.UseNpgsql(_configuration.GetConnectionString(DS_CONNECTION_STRING));
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(DsDbContext).Assembly);
     }
 }
