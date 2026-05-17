@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DS.Application\DS.Application.csproj" />
-  </ItemGroup>
-
 </Project>
