@@ -1,17 +1,17 @@
 ﻿namespace DS.Contracts.Location;
 
 public record AddressDto(
-        string country,
-        string region,
-        string settlementName,
-        string settlementType,
-        string street,
-        string buildingNumber,
-        string? buildingBlock,
-        string entrance,
-        string floor,
-        string premiseNumber,
-        string premiseType,
-        string postCode,
-        string fullAddress,
-        string? comment);
+        string Country,
+        string Region,
+        string SettlementName,
+        string SettlementType,
+        string Street,
+        string BuildingNumber,
+        string? BuildingBlock,
+        string Entrance,
+        string Floor,
+        string PremiseNumber,
+        string PremiseType,
+        string PostCode,
+        string FullAddress,
+        string? Comment);
