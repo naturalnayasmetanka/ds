@@ -10,7 +10,6 @@ namespace DS.Presentation.Controllers;
 public class DepartmentController : ControllerBase
 {
     [HttpGet("departments")]
-    [SwaggerOperation(Tags = ["Department"])]
     public async Task<IActionResult> Get(
         CancellationToken cancellationToken)
     {
@@ -18,7 +17,6 @@ public class DepartmentController : ControllerBase
     }
 
     [HttpGet("departments/{id:guid}")]
-    [SwaggerOperation(Tags = ["Department"])]
     public async Task<IActionResult> GetById(
         [FromRoute] GetDepartmentByIdRequest request,
         CancellationToken cancellationToken)
@@ -27,7 +25,6 @@ public class DepartmentController : ControllerBase
     }
 
     [HttpPost("departments")]
-    [SwaggerOperation(Tags = ["Department"])]
     public async Task<IActionResult> Create(
         [FromBody] CreateDepartmentRequest request,
         CancellationToken cancellationToken)
@@ -36,7 +33,6 @@ public class DepartmentController : ControllerBase
     }
 
     [HttpPut("departments/{id:guid}")]
-    [SwaggerOperation(Tags = ["Department"])]
     public async Task<IActionResult> Update(
         [FromRoute] Guid id,
         [FromBody] UpdateDepartmentRequest request,
@@ -46,7 +42,6 @@ public class DepartmentController : ControllerBase
     }
 
     [HttpDelete("departments/{id:guid}")]
-    [SwaggerOperation(Tags = ["Department"])]
     public async Task<IActionResult> Delete(
         [FromRoute] Guid id,
         CancellationToken cancellationToken)

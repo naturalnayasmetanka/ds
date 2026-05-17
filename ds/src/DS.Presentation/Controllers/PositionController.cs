@@ -12,7 +12,6 @@ namespace DS.Presentation.Controllers;
 public class PositionController : ControllerBase
 {
     [HttpGet("positions")]
-    [SwaggerOperation(Tags = ["Position"])]
     public async Task<IActionResult> Get(
         CancellationToken cancellationToken)
     {
@@ -20,7 +19,6 @@ public class PositionController : ControllerBase
     }
 
     [HttpGet("positions/{id:guid}")]
-    [SwaggerOperation(Tags = ["Position"])]
     public async Task<IActionResult> GetById(
         [FromRoute] GetPositionByIdRequest request,
         CancellationToken cancellationToken)
@@ -29,7 +27,6 @@ public class PositionController : ControllerBase
     }
 
     [HttpPost("positions")]
-    [SwaggerOperation(Tags = ["Position"])]
     public async Task<IActionResult> Create(
         [FromBody] CreatePositionRequest request,
         CancellationToken cancellationToken)
@@ -38,7 +35,6 @@ public class PositionController : ControllerBase
     }
 
     [HttpPut("positions/{id:guid}")]
-    [SwaggerOperation(Tags = ["Position"])]
     public async Task<IActionResult> Update(
        [FromRoute] Guid id,
        [FromBody] UpdatePositionRequest request,
@@ -48,7 +44,6 @@ public class PositionController : ControllerBase
     }
 
     [HttpDelete("positions/{id:guid}")]
-    [SwaggerOperation(Tags = ["Position"])]
     public async Task<IActionResult> Delete(
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
