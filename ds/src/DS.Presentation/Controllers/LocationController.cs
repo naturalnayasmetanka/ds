@@ -1,4 +1,5 @@
-﻿using DS.Contracts.Location.Create;
+﻿using DS.Application.Locations.Services;
+using DS.Contracts.Location.Create;
 using DS.Contracts.Location.GetById;
 using DS.Contracts.Location.Update;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,13 @@ namespace DS.Presentation.Controllers;
 [ApiController]
 public class LocationController : ControllerBase
 {
+    private readonly ILocationsService _locationsService;
+
+    public LocationController(ILocationsService locationsService)
+    {
+        _locationsService = locationsService;
+    }
+
     [HttpGet("locations")]
     public async Task<IActionResult> Get(
         CancellationToken cancellationToken)
@@ -30,7 +38,9 @@ public class LocationController : ControllerBase
         [FromBody] CreateLocationRequest request,
         CancellationToken cancellationToken)
     {
-        return Created();
+        var createLocationResult = await _locationsService.CreateLocationAsync(request);
+
+        return Ok(createLocationResult);
     }
 
     [HttpPut("locations/{id:guid}")]

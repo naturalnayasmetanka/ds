@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DS.Contracts\DS.Contracts.csproj" />
     <ProjectReference Include="..\DS.Domain\DS.Domain.csproj" />
     <ProjectReference Include="..\DS.Infrastructure\DS.Infrastructure.csproj" />
   </ItemGroup>
