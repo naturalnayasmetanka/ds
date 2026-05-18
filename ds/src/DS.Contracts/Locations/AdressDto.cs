@@ -1,4 +1,4 @@
-﻿namespace DS.Contracts.Location;
+﻿namespace DS.Contracts.Locations;
 
 public record AddressDto(
         string Country,

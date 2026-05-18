@@ -1,3 +1,3 @@
-﻿namespace DS.Contracts.Location.Delete;
+﻿namespace DS.Contracts.Locations.Delete;
 
 public record DeleteLiocationRequest(Guid Id);

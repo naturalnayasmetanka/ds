@@ -1,3 +1,3 @@
-﻿namespace DS.Contracts.Location.GetById;
+﻿namespace DS.Contracts.Locations.GetById;
 
 public record GetLocationByIdResponse();

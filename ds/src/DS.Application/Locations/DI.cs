@@ -1,5 +1,4 @@
-﻿using DS.Application.Locations.Repositories;
-using DS.Application.Locations.Services;
+﻿using DS.Application.Locations.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +13,6 @@ public static class DI
         services.AddValidatorsFromAssembly(typeof(DI).Assembly);
 
         services.AddScoped<ILocationsService, LocationsService>();
-        services.AddScoped<ILocationsRepository, LocationsRepository>();
 
         return services;
     }

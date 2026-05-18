@@ -1,3 +1,3 @@
-﻿namespace DS.Contracts.Position.GetById;
+﻿namespace DS.Contracts.Positions.GetById;
 
 public record GetPositionByIdRequest(Guid Id);

@@ -1,6 +1,6 @@
-﻿using DS.Contracts.Department.Create;
-using DS.Contracts.Department.GetById;
-using DS.Contracts.Department.Update;
+﻿using DS.Contracts.Departments.Create;
+using DS.Contracts.Departments.GetById;
+using DS.Contracts.Departments.Update;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 

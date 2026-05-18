@@ -1,3 +1,3 @@
-﻿namespace DS.Contracts.Position.Delete;
+﻿namespace DS.Contracts.Positions.Delete;
 
 public record DeletePositionResponse();

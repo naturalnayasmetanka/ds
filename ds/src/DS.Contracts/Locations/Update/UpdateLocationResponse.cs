@@ -1,3 +1,3 @@
-﻿namespace DS.Contracts.Location.Update;
+﻿namespace DS.Contracts.Locations.Update;
 
 public record UpdateLocationResponse();

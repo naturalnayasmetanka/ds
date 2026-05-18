@@ -1,3 +1,3 @@
-﻿namespace DS.Contracts.Position.Get;
+﻿namespace DS.Contracts.Positions.Get;
 
 public record GetPositionsResponse();

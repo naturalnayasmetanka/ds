@@ -1,3 +1,3 @@
-﻿namespace DS.Contracts.Department.GetById;
+﻿namespace DS.Contracts.Departments.GetById;
 
 public record GetDepartmentByIdResponse();

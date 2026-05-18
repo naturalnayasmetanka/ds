@@ -1,3 +1,3 @@
-﻿namespace DS.Contracts.Location.Create;
+﻿namespace DS.Contracts.Locations.Create;
 
 public record CreateLocationResponse();
