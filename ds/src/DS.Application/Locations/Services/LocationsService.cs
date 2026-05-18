@@ -22,14 +22,17 @@ public class LocationsService : ILocationsService
         CreateLocationRequest request, 
         CancellationToken cancellationToken)
     {
-        if (await _locationsRepository.ExistsByNameAsync(Name.Create(request.Name).Value, cancellationToken))
-            throw new Exception("Name already exists");
-
-        var fullValidationResult = 
+        var fullValidationResult =
             await _createLocationRequestValidator.ValidateAsync(request, cancellationToken);
 
         if (!fullValidationResult.IsValid)
             throw new ValidationException(fullValidationResult.Errors);
+
+        var isAlewadyExistsByName =
+            await _locationsRepository.ExistsByNameAsync(Name.Create(request.Name).Value, cancellationToken);
+        
+        if (isAlewadyExistsByName)
+            throw new Exception("Name already exists");
 
         var newLocation = Location.Create(
             Name.Create(request.Name).Value,

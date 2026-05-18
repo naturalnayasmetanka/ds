@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace DS.Presentation.Controllers;
 
 [ApiController]
-public class DepartmentController : ControllerBase
+public class DepartmentsController : ControllerBase
 {
     [HttpGet("departments")]
     public async Task<IActionResult> Get(

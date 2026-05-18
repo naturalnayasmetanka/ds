@@ -9,7 +9,7 @@ namespace DS.Presentation.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 
-public class PositionController : ControllerBase
+public class PositionsController : ControllerBase
 {
     [HttpGet("positions")]
     public async Task<IActionResult> Get(

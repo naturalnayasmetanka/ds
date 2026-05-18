@@ -9,11 +9,11 @@ namespace DS.Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class LocationController : ControllerBase
+public class LocationsController : ControllerBase
 {
     private readonly ILocationsService _locationsService;
 
-    public LocationController(ILocationsService locationsService)
+    public LocationsController(ILocationsService locationsService)
     {
         _locationsService = locationsService;
     }
@@ -38,7 +38,7 @@ public class LocationController : ControllerBase
         [FromBody] CreateLocationRequest request,
         CancellationToken cancellationToken)
     {
-        var createLocationResult = await _locationsService.CreateLocationAsync(request);
+        var createLocationResult = await _locationsService.CreateLocationAsync(request, cancellationToken);
 
         return Ok(createLocationResult);
     }
