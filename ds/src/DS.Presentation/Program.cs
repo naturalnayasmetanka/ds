@@ -1,4 +1,5 @@
 ﻿using DS.Infrastructure;
+using DS.Presentation.DI;
 using Scalar.AspNetCore;
 
 namespace DS.Presentation;
@@ -9,9 +10,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddWebDI();
+        builder.Services.AddApplicationDI();
 
         builder.Services.AddScoped<DsDbContext>();
 
