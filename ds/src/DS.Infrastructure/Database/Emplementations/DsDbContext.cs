@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DS.Infrastructure.Database.Emplementations;
 
-public class DsDbContext : DbContext, IDsDbContext
+public class DsDbContext : DbContext
 {
     private const string DS_CONNECTION_STRING = "DsDbConnection";
 

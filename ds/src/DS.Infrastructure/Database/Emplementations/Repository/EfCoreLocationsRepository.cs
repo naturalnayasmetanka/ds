@@ -8,10 +8,10 @@ namespace DS.Infrastructure.Database.Emplementations.Repository;
 
 public class EfCoreLocationsRepository : ILocationsRepository
 {
-    private readonly IDsDbContext _dbContext;
+    private readonly DsDbContext _dbContext;
     private readonly ILogger<EfCoreLocationsRepository> _logger;
 
-    public EfCoreLocationsRepository(IDsDbContext dbContext, ILogger<EfCoreLocationsRepository> logger)
+    public EfCoreLocationsRepository(DsDbContext dbContext, ILogger<EfCoreLocationsRepository> logger)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _logger = logger;

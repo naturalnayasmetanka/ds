@@ -10,7 +10,7 @@ public static class InfrastructureDI
     public static IServiceCollection AddInfrastructureDI(this IServiceCollection services)
     {
         services.AddSingleton<IDbConnectionFactory, NpgSqlConnectionFactory>();
-        services.AddScoped<IDsDbContext, DsDbContext>();
+        services.AddScoped<DsDbContext>();
 
         services.AddScoped<ILocationsRepository, EfCoreLocationsRepository>();
 
