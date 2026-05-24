@@ -13,8 +13,8 @@ public static class DI
 
         services.AddValidatorsFromAssembly(typeof(DI).Assembly);
 
-        services.AddScoped<ILocationsService, LocationsService>();
         services.AddScoped<ILocationsRepository, LocationsRepository>();
+        services.AddScoped<ILocationsService, LocationsService>();
 
         return services;
     }
