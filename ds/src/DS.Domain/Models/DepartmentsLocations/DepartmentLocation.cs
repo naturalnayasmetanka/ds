@@ -15,4 +15,9 @@ public class DepartmentLocation
         DepartmentId = departmentId;
         LocationId = locationId;
     }
+
+    public static DepartmentLocation Create(Guid departmentId, Guid locationId)
+    {
+        return new DepartmentLocation(departmentId: departmentId, locationId: locationId);
+    }
 }

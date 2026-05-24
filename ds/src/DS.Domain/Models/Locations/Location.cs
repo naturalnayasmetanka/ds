@@ -1,21 +1,19 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Domain.Models.DepartmentsLocations;
 
 namespace DS.Domain.Models.Locations;
 
 public class Location
 {
-    private List<DepartmentLocation> _departmentsLocations = [];
-
     //ef
     private Location() { }
 
     private Location(
+        Guid id,
         Name name,
         Address address,
         Timezone timezone)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         Name = name;
         Address = address;
         Timezone = timezone;
@@ -31,16 +29,30 @@ public class Location
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
-    public IReadOnlyList<DepartmentLocation> DepartmentsLocations => _departmentsLocations;
 
     public static Result<Location, string> Create(
+        Guid id,
         Name name,
         Address adress,
         Timezone timezone)
     {
         return Result.Success<Location, string>(new Location(
+            id,
             name,
             adress,
             timezone));
+    }
+
+    public static Result<Location, string> Update(
+        Location existLocaiton,
+        Name name,
+        Address adress,
+        Timezone timezone)
+    {
+        existLocaiton.Name = name;
+        existLocaiton.Address = adress;
+        existLocaiton.Timezone = timezone;
+
+        return Result.Success<Location, string>(existLocaiton);
     }
 }
