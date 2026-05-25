@@ -1,5 +1,5 @@
-﻿using DS.Contracts.Location.Create;
-using DS.Contracts.Location.Update;
+﻿using DS.Contracts.Locations.Create;
+using DS.Contracts.Locations.Update;
 
 namespace DS.Application.Locations.Services;
 

@@ -10,7 +10,6 @@ public static class DI
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.AddScoped<IDepartmentsLocationsRepository, DepartmentsLocationsRepository>();
         services.AddScoped<IDepartmentLocationsService, DepartmentLocationsService>();
 
         return services;

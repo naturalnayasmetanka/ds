@@ -1,3 +1,3 @@
-﻿namespace DS.Contracts.Department.Delete;
+﻿namespace DS.Contracts.Departments.Delete;
 
 public record DeleteDepartmentResponse();

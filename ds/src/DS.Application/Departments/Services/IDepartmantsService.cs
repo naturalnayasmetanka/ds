@@ -1,7 +1,5 @@
-﻿using DS.Contracts.Department.Create;
-using DS.Contracts.Department.Update;
-using DS.Domain.Models.Departments;
-using System.Linq.Expressions;
+﻿using DS.Contracts.Departments.Create;
+using DS.Contracts.Departments.Update;
 
 namespace DS.Application.Departments.Services;
 

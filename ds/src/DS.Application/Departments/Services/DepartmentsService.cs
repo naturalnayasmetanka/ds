@@ -1,8 +1,8 @@
 ﻿using DS.Application.Departments.Repositories;
 using DS.Application.DepartmentsLocations.Repositories;
 using DS.Application.Locations.Repositories;
-using DS.Contracts.Department.Create;
-using DS.Contracts.Department.Update;
+using DS.Contracts.Departments.Create;
+using DS.Contracts.Departments.Update;
 using DS.Domain.Models;
 using DS.Domain.Models.Departments;
 using DS.Domain.Models.DepartmentsLocations;

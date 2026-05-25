@@ -1,7 +1,7 @@
 ﻿using DS.Application.Locations.Validations.CustomRules;
-using DS.Contracts.Location;
-using DS.Contracts.Location.Create;
-using DS.Contracts.Location.Update;
+using DS.Contracts.Locations;
+using DS.Contracts.Locations.Create;
+using DS.Contracts.Locations.Update;
 using FluentValidation;
 
 namespace DS.Application.Locations.Validations;

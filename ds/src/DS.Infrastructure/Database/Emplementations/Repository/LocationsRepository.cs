@@ -1,10 +1,11 @@
-﻿using DS.Domain.Models.Locations;
-using DS.Infrastructure;
+﻿using DS.Application.Locations.Repositories;
+using DS.Domain.Models.Locations;
+using DS.Infrastructure.Database.Emplementations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
-namespace DS.Application.Locations.Repositories;
+namespace DS.Infrastructure.Database.Emplementations.Repository;
 
 public class LocationsRepository : ILocationsRepository
 {

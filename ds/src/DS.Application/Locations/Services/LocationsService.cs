@@ -1,6 +1,6 @@
 ﻿using DS.Application.Locations.Repositories;
-using DS.Contracts.Location.Create;
-using DS.Contracts.Location.Update;
+using DS.Contracts.Locations.Create;
+using DS.Contracts.Locations.Update;
 using DS.Domain.Models;
 using DS.Domain.Models.Locations;
 using FluentValidation;

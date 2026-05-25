@@ -1,4 +1,6 @@
-﻿namespace DS.Contracts.Location.Update;
+﻿using DS.Contracts.Locations;
+
+namespace DS.Contracts.Locations.Update;
 
 public record UpdateLocationRequest(
     string Name,

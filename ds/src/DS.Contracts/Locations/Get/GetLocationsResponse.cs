@@ -1,3 +1,3 @@
-﻿namespace DS.Contracts.Location.Get;
+﻿namespace DS.Contracts.Locations.Get;
 
 public record GetLocationsResponse();

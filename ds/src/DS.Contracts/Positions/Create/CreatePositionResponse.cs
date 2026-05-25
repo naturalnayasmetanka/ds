@@ -1,3 +1,3 @@
-﻿namespace DS.Contracts.Position.Create;
+﻿namespace DS.Contracts.Positions.Create;
 
 public record CreatePositionResponse();

@@ -1,8 +1,9 @@
-﻿using DS.Domain.Models.DepartmentsLocations;
-using DS.Infrastructure;
+﻿using DS.Application.DepartmentsLocations.Repositories;
+using DS.Domain.Models.DepartmentsLocations;
+using DS.Infrastructure.Database.Emplementations;
 using Microsoft.Extensions.Logging;
 
-namespace DS.Application.DepartmentsLocations.Repositories;
+namespace DS.Infrastructure.Database.Emplementations.Repository;
 
 public class DepartmentsLocationsRepository : IDepartmentsLocationsRepository
 {

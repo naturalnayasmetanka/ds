@@ -1,4 +1,4 @@
-﻿namespace DS.Contracts.Department.Create;
+﻿namespace DS.Contracts.Departments.Create;
 
 public record CreateDepartmentRequest(
     string Name,

@@ -1,10 +1,11 @@
-﻿using DS.Domain.Models.Departments;
+﻿using DS.Application.Departments.Repositories;
+using DS.Domain.Models.Departments;
 using DS.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
-namespace DS.Application.Departments.Repositories;
+namespace DS.Infrastructure.Database.Emplementations.Repository;
 
 public class DepartmentsRepository : IDepartmentsRepository
 {

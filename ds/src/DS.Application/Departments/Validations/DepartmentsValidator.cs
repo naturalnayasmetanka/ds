@@ -1,4 +1,4 @@
-﻿using DS.Contracts.Department.Create;
+﻿using DS.Contracts.Departments.Create;
 using FluentValidation;
 
 namespace DS.Application.Departments.Validations

@@ -2,6 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DS.Contracts.Position.GetById;
+namespace DS.Contracts.Positions.GetById;
 
 public record GetPositionByIdResponse();
