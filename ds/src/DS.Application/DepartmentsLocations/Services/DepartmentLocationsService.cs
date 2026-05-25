@@ -31,22 +31,19 @@ public class DepartmentLocationsService : IDepartmentLocationsService
         BindDepartmentLocationRequest request,
         CancellationToken cancellationToken)
     {
-        var department =
-            await _departmentsRepository
-            .GetByIdAsync(request.departmentId, cancellationToken);
+        var department = await _departmentsRepository
+            .GetByFieldAsync(x => x.Id == request.departmentId, cancellationToken);
 
         if (department is null)
             throw new Exception($"departmentId is null");
 
-        var location =
-            await _locationsRepository
-            .GetByIdAsync(request.locationId, cancellationToken);
+        var location = await _locationsRepository
+            .GetByFieldAsync(x => x.Id == request.locationId, cancellationToken);
 
         if (department is null)
             throw new Exception($"locationId is null");
 
-        var departmentLocation =
-            await _departmentsLocationsRepository
+        var departmentLocation = await _departmentsLocationsRepository
             .GetByIdsAsync(DepartmentLocation.Create(request.departmentId, request.locationId), cancellationToken);
 
         if (departmentLocation is not null)
@@ -55,40 +52,28 @@ public class DepartmentLocationsService : IDepartmentLocationsService
         await _departmentsLocationsRepository
             .BindAsync(DepartmentLocation.Create(request.departmentId, request.locationId), cancellationToken);
 
-        try
-        {
-            await _departmentsLocationsRepository.SaveAsync(cancellationToken);
+        await _departmentsLocationsRepository.SaveAsync(cancellationToken);
 
-            return (request.departmentId, request.locationId);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message);
-        }
-
-        return null;
+        return (request.departmentId, request.locationId);
     }
 
     public async Task<(Guid, Guid)?> UnbindAsync(
         UnbindDepartmentLocationRequest request,
         CancellationToken cancellationToken)
     {
-        var department =
-           await _departmentsRepository
-           .GetByIdAsync(request.departmentId, cancellationToken);
+        var department = await _departmentsRepository.
+            GetByFieldAsync(x => x.Id == request.departmentId, cancellationToken);
 
         if (department is null)
             throw new Exception($"departmentId is null");
 
-        var location =
-            await _locationsRepository
-            .GetByIdAsync(request.locationId, cancellationToken);
+        var location = await _locationsRepository
+            .GetByFieldAsync(x => x.Id == request.locationId, cancellationToken);
 
         if (department is null)
             throw new Exception($"locationId is null");
 
-        var departmentLocation =
-            await _departmentsLocationsRepository
+        var departmentLocation = await _departmentsLocationsRepository
             .GetByIdsAsync(DepartmentLocation.Create(request.departmentId, request.locationId), cancellationToken);
 
         if (departmentLocation is null)
@@ -97,17 +82,8 @@ public class DepartmentLocationsService : IDepartmentLocationsService
         _departmentsLocationsRepository
             .UnbindAsync(DepartmentLocation.Create(request.departmentId, request.locationId), cancellationToken);
 
-        try
-        {
-            await _departmentsLocationsRepository.SaveAsync(cancellationToken);
+        await _departmentsLocationsRepository.SaveAsync(cancellationToken);
 
-            return (request.departmentId, request.locationId);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message);
-        }
-
-        return null;
+        return (request.departmentId, request.locationId);
     }
 }

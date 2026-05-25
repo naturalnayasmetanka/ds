@@ -1,20 +1,21 @@
 ﻿using DS.Domain.Models.Departments;
+using System.Linq.Expressions;
 
 namespace DS.Application.Departments.Repositories;
 
 public interface IDepartmentsRepository
 {
-    Task<Guid> CreateAsync(
+    Task<Guid> AddAsync(
         Department request,
         CancellationToken cancellationToken);
 
-    Task<Department?> GetByIdAsync(
-        Guid? id,
-        CancellationToken cancellationToken);
-
-    Guid Update(
-        Department department,
-        CancellationToken cancellationToken);
-
     Task SaveAsync(CancellationToken cancellationToken);
+
+    Task<Department?> GetByFieldAsync(
+        Expression<Func<Department, bool>> predicate,
+        CancellationToken cancellationToken = default);
+
+    Task<List<Department>> GetListByFieldAsync(
+        Expression<Func<Department, bool>> predicate,
+        CancellationToken cancellationToken = default);
 }

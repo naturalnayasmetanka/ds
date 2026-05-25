@@ -4,7 +4,7 @@ namespace DS.Application.DepartmentsLocations.Repositories;
 
 public interface IDepartmentsLocationsRepository
 {
-    Task CreateRangeAsync(
+    Task AddRangeAsync(
         List<DepartmentLocation> departmentLocation,
         CancellationToken cancellationToken);
 

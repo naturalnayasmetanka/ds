@@ -1,14 +1,20 @@
 ﻿using DS.Domain.Models.DepartmentsLocations;
 using DS.Infrastructure;
+using Microsoft.Extensions.Logging;
 
 namespace DS.Application.DepartmentsLocations.Repositories;
 
 public class DepartmentsLocationsRepository : IDepartmentsLocationsRepository
 {
     private readonly DsDbContext _dbContext;
-    public DepartmentsLocationsRepository(DsDbContext dsDbContext)
+    private readonly ILogger<DepartmentsLocationsRepository> _logger;
+
+    public DepartmentsLocationsRepository(
+        DsDbContext dsDbContext,
+        ILogger<DepartmentsLocationsRepository> logger)
     {
         _dbContext = dsDbContext;
+        _logger = logger;
     }
 
     public async Task<DepartmentLocation> BindAsync(
@@ -34,7 +40,7 @@ public class DepartmentsLocationsRepository : IDepartmentsLocationsRepository
         await _dbContext.DepartmentsLocations.AddAsync(departmentLocation, cancellationToken);
     }
 
-    public async Task CreateRangeAsync(
+    public async Task AddRangeAsync(
         List<DepartmentLocation> departmentLocation,
         CancellationToken cancellationToken)
     {
@@ -46,12 +52,18 @@ public class DepartmentsLocationsRepository : IDepartmentsLocationsRepository
         CancellationToken cancellationToken)
     {
         return await _dbContext.DepartmentsLocations
-             .FindAsync(departmentLocation.DepartmentId, departmentLocation.LocationId, cancellationToken);
+            .FindAsync(departmentLocation.DepartmentId, departmentLocation.LocationId, cancellationToken);
     }
 
     public async Task SaveAsync(CancellationToken cancellationToken)
     {
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+        }
     }
-
 }

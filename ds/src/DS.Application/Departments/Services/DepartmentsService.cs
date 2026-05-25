@@ -38,37 +38,36 @@ public class DepartmentsService : IDepartmantsService
         _logger = logger;
     }
 
-    public async Task<Guid?> CreateAsync(
+    public async Task<Guid> CreateAsync(
         CreateDepartmentRequest request,
         CancellationToken cancellationToken)
     {
         var fullValidationResult =
-            await _createDepartmentRequetValidator
-            .ValidateAsync(request);
+            await _createDepartmentRequetValidator.ValidateAsync(request);
 
         if (!fullValidationResult.IsValid)
             throw new ValidationException(fullValidationResult.Errors);
 
         if (request.Locations is not null)
         {
-            var existLocations =
-                await _locationsRepository
+            var existLocations = await _locationsRepository
                 .AllLocationsExistAsync(request.Locations, cancellationToken);
 
             if (!existLocations)
                 throw new Exception("Invalid locations");
         }
 
-        Department? existParentDepartment =
-            await _departmentsRepository
-            .GetByIdAsync(request.ParentId, cancellationToken);
+        var departmentId = Id.Create();
 
-        Path path = existParentDepartment is null ?
+        var existParentDepartment = await _departmentsRepository
+            .GetByFieldAsync(x => x.Id == request.ParentId, cancellationToken);
+
+        var path = existParentDepartment is null ?
             Path.Create(request.Slug).Value :
             Path.Create(existParentDepartment.Path.Value, request.Slug).Value;
 
         var newDepartment = Department.Create(
-            Id.Create(),
+            departmentId,
             Name.Create(request.Name).Value,
             path,
             Identifier.Create(request.Slug).Value,
@@ -76,70 +75,44 @@ public class DepartmentsService : IDepartmantsService
             0,
             0).Value;
 
-        var newDepartmentsLocations = request.Locations!
+        List<DepartmentLocation> newDepartmentsLocations = request.Locations
             .Select(locationId => DepartmentLocation.Create(newDepartment.Id, locationId)).ToList();
 
-        var createDepartmentResult =
-            await _departmentsRepository
-            .CreateAsync(newDepartment, cancellationToken);
+        var createDepartmentResult = await _departmentsRepository
+            .AddAsync(newDepartment, cancellationToken);
 
-        await _departmentsLocationsRepository
-            .CreateRangeAsync(newDepartmentsLocations, cancellationToken);
+        await _departmentsLocationsRepository.AddRangeAsync(newDepartmentsLocations, cancellationToken);
 
-        try
-        {
-            await _departmentsRepository.SaveAsync(cancellationToken);
+        await _departmentsRepository.SaveAsync(cancellationToken);
 
-            return createDepartmentResult;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message);
-        }
-
-        return null;
+        return createDepartmentResult;
     }
 
-    public async Task<Guid?> UpdateAsync(
+    public async Task<Guid> UpdateAsync(
         Guid departmentId,
         UpdateDepartmentRequest request,
         CancellationToken cancellationToken)
     {
         var fullValidationResult =
-            await _updateDepartmentRequetValidator
-            .ValidateAsync(request);
+            await _updateDepartmentRequetValidator.ValidateAsync(request);
 
         if (!fullValidationResult.IsValid)
             throw new ValidationException(fullValidationResult.Errors);
 
-        var existParentDepartment =
-           await _departmentsRepository
-           .GetByIdAsync(departmentId, cancellationToken);
+        var existDepartment =
+           await _departmentsRepository.GetByFieldAsync(x => x.Id == departmentId, cancellationToken);
 
-        if (existParentDepartment is null)
-            return null;
+        if (existDepartment is null)
+            throw new Exception("Department not found");
 
         var updatedDepartment =
             Department.Update(
-                existParentDepartment,
+                existDepartment,
                 Name.Create(request.Name).Value,
                 Identifier.Create(request.Slug).Value);
 
-        var updateDepartmentResult =
-                _departmentsRepository
-            .Update(updatedDepartment.Value, cancellationToken);
+        await _departmentsRepository.SaveAsync(cancellationToken);
 
-        try
-        {
-            await _departmentsRepository.SaveAsync(cancellationToken);
-
-            return updatedDepartment.Value.Id;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message);
-        }
-
-        return null;
+        return updatedDepartment.Value.Id;
     }
 }

@@ -27,15 +27,13 @@ public class LocationsService : ILocationsService
         CreateLocationRequest request,
         CancellationToken cancellationToken)
     {
-        var fullValidationResult =
-            await _createLocationRequestValidator
+        var fullValidationResult = await _createLocationRequestValidator
             .ValidateAsync(request, cancellationToken);
 
         if (!fullValidationResult.IsValid)
             throw new ValidationException(fullValidationResult.Errors);
 
-        var isAlewadyExistsByName =
-            await _locationsRepository
+        var isAlewadyExistsByName = await _locationsRepository
             .ExistsByNameAsync(Name.Create(request.Name).Value, cancellationToken);
 
         if (isAlewadyExistsByName)
@@ -74,16 +72,14 @@ public class LocationsService : ILocationsService
         UpdateLocationRequest request,
         CancellationToken cancellationToken)
     {
-        var fullValidationResult =
-           await _updateLocationRequetValidator
+        var fullValidationResult = await _updateLocationRequetValidator
            .ValidateAsync(request, cancellationToken);
 
         if (!fullValidationResult.IsValid)
             throw new ValidationException(fullValidationResult.Errors);
 
-        var existLocation =
-          await _locationsRepository
-          .GetByIdAsync(locationId, cancellationToken);
+        var existLocation = await _locationsRepository
+          .GetByFieldAsync(x => x.Id == locationId, cancellationToken);
 
         if (existLocation is null)
             return null;
@@ -107,10 +103,6 @@ public class LocationsService : ILocationsService
                 request.Adress.FullAddress,
                 request.Adress.Comment).Value,
             Timezone.Create(request.TimeZone).Value);
-
-        var updateLocationResult =
-                _locationsRepository
-            .UpdateLocation(updateLocation.Value, cancellationToken);
 
         await _locationsRepository.SaveAsync(cancellationToken);
 
