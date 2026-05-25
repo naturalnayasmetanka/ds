@@ -1,6 +1,7 @@
 ﻿using DS.Application.Locations.Validations.CustomRules;
 using DS.Contracts.Locations;
 using DS.Contracts.Locations.Create;
+using DS.Contracts.Locations.Update;
 using FluentValidation;
 
 namespace DS.Application.Locations.Validations;
@@ -25,6 +26,28 @@ public class CreateLocationsValidator : AbstractValidator<CreateLocationRequest>
             .SetValidator(addressValidator);
     }
 }
+
+public class UpdateLocationsValidator : AbstractValidator<UpdateLocationRequest>
+{
+    public UpdateLocationsValidator(IValidator<AddressDto> addressValidator)
+    {
+        RuleFor(x => x.Name)
+            .NotEmpty().WithMessage("Name cannot be null")
+            .MinimumLength(3).WithMessage("Name min length 3")
+            .MaximumLength(100).WithMessage("Name max length 100");
+
+        RuleFor(x => x.TimeZone)
+            .NotEmpty().WithMessage("TimeZone cannot be null")
+            .MaximumLength(50)
+            .Must(TimeZoneRules.BeValidTimeZoneId)
+            .WithMessage("Invalid time zone identifier is specified");
+
+        RuleFor(x => x.Adress)
+            .NotNull().WithMessage("Address cannot be null")
+            .SetValidator(addressValidator);
+    }
+}
+
 
 public class AddressDtoValidator : AbstractValidator<AddressDto>
 {

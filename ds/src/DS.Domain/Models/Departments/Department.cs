@@ -1,28 +1,27 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Domain.Models.DepartmentsLocations;
-using DS.Domain.Models.DepartmentsPositions;
 
 namespace DS.Domain.Models.Departments;
 
 public class Department
 {
     private List<Department> _childrens = [];
-    private List<DepartmentPosition> _departmentsPositions = [];
-    private List<DepartmentLocation> _departmentsLocations = [];
 
     //ef
     private Department() { }
 
     private Department(
+        Guid id,
         Name name,
         Path path,
         Identifier identifier,
+        Guid? parentId,
         int depth,
         int childrenCount)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         Name = name;
         Identifier = identifier;
+        ParentId = parentId;
         Path = path;
         Depth = depth;
         ChildrenCount = childrenCount;
@@ -41,18 +40,16 @@ public class Department
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
-
-    public IReadOnlyList<DepartmentPosition> DepartmentsPositions => _departmentsPositions;
-    public IReadOnlyList<DepartmentLocation> DepartmentsLocations => _departmentsLocations;
-
     public Department Parent { get; private set; }
 
     public IReadOnlyList<Department> Childrens => _childrens;
 
     public static Result<Department, string> Create(
+        Guid id,
         Name name,
         Path path,
         Identifier identifer,
+        Guid? parentId,
         int depth,
         int childrenCount)
     {
@@ -70,10 +67,28 @@ public class Department
 
         return Result.Success<Department, string>(
             new Department(
+                id,
                 name,
                 path,
                 identifer,
+                parentId,
                 depth,
                 childrenCount));
+    }
+
+    public static Result<Department, string> Update(
+        Department oldDepartment,
+        Name name,
+        Identifier slug)
+    {
+        return Result.Success<Department, string>(
+            new Department(
+                oldDepartment.Id,
+                name,
+                oldDepartment.Path,
+                slug,
+                oldDepartment.ParentId,
+                oldDepartment.Depth,
+                oldDepartment.ChildrenCount));
     }
 }

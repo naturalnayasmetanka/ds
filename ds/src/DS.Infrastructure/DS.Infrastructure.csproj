@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DS.Application\DS.Application.csproj" />
+    <ProjectReference Include="..\DS.Contracts\DS.Contracts.csproj" />
     <ProjectReference Include="..\DS.Domain\DS.Domain.csproj" />
   </ItemGroup>
 

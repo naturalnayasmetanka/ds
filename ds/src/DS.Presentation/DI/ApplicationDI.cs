@@ -1,4 +1,6 @@
-﻿using DS.Application.Locations;
+﻿using DS.Application.Departments;
+using DS.Application.DepartmentsLocations;
+using DS.Application.Locations;
 
 namespace DS.Presentation.DI
 {
@@ -9,6 +11,8 @@ namespace DS.Presentation.DI
             ArgumentNullException.ThrowIfNull(services);
 
             services.AddLocations();
+            services.AddDepartments();
+            services.AddDepartmentsLocations();
 
             return services;
         }

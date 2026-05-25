@@ -2,4 +2,7 @@
 
 namespace DS.Contracts.Locations.Update;
 
-public record UpdateLocationRequest(string Name, AddressDto Adress);
+public record UpdateLocationRequest(
+    string Name,
+    string TimeZone,
+    AddressDto Adress);

@@ -1,7 +1,4 @@
-﻿using DS.Application.Locations.Repositories;
-using DS.Infrastructure.Database.Abstractions;
-using DS.Infrastructure.Database.Emplementations;
-using DS.Infrastructure.Database.Emplementations.Repository;
+﻿using DS.Infrastructure;
 
 namespace DS.Presentation.DI;
 
@@ -9,12 +6,8 @@ public static class InfrastructureDI
 {
     public static IServiceCollection AddInfrastructureDI(this IServiceCollection services)
     {
-        services.AddSingleton<IDbConnectionFactory, NpgSqlConnectionFactory>();
-        services.AddScoped<DsDbContext>();
+        services.AddInfrastractureDb();
 
-        services.AddScoped<ILocationsRepository, EfCoreLocationsRepository>();
-
-        // services.AddScoped<ILocationsRepository, NpgSqlLocationsRepository>();
         return services;
     }
 }

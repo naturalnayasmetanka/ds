@@ -5,8 +5,6 @@ namespace DS.Domain.Models.Positions;
 
 public class Position
 {
-    private List<DepartmentPosition> _departmentsPositions = [];
-
     private Position(
         string name,
         string? description)
@@ -25,8 +23,6 @@ public class Position
     public bool IsActive { get; private set; }
     public DateTime CreateAt { get; private set; }
     public DateTime UpdateAt { get; private set; }
-
-    public IReadOnlyList<DepartmentPosition> DepartmentsPositions => _departmentsPositions;
 
     public static Result<Position, string> Create(
         string name,

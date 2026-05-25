@@ -1,14 +1,21 @@
-﻿using DS.Contracts.Departments.Create;
+﻿using DS.Application.Departments.Services;
+using DS.Contracts.Departments.Create;
 using DS.Contracts.Departments.GetById;
 using DS.Contracts.Departments.Update;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace DS.Presentation.Controllers;
 
 [ApiController]
 public class DepartmentsController : ControllerBase
 {
+    private readonly IDepartmantsService _departmantsService;
+
+    public DepartmentsController(IDepartmantsService departmantsService)
+    {
+        _departmantsService = departmantsService;
+    }
+
     [HttpGet("departments")]
     public async Task<IActionResult> Get(
         CancellationToken cancellationToken)
@@ -29,16 +36,24 @@ public class DepartmentsController : ControllerBase
         [FromBody] CreateDepartmentRequest request,
         CancellationToken cancellationToken)
     {
-        return Created();
+        var createDepartmentResult =
+            await _departmantsService
+            .CreateAsync(request, cancellationToken);
+
+        return Ok(createDepartmentResult);
     }
 
-    [HttpPut("departments/{id:guid}")]
+    [HttpPatch("departments/{id:guid}")]
     public async Task<IActionResult> Update(
         [FromRoute] Guid id,
         [FromBody] UpdateDepartmentRequest request,
         CancellationToken cancellationToken)
     {
-        return Ok("Department");
+        var updateDepartmentResult =
+            await _departmantsService
+            .UpdateAsync(id, request, cancellationToken);
+
+        return Ok(updateDepartmentResult);
     }
 
     [HttpDelete("departments/{id:guid}")]

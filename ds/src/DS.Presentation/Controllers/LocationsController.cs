@@ -3,7 +3,6 @@ using DS.Contracts.Locations.Create;
 using DS.Contracts.Locations.GetById;
 using DS.Contracts.Locations.Update;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace DS.Presentation.Controllers;
 
@@ -38,18 +37,24 @@ public class LocationsController : ControllerBase
         [FromBody] CreateLocationRequest request,
         CancellationToken cancellationToken)
     {
-        var createLocationResult = await _locationsService.CreateLocationAsync(request, cancellationToken);
+        var createLocationResult =
+            await _locationsService
+            .CreateAsync(request, cancellationToken);
 
         return Ok(createLocationResult);
     }
 
-    [HttpPut("locations/{id:guid}")]
+    [HttpPatch("locations/{id:guid}")]
     public async Task<IActionResult> Update(
        [FromRoute] Guid id,
        [FromBody] UpdateLocationRequest request,
        CancellationToken cancellationToken)
     {
-        return Ok("Location");
+        var updateLocationResult =
+            await _locationsService
+            .UpdateAsync(id, request, cancellationToken);
+
+        return Ok(updateLocationResult);
     }
 
     [HttpDelete("locations/{id:guid}")]

@@ -19,13 +19,13 @@ public class DepartmentLocationConfiguration : IEntityTypeConfiguration<Departme
         builder.Property(dl => dl.DepartmentId).HasColumnName("department_id");
 
         builder.HasOne<Department>()
-              .WithMany(d => d.DepartmentsLocations)
+              .WithMany()
               .HasForeignKey(dp => dp.DepartmentId)
               .HasConstraintName("fk_department_locaitons_department_id")
               .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Location>()
-               .WithMany(p => p.DepartmentsLocations)
+               .WithMany()
                .HasForeignKey(dp => dp.LocationId)
                .HasConstraintName("fk_department_locations_location_id")
                .OnDelete(DeleteBehavior.Cascade);

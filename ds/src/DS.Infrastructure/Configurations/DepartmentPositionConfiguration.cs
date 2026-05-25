@@ -23,13 +23,13 @@ public class DepartmentPositionConfiguration : IEntityTypeConfiguration<Departme
             .HasColumnName("department_id");
 
         builder.HasOne<Department>()
-               .WithMany(d => d.DepartmentsPositions)
+               .WithMany()
                .HasForeignKey(dp => dp.DepartmentId)
                .HasConstraintName("fk_department_positions_department_id")
                .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Position>()
-               .WithMany(p => p.DepartmentsPositions)
+               .WithMany()
                .HasForeignKey(dp => dp.PositionId)
                .HasConstraintName("fk_department_positions_position_id")
                .OnDelete(DeleteBehavior.Cascade);

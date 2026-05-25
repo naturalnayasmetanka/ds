@@ -1,7 +1,7 @@
 ﻿using DS.Domain.Models.Departments;
+using DS.Domain.Models.DepartmentsLocations;
 using DS.Domain.Models.Locations;
 using DS.Domain.Models.Positions;
-using DS.Infrastructure.Database.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -22,6 +22,7 @@ public class DsDbContext : DbContext
     public DbSet<Department> Departments { get; set; }
     public DbSet<Location> Locations { get; set; }
     public DbSet<Position> Positions { get; set; }
+    public DbSet<DepartmentLocation> DepartmentsLocations { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
