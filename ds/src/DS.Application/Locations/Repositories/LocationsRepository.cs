@@ -53,12 +53,12 @@ public class LocationsRepository : ILocationsRepository
         Expression<Func<Location, bool>> predicate,
         CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Set<Location>().FirstOrDefaultAsync(predicate, cancellationToken);
+        return await _dbContext.Locations.FirstOrDefaultAsync(predicate, cancellationToken);
     }
     public async Task<List<Location>> GetListByFieldAsync(
         Expression<Func<Location, bool>> predicate,
         CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Set<Location>().Where(predicate).ToListAsync(cancellationToken);
+        return await _dbContext.Locations.Where(predicate).ToListAsync(cancellationToken);
     }
 }

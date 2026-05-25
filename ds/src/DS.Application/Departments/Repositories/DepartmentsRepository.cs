@@ -31,14 +31,14 @@ public class DepartmentsRepository : IDepartmentsRepository
         Expression<Func<Department, bool>> predicate, 
         CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Set<Department>().FirstOrDefaultAsync(predicate, cancellationToken);
+        return await _dbContext.Departments.FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
     public async Task<List<Department>> GetListByFieldAsync(
        Expression<Func<Department, bool>> predicate,
        CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Set<Department>().Where(predicate).ToListAsync(cancellationToken);
+        return await _dbContext.Departments.Where(predicate).ToListAsync(cancellationToken);
     }
 
     public async Task SaveAsync(CancellationToken cancellationToken)
