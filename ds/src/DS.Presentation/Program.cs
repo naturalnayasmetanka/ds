@@ -1,5 +1,4 @@
-﻿using DS.Infrastructure;
-using DS.Presentation.DI;
+﻿using DS.Presentation.DI;
 using Scalar.AspNetCore;
 
 namespace DS.Presentation;
@@ -11,9 +10,8 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddWebDI();
+        builder.Services.AddInfrastructureDI();
         builder.Services.AddApplicationDI();
-
-        builder.Services.AddScoped<DsDbContext>();
 
         var app = builder.Build();
 

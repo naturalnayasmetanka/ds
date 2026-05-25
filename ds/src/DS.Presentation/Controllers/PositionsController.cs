@@ -1,6 +1,6 @@
-﻿using DS.Contracts.Position.Create;
-using DS.Contracts.Position.GetById;
-using DS.Contracts.Position.Update;
+﻿using DS.Contracts.Positions.Create;
+using DS.Contracts.Positions.GetById;
+using DS.Contracts.Positions.Update;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 

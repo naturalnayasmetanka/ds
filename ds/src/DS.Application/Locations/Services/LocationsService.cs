@@ -1,25 +1,29 @@
 ﻿using DS.Application.Locations.Repositories;
-using DS.Contracts.Location.Create;
+using DS.Contracts.Locations.Create;
 using DS.Domain.Models.Locations;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 
 namespace DS.Application.Locations.Services;
 
 public class LocationsService : ILocationsService
 {
     private readonly ILocationsRepository _locationsRepository;
+    private readonly ILogger<LocationsService> _logger;
     private readonly IValidator<CreateLocationRequest> _createLocationRequestValidator;
 
     public LocationsService(
         ILocationsRepository locationsRepository,
+        ILogger<LocationsService> logger,
         IValidator<CreateLocationRequest> createLocationRequestValidator)
     {
         _locationsRepository = locationsRepository;
+        _logger = logger;
         _createLocationRequestValidator = createLocationRequestValidator;
     }
 
     public async Task<Guid> CreateLocationAsync(
-        CreateLocationRequest request, 
+        CreateLocationRequest request,
         CancellationToken cancellationToken)
     {
         var fullValidationResult =
@@ -30,7 +34,7 @@ public class LocationsService : ILocationsService
 
         var isAlewadyExistsByName =
             await _locationsRepository.ExistsByNameAsync(Name.Create(request.Name).Value, cancellationToken);
-        
+
         if (isAlewadyExistsByName)
             throw new Exception("Name already exists");
 
@@ -54,6 +58,8 @@ public class LocationsService : ILocationsService
             Timezone.Create(request.TimeZone).Value);
 
         await _locationsRepository.AddAsync(newLocation.Value, cancellationToken);
+
+        await _locationsRepository.SaveAsync(cancellationToken);
 
         return await Task.FromResult(newLocation.Value.Id);
     }

@@ -1,4 +1,4 @@
-﻿namespace DS.Contracts.Department.Update;
+﻿namespace DS.Contracts.Departments.Update;
 
 public record UpdateDepartmentRequest(
     string Name,

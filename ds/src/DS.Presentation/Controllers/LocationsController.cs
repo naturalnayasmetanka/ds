@@ -1,7 +1,7 @@
 ﻿using DS.Application.Locations.Services;
-using DS.Contracts.Location.Create;
-using DS.Contracts.Location.GetById;
-using DS.Contracts.Location.Update;
+using DS.Contracts.Locations.Create;
+using DS.Contracts.Locations.GetById;
+using DS.Contracts.Locations.Update;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
