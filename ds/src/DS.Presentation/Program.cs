@@ -1,4 +1,5 @@
-﻿using DS.Presentation.DI;
+﻿using DS.Domain.Exceptions;
+using DS.Presentation.DI;
 using DS.Presentation.Middlewares;
 using Scalar.AspNetCore;
 

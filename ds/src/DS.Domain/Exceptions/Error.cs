@@ -1,4 +1,6 @@
-﻿namespace DS.Domain.Exceptions;
+﻿using DS.Domain.Enums;
+
+namespace DS.Domain.Exceptions;
 
 public record Error
 {

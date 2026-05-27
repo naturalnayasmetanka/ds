@@ -1,4 +1,4 @@
-﻿namespace DS.Domain.Exceptions;
+﻿namespace DS.Domain.Enums;
 
 public enum ErrorType
 {
