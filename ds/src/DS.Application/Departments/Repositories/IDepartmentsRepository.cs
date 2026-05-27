@@ -1,21 +1,24 @@
-﻿using DS.Domain.Models.Departments;
+﻿using CSharpFunctionalExtensions;
+using DS.Domain.Exceptions;
+using DS.Domain.Models.Departments;
 using System.Linq.Expressions;
 
 namespace DS.Application.Departments.Repositories;
 
 public interface IDepartmentsRepository
 {
-    Task<Guid> AddAsync(
+    Task<Result<Guid>> AddAsync(
         Department request,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
-    Task SaveAsync(CancellationToken cancellationToken);
+    Task<UnitResult<Error>> SaveAsync(
+        CancellationToken cancellationToken = default);
 
-    Task<Department?> GetByFieldAsync(
+    Task<Result<Department?>> GetByFieldAsync(
         Expression<Func<Department, bool>> predicate,
         CancellationToken cancellationToken = default);
 
-    Task<List<Department>> GetListByFieldAsync(
+    Task<Result<List<Department>>> GetListByFieldAsync(
         Expression<Func<Department, bool>> predicate,
         CancellationToken cancellationToken = default);
 }

@@ -1,6 +1,7 @@
-﻿using DS.Application.Departments.Repositories;
+﻿using CSharpFunctionalExtensions;
+using DS.Application.Departments.Repositories;
+using DS.Domain.Exceptions;
 using DS.Domain.Models.Departments;
-using DS.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -12,46 +13,39 @@ public class DepartmentsRepository : IDepartmentsRepository
     private readonly DsDbContext _dbContext;
     private readonly ILogger<DepartmentsRepository> _logger;
     public DepartmentsRepository(
-        DsDbContext context, 
+        DsDbContext context,
         ILogger<DepartmentsRepository> logger)
     {
         _dbContext = context;
         _logger = logger;
     }
 
-    public async Task<Guid> AddAsync(
-        Department department,
-        CancellationToken cancellationToken)
+    public async Task<Result<Guid>> AddAsync(Department department, CancellationToken cancellationToken = default)
     {
         await _dbContext.Departments.AddAsync(department, cancellationToken);
 
-        return department.Id;
+        return Result.Success<Guid>(department.Id);
     }
 
-    public async Task<Department?> GetByFieldAsync(
-        Expression<Func<Department, bool>> predicate, 
-        CancellationToken cancellationToken = default)
+    public async Task<Result<Department?>> GetByFieldAsync(Expression<Func<Department, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Departments.FirstOrDefaultAsync(predicate, cancellationToken);
+        var result = await _dbContext.Departments.FirstOrDefaultAsync(predicate, cancellationToken);
+
+        return Result.Success<Department?>(result);
     }
 
-    public async Task<List<Department>> GetListByFieldAsync(
-       Expression<Func<Department, bool>> predicate,
-       CancellationToken cancellationToken = default)
+    public async Task<Result<List<Department>>> GetListByFieldAsync(Expression<Func<Department, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Departments.Where(predicate).ToListAsync(cancellationToken);
+        var result = await _dbContext.Departments.Where(predicate).ToListAsync(cancellationToken);
+
+        return Result.Success<List<Department>>(result);
     }
 
-    public async Task SaveAsync(CancellationToken cancellationToken)
+    public async Task<UnitResult<Error>> SaveAsync(CancellationToken cancellationToken = default)
     {
-        try
-        {
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message);
-        }
-        
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return UnitResult.Success<Error>();
     }
+
 }

@@ -1,21 +1,30 @@
-﻿using DS.Domain.Models.Locations;
+﻿using CSharpFunctionalExtensions;
+using DS.Domain.Exceptions;
+using DS.Domain.Models.Locations;
 using System.Linq.Expressions;
 
 namespace DS.Application.Locations.Repositories;
 
 public interface ILocationsRepository
 {
-    Task AddAsync(Location newLocation, CancellationToken cancellationToken);
-    Task<bool> ExistsByNameAsync(Name name, CancellationToken cancellationToken);
-    Task<bool> AllLocationsExistAsync(List<Guid> ids, CancellationToken cancellationToken);
+    Task<Result<Guid>> AddAsync(
+        Location newLocation,
+        CancellationToken cancellationToken = default);
+    Task<Result<bool>> ExistsByNameAsync(
+        Name name,
+        CancellationToken cancellationToken = default);
+    Task<Result<bool>> AllLocationsExistAsync(
+        List<Guid> ids,
+        CancellationToken cancellationToken = default);
 
-    Task<Location?> GetByFieldAsync(
+    Task<Result<Location?>> GetByFieldAsync(
     Expression<Func<Location, bool>> predicate,
     CancellationToken cancellationToken = default);
 
-    Task<List<Location>> GetListByFieldAsync(
+    Task<Result<List<Location>>> GetListByFieldAsync(
         Expression<Func<Location, bool>> predicate,
         CancellationToken cancellationToken = default);
 
-    Task SaveAsync(CancellationToken cancellationToken);
+    Task<UnitResult<Error>> SaveAsync(
+        CancellationToken cancellationToken = default);
 }

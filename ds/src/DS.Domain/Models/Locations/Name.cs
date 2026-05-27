@@ -11,15 +11,6 @@ public record Name
 
     public string Value { get; }
 
-    public static Result<Name, string> Create(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-        {
-            return Result.Failure<Name, string>
-                ($"{nameof(Name)} empty or null");
-        }
-
-        return Result.Success<Name, string>
-            (new Name(Value: value));
-    }
+    public static Result<Name> Create(string value)
+        => Result.Success<Name>(new Name(Value: value));
 }

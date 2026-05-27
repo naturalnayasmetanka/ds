@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Domain.Models.DepartmentsPositions;
 
 namespace DS.Domain.Models.Positions;
 
@@ -24,17 +23,6 @@ public class Position
     public DateTime CreateAt { get; private set; }
     public DateTime UpdateAt { get; private set; }
 
-    public static Result<Position, string> Create(
-        string name,
-        string? description)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            return Result.Failure<Position, string>
-                ($"{nameof(Position)} empty or null");
-        }
-
-        return Result.Success<Position, string>
-            (new Position(name, description));
-    }
+    public static Result<Position> Create(string name, string? description)
+        => Result.Success<Position>(new Position(name, description));
 }

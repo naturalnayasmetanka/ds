@@ -11,27 +11,9 @@ public record Path
 
     public string Value { get; }
 
-    public static Result<Path, string> Create(string parentPath, string slug)
-    {
-        if (string.IsNullOrEmpty(parentPath) || string.IsNullOrEmpty(slug))
-        {
-            return Result.Failure<Path, string>
-                ($"{nameof(Path)} empty or null");
-        }
+    public static Result<Path> Create(string parentPath, string slug)
+        => Result.Success<Path>(new Path(Value: parentPath + "." + slug));
 
-        return Result.Success<Path, string>
-            (new Path(Value: parentPath + "." + slug));
-    }
-
-    public static Result<Path, string> Create(string slug)
-    {
-        if (string.IsNullOrEmpty(slug))
-        {
-            return Result.Failure<Path, string>
-                ($"{nameof(Path)} empty or null");
-        }
-
-        return Result.Success<Path, string>
-            (new Path(Value: slug));
-    }
+    public static Result<Path> Create(string slug)
+        => Result.Success<Path>(new Path(Value: slug));
 }

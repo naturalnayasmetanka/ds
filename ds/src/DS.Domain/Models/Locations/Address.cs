@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using DS.Domain.Attributes;
-using DS.Domain.Extentions;
 
 namespace DS.Domain.Models.Locations;
 
@@ -67,7 +66,7 @@ public record Address
     public string FullAddress { get; }
     public string? Comment { get; }
 
-    public static Result<Address, List<string>> Create(
+    public static Result<Address> Create(
         string country,
         string region,
         string settlementName,
@@ -99,11 +98,6 @@ public record Address
                fullAddress,
                comment);
 
-        List<string> errors = Validator.ValidateRequired(adress);
-
-        if (errors.Any())
-            return Result.Failure<Address, List<string>>(errors);
-
-        return Result.Success<Address, List<string>>(adress);
+        return Result.Success<Address>(adress);
     }
 }

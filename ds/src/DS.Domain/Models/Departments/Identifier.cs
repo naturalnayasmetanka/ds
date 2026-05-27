@@ -11,15 +11,6 @@ public record Identifier
 
     public string Value { get; }
 
-    public static Result<Identifier, string> Create(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return Result.Failure<Identifier, string>
-                ($"{nameof(Identifier)} empty or null");
-        }
-
-        return Result.Success<Identifier, string>
-            (new Identifier(Value: value));
-    }
+    public static Result<Identifier> Create(string value) 
+        => Result.Success<Identifier>(new Identifier(Value: value));
 }

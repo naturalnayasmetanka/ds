@@ -1,16 +1,18 @@
-﻿using DS.Contracts.Locations.Create;
+﻿using CSharpFunctionalExtensions;
+using DS.Contracts.Locations.Create;
 using DS.Contracts.Locations.Update;
+using DS.Domain.Exceptions;
 
 namespace DS.Application.Locations.Services;
 
 public interface ILocationsService
 {
-    Task<Guid> CreateAsync(
+    Task<Result<Guid, List<Error>>> CreateAsync(
         CreateLocationRequest request,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
-    Task<Guid?> UpdateAsync(
+    Task<Result<Guid?, List<Error>>> UpdateAsync(
         Guid locationId,
         UpdateLocationRequest request,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 }

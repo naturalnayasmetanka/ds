@@ -1,8 +1,10 @@
-﻿using DS.Application.Departments.Repositories;
+﻿using CSharpFunctionalExtensions;
+using DS.Application.Departments.Repositories;
 using DS.Application.DepartmentsLocations.Repositories;
 using DS.Application.Locations.Repositories;
 using DS.Contracts.DepartmentsLocations.Bind;
 using DS.Contracts.DepartmentsLocations.Unbind;
+using DS.Domain.Exceptions;
 using DS.Domain.Models.DepartmentsLocations;
 using Microsoft.Extensions.Logging;
 
@@ -27,63 +29,63 @@ public class DepartmentLocationsService : IDepartmentLocationsService
         _logger = logger;
     }
 
-    public async Task<(Guid, Guid)?> BindAsync(
+    public async Task<Result<(Guid, Guid)?, List<Error>>> BindAsync(
         BindDepartmentLocationRequest request,
         CancellationToken cancellationToken)
     {
         var department = await _departmentsRepository
             .GetByFieldAsync(x => x.Id == request.departmentId, cancellationToken);
 
-        if (department is null)
-            throw new Exception($"departmentId is null");
+        if (department.Value is null)
+            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("department.not.found", "Подразделение не найдено") });
 
         var location = await _locationsRepository
             .GetByFieldAsync(x => x.Id == request.locationId, cancellationToken);
 
-        if (department is null)
-            throw new Exception($"locationId is null");
+        if (location.Value is null)
+            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("location.not.found", "Расположение не найдено") });
 
         var departmentLocation = await _departmentsLocationsRepository
-            .GetByIdsAsync(DepartmentLocation.Create(request.departmentId, request.locationId), cancellationToken);
+            .GetByIdsAsync(DepartmentLocation.Create(request.departmentId, request.locationId).Value, cancellationToken);
 
-        if (departmentLocation is not null)
-            throw new Exception($"departmentLocation already exists");
+        if (departmentLocation.Value is not null)
+            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("department.location.already.exists", "Подразделение с таким расположением уже существует") });
 
         await _departmentsLocationsRepository
-            .BindAsync(DepartmentLocation.Create(request.departmentId, request.locationId), cancellationToken);
+            .BindAsync(DepartmentLocation.Create(request.departmentId, request.locationId).Value, cancellationToken);
 
         await _departmentsLocationsRepository.SaveAsync(cancellationToken);
 
-        return (request.departmentId, request.locationId);
+        return Result.Success<(Guid, Guid)?, List<Error>>((request.departmentId, request.locationId));
     }
 
-    public async Task<(Guid, Guid)?> UnbindAsync(
+    public async Task<Result<(Guid, Guid)?, List<Error>>> UnbindAsync(
         UnbindDepartmentLocationRequest request,
         CancellationToken cancellationToken)
     {
         var department = await _departmentsRepository.
             GetByFieldAsync(x => x.Id == request.departmentId, cancellationToken);
 
-        if (department is null)
-            throw new Exception($"departmentId is null");
+        if (department.Value is null)
+            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("department.not.found", "Подразделение не найдено") });
 
         var location = await _locationsRepository
             .GetByFieldAsync(x => x.Id == request.locationId, cancellationToken);
 
-        if (department is null)
-            throw new Exception($"locationId is null");
+        if (location.Value is null)
+            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("location.not.found", "Расположение не найдено") });
 
         var departmentLocation = await _departmentsLocationsRepository
-            .GetByIdsAsync(DepartmentLocation.Create(request.departmentId, request.locationId), cancellationToken);
+            .GetByIdsAsync(DepartmentLocation.Create(request.departmentId, request.locationId).Value, cancellationToken);
 
-        if (departmentLocation is null)
-            throw new Exception($"departmentLocation is null");
+        if (departmentLocation.Value is not null)
+            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("department.location.already.exists", "Подразделение с таким расположением уже существует") });
 
         _departmentsLocationsRepository
-            .UnbindAsync(DepartmentLocation.Create(request.departmentId, request.locationId), cancellationToken);
+            .Unbind(DepartmentLocation.Create(request.departmentId, request.locationId).Value, cancellationToken);
 
         await _departmentsLocationsRepository.SaveAsync(cancellationToken);
 
-        return (request.departmentId, request.locationId);
+        return Result.Success<(Guid, Guid)?, List<Error>>((request.departmentId, request.locationId));
     }
 }

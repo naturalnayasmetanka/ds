@@ -44,51 +44,9 @@ public class Department
 
     public IReadOnlyList<Department> Childrens => _childrens;
 
-    public static Result<Department, string> Create(
-        Guid id,
-        Name name,
-        Path path,
-        Identifier identifer,
-        Guid? parentId,
-        int depth,
-        int childrenCount)
-    {
-        if (depth < 0)
-        {
-            return Result.Failure<Department, string>
-                ($"{nameof(Department)} {nameof(depth)} less 0");
-        }
+    public static Result<Department> Create(Guid id, Name name, Path path, Identifier identifer, Guid? parentId, int depth, int childrenCount) =>
+        Result.Success<Department>(new Department(id, name, path, identifer, parentId, depth, childrenCount));
 
-        if (childrenCount < 0)
-        {
-            return Result.Failure<Department, string>
-                ($"{nameof(Department)} {nameof(childrenCount)} less 0");
-        }
-
-        return Result.Success<Department, string>(
-            new Department(
-                id,
-                name,
-                path,
-                identifer,
-                parentId,
-                depth,
-                childrenCount));
-    }
-
-    public static Result<Department, string> Update(
-        Department oldDepartment,
-        Name name,
-        Identifier slug)
-    {
-        return Result.Success<Department, string>(
-            new Department(
-                oldDepartment.Id,
-                name,
-                oldDepartment.Path,
-                slug,
-                oldDepartment.ParentId,
-                oldDepartment.Depth,
-                oldDepartment.ChildrenCount));
-    }
+    public static Result<Department> Update(Department old, Name name, Identifier slug) =>
+        Result.Success<Department>(new Department(old.Id, name, old.Path, slug, old.ParentId, old.Depth, old.ChildrenCount));
 }
