@@ -37,10 +37,12 @@ public class DepartmentsController : ControllerBase
         CancellationToken cancellationToken)
     {
         var createDepartmentResult =
-            await _departmantsService
-            .CreateAsync(request, cancellationToken);
+            await _departmantsService.CreateAsync(request, cancellationToken);
 
-        return Ok(createDepartmentResult);
+        if (createDepartmentResult.IsFailure)
+            return BadRequest(createDepartmentResult.Error);
+
+        return Ok(createDepartmentResult.Value);
     }
 
     [HttpPatch("departments/{id:guid}")]
@@ -50,10 +52,12 @@ public class DepartmentsController : ControllerBase
         CancellationToken cancellationToken)
     {
         var updateDepartmentResult =
-            await _departmantsService
-            .UpdateAsync(id, request, cancellationToken);
+            await _departmantsService.UpdateAsync(id, request, cancellationToken);
 
-        return Ok(updateDepartmentResult);
+        if (updateDepartmentResult.IsFailure)
+            return BadRequest(updateDepartmentResult.Error);
+
+        return Ok(updateDepartmentResult.Value);
     }
 
     [HttpDelete("departments/{id:guid}")]

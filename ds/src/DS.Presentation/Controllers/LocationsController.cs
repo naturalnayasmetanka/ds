@@ -38,10 +38,12 @@ public class LocationsController : ControllerBase
         CancellationToken cancellationToken)
     {
         var createLocationResult =
-            await _locationsService
-            .CreateAsync(request, cancellationToken);
+            await _locationsService.CreateAsync(request, cancellationToken);
 
-        return Ok(createLocationResult);
+        if (createLocationResult.IsFailure)
+            return BadRequest(createLocationResult.Error);
+
+        return Ok(createLocationResult.Value);
     }
 
     [HttpPatch("locations/{id:guid}")]
@@ -51,10 +53,12 @@ public class LocationsController : ControllerBase
        CancellationToken cancellationToken)
     {
         var updateLocationResult =
-            await _locationsService
-            .UpdateAsync(id, request, cancellationToken);
+            await _locationsService.UpdateAsync(id, request, cancellationToken);
 
-        return Ok(updateLocationResult);
+        if (updateLocationResult.IsFailure)
+            return BadRequest(updateLocationResult.Error);
+
+        return Ok(updateLocationResult.Value);
     }
 
     [HttpDelete("locations/{id:guid}")]

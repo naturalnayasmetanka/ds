@@ -23,11 +23,13 @@ namespace DS.Presentation.Controllers
               [FromRoute] Guid locationId,
               CancellationToken cancellationToken)
         {
-            var createDepartmentResult =
-                await _departmentLocationsService
-                .BindAsync(new BindDepartmentLocationRequest(departmentId, locationId), cancellationToken);
+            var createDLResult =
+                await _departmentLocationsService.BindAsync(new BindDepartmentLocationRequest(departmentId, locationId), cancellationToken);
 
-            return Ok(createDepartmentResult);
+            if (createDLResult.IsFailure)
+                return BadRequest(createDLResult.Error);
+
+            return Ok(createDLResult.Value);
         }
 
         [HttpDelete("/departments/{departmentId:guid}/locations/{locationId:guid}")]
@@ -36,11 +38,13 @@ namespace DS.Presentation.Controllers
               [FromRoute] Guid locationId,
               CancellationToken cancellationToken)
         {
-            var createDepartmentResult =
-                await _departmentLocationsService
-                .UnbindAsync(new UnbindDepartmentLocationRequest(departmentId, locationId), cancellationToken);
+            var createDLResult =
+                await _departmentLocationsService.UnbindAsync(new UnbindDepartmentLocationRequest(departmentId, locationId), cancellationToken);
 
-            return Ok(createDepartmentResult);
+            if (createDLResult.IsFailure)
+                return BadRequest(createDLResult.Error);
+
+            return Ok(createDLResult.Value);
         }
     }
 }
