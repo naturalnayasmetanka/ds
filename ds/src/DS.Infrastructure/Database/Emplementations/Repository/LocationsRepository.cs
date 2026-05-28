@@ -1,6 +1,7 @@
-﻿using DS.Application.Locations.Repositories;
+﻿using CSharpFunctionalExtensions;
+using DS.Application.Locations.Repositories;
+using DS.Domain.Exceptions;
 using DS.Domain.Models.Locations;
-using DS.Infrastructure.Database.Emplementations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -19,47 +20,38 @@ public class LocationsRepository : ILocationsRepository
         _logger = logger;
     }
 
-    public Task AddAsync(
-        Location newLocation,
-        CancellationToken cancellationToken) => throw new NotImplementedException();
-    public Task<bool> ExistsByNameAsync(
-        Name name,
-        CancellationToken cancellationToken) => throw new NotImplementedException();
-
-    public async Task<bool> AllLocationsExistAsync(
-        List<Guid> ids,
-        CancellationToken cancellationToken)
+    public async Task<Result<Guid>> AddAsync(Location newLocation, CancellationToken cancellationToken = default)
     {
-        var existingCount =
-            await _dbContext.Locations.Where(l => ids.Contains(l.Id))
-            .CountAsync(cancellationToken);
+        await _dbContext.Locations.AddAsync(newLocation, cancellationToken);
 
-        return ids.Count == existingCount;
+        return newLocation.Id;
     }
 
-    public async Task SaveAsync(
-        CancellationToken cancellationToken)
+    public async Task<Result<bool>> AllLocationsExistAsync(List<Guid> ids, CancellationToken cancellationToken = default)
     {
-        try
-        {
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message);
-        }
+        var existingCount = await _dbContext.Locations.Where(l => ids.Contains(l.Id)).CountAsync(cancellationToken);
+        var result = ids.Count == existingCount;
+
+        return Result.Success<bool>(result);
     }
 
-    public async Task<Location?> GetByFieldAsync(
-        Expression<Func<Location, bool>> predicate,
-        CancellationToken cancellationToken = default)
+    public async Task<UnitResult<Error>> SaveAsync(CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Locations.FirstOrDefaultAsync(predicate, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return UnitResult.Success<Error>();
     }
-    public async Task<List<Location>> GetListByFieldAsync(
-        Expression<Func<Location, bool>> predicate,
-        CancellationToken cancellationToken = default)
+
+    public async Task<Result<Location?>> GetByFieldAsync(Expression<Func<Location, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Locations.Where(predicate).ToListAsync(cancellationToken);
+        var result = await _dbContext.Locations.FirstOrDefaultAsync(predicate, cancellationToken);
+
+        return Result.Success<Location?>(result);
+    }
+    public async Task<Result<List<Location>>> GetListByFieldAsync(Expression<Func<Location, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        var result = await _dbContext.Locations.Where(predicate).ToListAsync(cancellationToken);
+
+        return Result.Success<List<Location>>(result);
     }
 }

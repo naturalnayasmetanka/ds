@@ -1,15 +1,17 @@
-﻿using DS.Contracts.Departments.Create;
+﻿using CSharpFunctionalExtensions;
+using DS.Contracts.Departments.Create;
 using DS.Contracts.Departments.Update;
+using DS.Domain.Exceptions;
 
 namespace DS.Application.Departments.Services;
 
 public interface IDepartmantsService
 {
-    Task<Guid> CreateAsync(
+    Task<Result<Guid, Errors>> CreateAsync(
         CreateDepartmentRequest request,
-        CancellationToken cancellationToken);
-    Task<Guid> UpdateAsync(
+        CancellationToken cancellationToken = default);
+    Task<Result<Guid, Errors>> UpdateAsync(
         Guid id,
         UpdateDepartmentRequest request,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 }

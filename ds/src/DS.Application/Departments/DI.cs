@@ -11,9 +11,11 @@ public static class DI
     {
         ArgumentNullException.ThrowIfNull(services);
 
+       
         services.AddValidatorsFromAssembly(typeof(DI).Assembly);
 
         services.AddScoped<IDepartmantsService, DepartmentsService>();
+
 
         return services;
     }

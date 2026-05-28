@@ -1,4 +1,6 @@
-﻿using DS.Presentation.DI;
+﻿using DS.Domain.Exceptions;
+using DS.Presentation.DI;
+using DS.Presentation.Middlewares;
 using Scalar.AspNetCore;
 
 namespace DS.Presentation;
@@ -14,6 +16,8 @@ public class Program
         builder.Services.AddApplicationDI();
 
         var app = builder.Build();
+
+        app.UseExceptionMiddleware();
 
         if (app.Environment.IsDevelopment())
         {

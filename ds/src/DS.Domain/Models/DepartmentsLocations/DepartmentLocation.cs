@@ -1,4 +1,6 @@
-﻿namespace DS.Domain.Models.DepartmentsLocations;
+﻿using CSharpFunctionalExtensions;
+
+namespace DS.Domain.Models.DepartmentsLocations;
 
 public class DepartmentLocation
 {
@@ -16,8 +18,7 @@ public class DepartmentLocation
         LocationId = locationId;
     }
 
-    public static DepartmentLocation Create(Guid departmentId, Guid locationId)
-    {
-        return new DepartmentLocation(departmentId: departmentId, locationId: locationId);
-    }
+    public static Result<DepartmentLocation> Create(Guid departmentId, Guid locationId) =>
+        Result.Success<DepartmentLocation>(new DepartmentLocation(departmentId: departmentId, locationId: locationId));
 }
+

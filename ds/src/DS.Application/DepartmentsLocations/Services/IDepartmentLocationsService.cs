@@ -1,15 +1,17 @@
-﻿using DS.Contracts.DepartmentsLocations.Bind;
+﻿using CSharpFunctionalExtensions;
+using DS.Contracts.DepartmentsLocations.Bind;
 using DS.Contracts.DepartmentsLocations.Unbind;
+using DS.Domain.Exceptions;
 
 namespace DS.Application.DepartmentsLocations.Services;
 
 public interface IDepartmentLocationsService
 {
-    Task<(Guid, Guid)?> BindAsync(
+    Task<UnitResult<Errors>> BindAsync(
         BindDepartmentLocationRequest request,
-        CancellationToken cancellation);
+        CancellationToken cancellation = default);
 
-    Task<(Guid, Guid)?> UnbindAsync(
+    Task<UnitResult<Errors>> UnbindAsync(
         UnbindDepartmentLocationRequest request,
-        CancellationToken cancellation);
+        CancellationToken cancellation = default);
 }

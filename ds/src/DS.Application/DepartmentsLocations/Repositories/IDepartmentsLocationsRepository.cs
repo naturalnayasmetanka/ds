@@ -1,24 +1,27 @@
-﻿using DS.Domain.Models.DepartmentsLocations;
+﻿using CSharpFunctionalExtensions;
+using DS.Domain.Exceptions;
+using DS.Domain.Models.DepartmentsLocations;
 
 namespace DS.Application.DepartmentsLocations.Repositories;
 
 public interface IDepartmentsLocationsRepository
 {
-    Task AddRangeAsync(
+    Task<UnitResult<Error>> AddRangeAsync(
         List<DepartmentLocation> departmentLocation,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
-    Task<DepartmentLocation?> GetByIdsAsync(
+    Task<Result<DepartmentLocation?>> GetByIdsAsync(
         DepartmentLocation departmentLocation,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
-    Task<DepartmentLocation> BindAsync(
+    Task<Result<DepartmentLocation>> BindAsync(
         DepartmentLocation departmentLocation,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
-    void UnbindAsync(
+    UnitResult<Error> Unbind(
         DepartmentLocation departmentLocation,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
-    Task SaveAsync(CancellationToken cancellationToken);
+    Task<UnitResult<Error>> SaveAsync(
+        CancellationToken cancellationToken = default);
 }

@@ -1,4 +1,6 @@
-﻿namespace DS.Domain.Models;
+﻿using CSharpFunctionalExtensions;
+
+namespace DS.Domain.Models;
 
 public class Id
 {
@@ -6,5 +8,5 @@ public class Id
 
     public Guid Value { get; }
 
-    public static Guid Create() => Guid.CreateVersion7();
+    public static Result<Guid> Create() => Result.Success<Guid>(Guid.CreateVersion7());
 }

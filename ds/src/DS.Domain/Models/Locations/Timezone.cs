@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using TimeZoneConverter;
+using DS.Domain.Exceptions;
 
 namespace DS.Domain.Models.Locations;
 
@@ -12,20 +12,23 @@ public record Timezone
 
     public string Value { get; }
 
-    public static Result<Timezone, string> Create(string value)
+    public static Result<Timezone, Errors> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return Result.Failure<Timezone, string>
-                ($"{nameof(Timezone)} empty or null");
+            return Result.Failure<Timezone, Errors>(Error.Validation("empty.Timezone", "Timezone cannot be null", "Timezone"));
         }
 
-        if (!TZConvert.KnownIanaTimeZoneNames.Contains(value))
+        if (value.Length > 50)
         {
-            return Result.Failure<Timezone, string>
-                ($"{nameof(Timezone)} isn`t IANA timezone");
+            return Result.Failure<Timezone, Errors>(Error.Validation("length.Timezone", "Max length 50", "Timezone"));
         }
 
-        return new Timezone(Value: value);
+        if (!TimeZoneInfo.TryFindSystemTimeZoneById(value.Trim(), out var tz))
+        {
+            return Result.Failure<Timezone, Errors>(Error.Validation("invalid.Timezone", "Invalid Timeazone", "Timezone"));
+        }
+
+        return Result.Success<Timezone, Errors>(new Timezone(Value: value));
     }
 }

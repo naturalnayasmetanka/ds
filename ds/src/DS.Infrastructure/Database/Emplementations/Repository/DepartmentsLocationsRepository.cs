@@ -1,6 +1,7 @@
-﻿using DS.Application.DepartmentsLocations.Repositories;
+﻿using CSharpFunctionalExtensions;
+using DS.Application.DepartmentsLocations.Repositories;
+using DS.Domain.Exceptions;
 using DS.Domain.Models.DepartmentsLocations;
-using DS.Infrastructure.Database.Emplementations;
 using Microsoft.Extensions.Logging;
 
 namespace DS.Infrastructure.Database.Emplementations.Repository;
@@ -18,53 +19,46 @@ public class DepartmentsLocationsRepository : IDepartmentsLocationsRepository
         _logger = logger;
     }
 
-    public async Task<DepartmentLocation> BindAsync(
-        DepartmentLocation departmentLocation,
-        CancellationToken cancellationToken)
+    public async Task<Result<DepartmentLocation>> BindAsync(DepartmentLocation departmentLocation, CancellationToken cancellationToken)
     {
         await _dbContext.DepartmentsLocations.AddAsync(departmentLocation, cancellationToken);
 
-        return departmentLocation;
+        return Result.Success<DepartmentLocation>(departmentLocation);
     }
 
-    public void UnbindAsync(
-        DepartmentLocation departmentLocation,
-        CancellationToken cancellationToken)
+    public UnitResult<Error> Unbind(DepartmentLocation departmentLocation, CancellationToken cancellationToken)
     {
         _dbContext.DepartmentsLocations.Remove(departmentLocation);
+
+        return new UnitResult<Error>();
     }
 
-    public async Task CreateAsync(
-        DepartmentLocation departmentLocation,
-        CancellationToken cancellationToken)
+    public async Task<UnitResult<Error>> CreateAsync(DepartmentLocation departmentLocation, CancellationToken cancellationToken)
     {
         await _dbContext.DepartmentsLocations.AddAsync(departmentLocation, cancellationToken);
+
+        return UnitResult.Success<Error>();
     }
 
-    public async Task AddRangeAsync(
-        List<DepartmentLocation> departmentLocation,
-        CancellationToken cancellationToken)
+    public async Task<UnitResult<Error>> AddRangeAsync(List<DepartmentLocation> departmentLocation, CancellationToken cancellationToken)
     {
         await _dbContext.DepartmentsLocations.AddRangeAsync(departmentLocation, cancellationToken);
+
+        return UnitResult.Success<Error>();
     }
 
-    public async Task<DepartmentLocation?> GetByIdsAsync(
-        DepartmentLocation departmentLocation,
-        CancellationToken cancellationToken)
+    public async Task<Result<DepartmentLocation?>> GetByIdsAsync(DepartmentLocation departmentLocation, CancellationToken cancellationToken)
     {
-        return await _dbContext.DepartmentsLocations
-            .FindAsync(departmentLocation.DepartmentId, departmentLocation.LocationId, cancellationToken);
+        var result = await _dbContext.DepartmentsLocations.FindAsync(departmentLocation.DepartmentId, departmentLocation.LocationId, cancellationToken);
+
+        return Result.Success<DepartmentLocation?>(result);
     }
 
-    public async Task SaveAsync(CancellationToken cancellationToken)
+    public async Task<UnitResult<Error>> SaveAsync(CancellationToken cancellationToken)
     {
-        try
-        {
-            await _dbContext.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message);
-        }
+        await _dbContext.SaveChangesAsync();
+
+        return UnitResult.Success<Error>();
     }
+
 }

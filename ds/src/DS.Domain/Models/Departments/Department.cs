@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using DS.Domain.Exceptions;
 
 namespace DS.Domain.Models.Departments;
 
@@ -44,51 +45,29 @@ public class Department
 
     public IReadOnlyList<Department> Childrens => _childrens;
 
-    public static Result<Department, string> Create(
-        Guid id,
-        Name name,
-        Path path,
-        Identifier identifer,
-        Guid? parentId,
-        int depth,
-        int childrenCount)
+    public static Result<Department, Errors> Create(Guid id, Name name, Path path, Identifier identifer, Guid? parentId, int depth, int childrenCount)
     {
         if (depth < 0)
         {
-            return Result.Failure<Department, string>
-                ($"{nameof(Department)} {nameof(depth)} less 0");
+            return Result.Failure<Department, Errors>(Error.Validation("invalid.depth", "Глубина меньше нуля"));
         }
 
         if (childrenCount < 0)
         {
-            return Result.Failure<Department, string>
-                ($"{nameof(Department)} {nameof(childrenCount)} less 0");
+            return Result.Failure<Department, Errors>(Error.Validation("invalid.childrenCount", "Количество дочерних элементов меньше нуля"));
         }
 
-        return Result.Success<Department, string>(
-            new Department(
-                id,
-                name,
-                path,
-                identifer,
-                parentId,
-                depth,
-                childrenCount));
+        return Result.Success<Department, Errors>(new Department(id, name, path, identifer, parentId, depth, childrenCount));
     }
 
-    public static Result<Department, string> Update(
-        Department oldDepartment,
-        Name name,
-        Identifier slug)
+
+    public static Result<Department, Errors> Update(Department old, Name name, Identifier slug)
     {
-        return Result.Success<Department, string>(
-            new Department(
-                oldDepartment.Id,
-                name,
-                oldDepartment.Path,
-                slug,
-                oldDepartment.ParentId,
-                oldDepartment.Depth,
-                oldDepartment.ChildrenCount));
+        if (string.IsNullOrEmpty(name.Value))
+        {
+            return Result.Failure<Department, Errors>(Error.Validation("invalid.depth", "Невалидное имя"));
+        }
+
+        return Result.Success<Department, Errors>(new Department(old.Id, name, old.Path, slug, old.ParentId, old.Depth, old.ChildrenCount));
     }
 }

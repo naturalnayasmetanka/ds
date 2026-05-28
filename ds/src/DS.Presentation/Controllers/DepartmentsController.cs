@@ -2,6 +2,7 @@
 using DS.Contracts.Departments.Create;
 using DS.Contracts.Departments.GetById;
 using DS.Contracts.Departments.Update;
+using DS.Presentation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DS.Presentation.Controllers;
@@ -32,28 +33,26 @@ public class DepartmentsController : ControllerBase
     }
 
     [HttpPost("departments")]
-    public async Task<IActionResult> Create(
+    public async Task<EndpointResult<Guid>> Create(
         [FromBody] CreateDepartmentRequest request,
         CancellationToken cancellationToken)
     {
         var createDepartmentResult =
-            await _departmantsService
-            .CreateAsync(request, cancellationToken);
+            await _departmantsService.CreateAsync(request, cancellationToken);
 
-        return Ok(createDepartmentResult);
+        return createDepartmentResult;
     }
 
     [HttpPatch("departments/{id:guid}")]
-    public async Task<IActionResult> Update(
+    public async Task<EndpointResult<Guid>> Update(
         [FromRoute] Guid id,
         [FromBody] UpdateDepartmentRequest request,
         CancellationToken cancellationToken)
     {
         var updateDepartmentResult =
-            await _departmantsService
-            .UpdateAsync(id, request, cancellationToken);
+            await _departmantsService.UpdateAsync(id, request, cancellationToken);
 
-        return Ok(updateDepartmentResult);
+        return updateDepartmentResult;
     }
 
     [HttpDelete("departments/{id:guid}")]
