@@ -39,8 +39,8 @@ public class LocationsService : ILocationsService
         var isAlewadyExistsByName =
             await _locationsRepository.GetByFieldAsync(x => x.Name == Name.Create(request.Name).Value, cancellationToken);
 
-        if (isAlewadyExistsByName.Value is null)
-            return Result.Failure<Guid, Errors>(Error.Failure("location.not.found", "Локация с таким именем не найдена"));
+        if (isAlewadyExistsByName.Value is not null)
+            return Result.Failure<Guid, Errors>(Error.Failure("location.already.exists", "Локация с таким именем уже существует"));
 
         var newLocation = Location.Create(
             Id.Create().Value,
