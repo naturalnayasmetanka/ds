@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using DS.Domain.Exceptions;
 
 namespace DS.Domain.Models.Locations;
 
@@ -30,15 +31,28 @@ public class Location
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 
-    public static Result<Location> Create(Guid id, Name name, Address adress, Timezone timezone) =>
-        Result.Success<Location>(new Location(id, name, adress, timezone));
-
-    public static Result<Location> Update(Location existLocaiton, Name name, Address adress, Timezone timezone)
+    public static Result<Location, Errors> Create(Guid id, Name name, Address adress, Timezone timezone)
     {
+        if (string.IsNullOrEmpty(name.Value))
+        {
+            return Result.Failure<Location, Errors>(Error.Validation("name.invalid", "Имя не может быть пустым"));
+        }
+
+        return Result.Success<Location, Errors>(new Location(id, name, adress, timezone));
+    }
+
+
+    public static Result<Location, Errors> Update(Location existLocaiton, Name name, Address address, Timezone timezone)
+    {
+        if (string.IsNullOrEmpty(name.Value))
+        {
+            return Result.Failure<Location, Errors>(Error.Validation("name.invalid", "Имя не может быть пустым"));
+        }
+
         existLocaiton.Name = name;
-        existLocaiton.Address = adress;
+        existLocaiton.Address = address;
         existLocaiton.Timezone = timezone;
 
-        return Result.Success<Location>(existLocaiton);
+        return Result.Success<Location, Errors>(existLocaiton);
     }
 }

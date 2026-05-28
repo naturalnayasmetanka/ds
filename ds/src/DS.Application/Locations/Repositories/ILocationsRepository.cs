@@ -10,9 +10,7 @@ public interface ILocationsRepository
     Task<Result<Guid>> AddAsync(
         Location newLocation,
         CancellationToken cancellationToken = default);
-    Task<Result<bool>> ExistsByNameAsync(
-        Name name,
-        CancellationToken cancellationToken = default);
+  
     Task<Result<bool>> AllLocationsExistAsync(
         List<Guid> ids,
         CancellationToken cancellationToken = default);

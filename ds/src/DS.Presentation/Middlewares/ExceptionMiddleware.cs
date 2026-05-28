@@ -33,15 +33,15 @@ public class ExceptionMiddleware
     {
         _logger.LogError(exception, exception.Message);
 
-        (int code, List<Error>? errors) = exception switch
+        (int code, Errors? errors) = exception switch
         {
-            DepartmentNotFoundException => (StatusCodes.Status404NotFound, JsonSerializer.Deserialize<List<Error>>(exception.Message)),
+            DepartmentNotFoundException => (StatusCodes.Status404NotFound, JsonSerializer.Deserialize<Errors>(exception.Message)),
 
-            LocationNotFoundException => (StatusCodes.Status404NotFound, JsonSerializer.Deserialize<List<Error>>(exception.Message)),
-            LocationDuplicatieException => (StatusCodes.Status409Conflict, JsonSerializer.Deserialize<List<Error>>(exception.Message)),
+            LocationNotFoundException => (StatusCodes.Status404NotFound, JsonSerializer.Deserialize<Errors>(exception.Message)),
+            LocationDuplicatieException => (StatusCodes.Status409Conflict, JsonSerializer.Deserialize<Errors>(exception.Message)),
 
-            DepartmentLocationNotFoundException => (StatusCodes.Status404NotFound, JsonSerializer.Deserialize<List<Error>>(exception.Message)),
-            DepartmentLocationBindAlreadyExistsException => (StatusCodes.Status409Conflict, JsonSerializer.Deserialize<List<Error>>(exception.Message)),
+            DepartmentLocationNotFoundException => (StatusCodes.Status404NotFound, JsonSerializer.Deserialize<Errors>(exception.Message)),
+            DepartmentLocationBindAlreadyExistsException => (StatusCodes.Status409Conflict, JsonSerializer.Deserialize<Errors>(exception.Message)),
 
             _ => (StatusCodes.Status500InternalServerError, new List<Error> { Error.Failure(null, "Something wrong") })
         };

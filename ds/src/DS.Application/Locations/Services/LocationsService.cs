@@ -36,10 +36,10 @@ public class LocationsService : ILocationsService
         if (!fullValidationResult.IsValid)
             return Result.Failure<Guid, Errors>(fullValidationResult.ToErrorList());
 
-        var isAlewadyExistsByName = await _locationsRepository
-            .ExistsByNameAsync(Name.Create(request.Name).Value, cancellationToken);
+        var isAlewadyExistsByName =
+            await _locationsRepository.GetByFieldAsync(x => x.Name == Name.Create(request.Name).Value, cancellationToken);
 
-        if (isAlewadyExistsByName.Value)
+        if (isAlewadyExistsByName.Value is null)
             return Result.Failure<Guid, Errors>(Error.Failure("location.already.exists", "Локация с таким именем уже существует"));
 
         var newLocation = Location.Create(

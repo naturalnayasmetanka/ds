@@ -20,8 +20,12 @@ public class LocationsRepository : ILocationsRepository
         _logger = logger;
     }
 
-    public Task<Result<Guid>> AddAsync(Location newLocation, CancellationToken cancellationToken = default) => throw new NotImplementedException();
-    public Task<Result<bool>> ExistsByNameAsync(Name name, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+    public async Task<Result<Guid>> AddAsync(Location newLocation, CancellationToken cancellationToken = default)
+    {
+        await _dbContext.Locations.AddAsync(newLocation, cancellationToken);
+
+        return newLocation.Id;
+    }
 
     public async Task<Result<bool>> AllLocationsExistAsync(List<Guid> ids, CancellationToken cancellationToken = default)
     {
