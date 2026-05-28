@@ -29,7 +29,7 @@ namespace DS.Presentation.Controllers
             if (createDLResult.IsFailure)
                 return BadRequest(createDLResult.Error);
 
-            return Ok(createDLResult.Value);
+            return Ok(createDLResult);
         }
 
         [HttpDelete("/departments/{departmentId:guid}/locations/{locationId:guid}")]
@@ -44,7 +44,7 @@ namespace DS.Presentation.Controllers
             if (createDLResult.IsFailure)
                 return BadRequest(createDLResult.Error);
 
-            return Ok(createDLResult.Value);
+            return Ok(createDLResult);
         }
     }
 }

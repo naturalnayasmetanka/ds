@@ -26,7 +26,7 @@ public class LocationsService : ILocationsService
         _updateLocationRequetValidator = updateLocationRequetValidator;
     }
 
-    public async Task<Result<Guid, List<Error>>> CreateAsync(
+    public async Task<Result<Guid, Errors>> CreateAsync(
         CreateLocationRequest request,
         CancellationToken cancellationToken)
     {
@@ -34,13 +34,13 @@ public class LocationsService : ILocationsService
             .ValidateAsync(request, cancellationToken);
 
         if (!fullValidationResult.IsValid)
-            return Result.Failure<Guid, List<Error>>(fullValidationResult.ToErrorList());
+            return Result.Failure<Guid, Errors>(fullValidationResult.ToErrorList());
 
         var isAlewadyExistsByName = await _locationsRepository
             .ExistsByNameAsync(Name.Create(request.Name).Value, cancellationToken);
 
         if (isAlewadyExistsByName.Value)
-            return Result.Failure<Guid, List<Error>>(new List<Error>() { Error.Failure("location.already.exists", "Локация с таким именем уже существует") });
+            return Result.Failure<Guid, Errors>(Error.Failure("location.already.exists", "Локация с таким именем уже существует"));
 
         var newLocation = Location.Create(
             Id.Create().Value,
@@ -67,10 +67,10 @@ public class LocationsService : ILocationsService
 
         await _locationsRepository.SaveAsync(cancellationToken);
 
-        return Result.Success<Guid, List<Error>>(newLocation.Value.Id);
+        return Result.Success<Guid, Errors>(newLocation.Value.Id);
     }
 
-    public async Task<Result<Guid?, List<Error>>> UpdateAsync(
+    public async Task<Result<Guid?, Errors>> UpdateAsync(
         Guid locationId,
         UpdateLocationRequest request,
         CancellationToken cancellationToken)
@@ -79,13 +79,13 @@ public class LocationsService : ILocationsService
            .ValidateAsync(request, cancellationToken);
 
         if (!fullValidationResult.IsValid)
-            return Result.Failure<Guid?, List<Error>>(fullValidationResult.ToErrorList());
+            return Result.Failure<Guid?, Errors>(fullValidationResult.ToErrorList());
 
         var existLocation = await _locationsRepository
           .GetByFieldAsync(x => x.Id == locationId, cancellationToken);
 
         if (existLocation.Value is null)
-            return Result.Failure<Guid?, List<Error>>(new List<Error>() { Error.Failure("location.not.found", "Локация не найдена") });
+            return Result.Failure<Guid?, Errors>(Error.Failure("location.not.found", "Локация не найдена"));
 
         var updateLocation = Location.Update(
             existLocation.Value,
@@ -109,6 +109,6 @@ public class LocationsService : ILocationsService
 
         await _locationsRepository.SaveAsync(cancellationToken);
 
-        return Result.Success<Guid?, List<Error>>(updateLocation.Value.Id);
+        return Result.Success<Guid?, Errors>(updateLocation.Value.Id);
     }
 }

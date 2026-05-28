@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Application.Departments.Exceptions;
 using DS.Application.Departments.Repositories;
 using DS.Application.DepartmentsLocations.Repositories;
 using DS.Application.Extentions;
@@ -42,7 +41,7 @@ public class DepartmentsService : IDepartmantsService
         _logger = logger;
     }
 
-    public async Task<Result<Guid, List<Error>>> CreateAsync(
+    public async Task<Result<Guid, Errors>> CreateAsync(
         CreateDepartmentRequest request,
         CancellationToken cancellationToken)
     {
@@ -50,13 +49,13 @@ public class DepartmentsService : IDepartmantsService
             await _createDepartmentRequetValidator.ValidateAsync(request);
 
         if (!fullValidationResult.IsValid)
-            return Result.Failure<Guid, List<Error>>(fullValidationResult.ToErrorList());
+            return Result.Failure<Guid, Errors>(fullValidationResult.ToErrorList());
 
         var existLocations = await _locationsRepository
             .AllLocationsExistAsync(request.Locations, cancellationToken);
 
         if (!existLocations.Value)
-            return Result.Failure<Guid, List<Error>>(new List<Error>() { Error.Failure("location.not.found", "Локация не найдена") });
+            return Result.Failure<Guid, Errors>(Error.Failure("location.not.found", "Локация не найдена"));
 
         var departmentId = Id.Create();
 
@@ -86,10 +85,10 @@ public class DepartmentsService : IDepartmantsService
 
         await _departmentsRepository.SaveAsync(cancellationToken);
 
-        return Result.Success<Guid, List<Error>>(createDepartmentResult.Value);
+        return Result.Success<Guid, Errors>(createDepartmentResult.Value);
     }
 
-    public async Task<Result<Guid, List<Error>>> UpdateAsync(
+    public async Task<Result<Guid, Errors>> UpdateAsync(
         Guid departmentId,
         UpdateDepartmentRequest request,
         CancellationToken cancellationToken)
@@ -98,13 +97,13 @@ public class DepartmentsService : IDepartmantsService
             await _updateDepartmentRequetValidator.ValidateAsync(request);
 
         if (!fullValidationResult.IsValid)
-            throw new ValidationException(fullValidationResult.Errors);
+            return Result.Failure<Guid, Errors>(fullValidationResult.ToErrorList());
 
         var existDepartment =
            await _departmentsRepository.GetByFieldAsync(x => x.Id == departmentId, cancellationToken);
 
         if (existDepartment.Value is null)
-            throw new DepartmentNotFoundException(Error.Failure("department.not.found", "Подразделение не найдено"));
+            return Result.Failure<Guid, Errors>(Error.Failure("department.not.found", "Подразделение не найдена"));
 
         var updatedDepartment =
             Department.Update(
@@ -114,6 +113,6 @@ public class DepartmentsService : IDepartmantsService
 
         await _departmentsRepository.SaveAsync(cancellationToken);
 
-        return Result.Success<Guid, List<Error>>(updatedDepartment.Value.Id);
+        return Result.Success<Guid, Errors>(updatedDepartment.Value.Id);
     }
 }

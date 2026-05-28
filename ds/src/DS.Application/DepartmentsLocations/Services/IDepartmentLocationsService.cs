@@ -7,11 +7,11 @@ namespace DS.Application.DepartmentsLocations.Services;
 
 public interface IDepartmentLocationsService
 {
-    Task<Result<(Guid, Guid)?, List<Error>>> BindAsync(
+    Task<UnitResult<Errors>> BindAsync(
         BindDepartmentLocationRequest request,
         CancellationToken cancellation = default);
 
-    Task<Result<(Guid, Guid)?, List<Error>>> UnbindAsync(
+    Task<UnitResult<Errors>> UnbindAsync(
         UnbindDepartmentLocationRequest request,
         CancellationToken cancellation = default);
 }

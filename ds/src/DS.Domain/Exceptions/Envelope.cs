@@ -5,12 +5,12 @@ namespace DS.Domain.Exceptions;
 public record Envelope
 {
     public object? Result { get; }
-    public List<Error> ErrorList { get; }
+    public Errors? ErrorList { get; }
     public bool IsError => ErrorList is not null || (ErrorList is not null && ErrorList.Any());
     public DateTime TimeGenerated { get; }
 
     [JsonConstructor]
-    public Envelope(object? result, List<Error> errorList)
+    public Envelope(object? result, Errors? errorList)
     {
         Result = result;
         ErrorList = errorList;
@@ -19,18 +19,18 @@ public record Envelope
 
     public static Envelope Ok(object? result = null) => new(result, null);
 
-    public static Envelope Error(List<Error> errors) => new(null, errors);
+    public static Envelope Error(Errors errors) => new(null, errors);
 }
 
 public record Envelope<T>
 {
     public T? Result { get; }
-    public List<Error> ErrorList { get; }
+    public Errors? ErrorList { get; }
     public bool IsError => ErrorList is not null || (ErrorList is not null && ErrorList.Any());
     public DateTime TimeGenerated { get; }
 
     [JsonConstructor]
-    public Envelope(T? result, List<Error> errorList)
+    public Envelope(T? result, Errors? errorList)
     {
         Result = result;
         ErrorList = errorList;
@@ -39,6 +39,6 @@ public record Envelope<T>
 
     public static Envelope Ok(T? result = default) => new(result, null);
 
-    public static Envelope Error(List<Error> errors) => new(null, errors);
+    public static Envelope Error(Errors errors) => new(null, errors);
 }
 

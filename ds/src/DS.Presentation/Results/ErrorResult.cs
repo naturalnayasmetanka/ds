@@ -5,14 +5,14 @@ namespace DS.Presentation.Results
 {
     public sealed class ErrorResult : IResult
     {
-        private readonly List<Error> _errors;
+        private readonly Errors _errors;
 
         public ErrorResult(Error error)
         {
             _errors = new List<Error>() { error };
         }
 
-        public ErrorResult(List<Error> errors)
+        public ErrorResult(Errors errors)
         {
             _errors = errors;
         }

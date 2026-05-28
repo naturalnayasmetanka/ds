@@ -29,7 +29,7 @@ public class DepartmentLocationsService : IDepartmentLocationsService
         _logger = logger;
     }
 
-    public async Task<Result<(Guid, Guid)?, List<Error>>> BindAsync(
+    public async Task<UnitResult<Errors>> BindAsync(
         BindDepartmentLocationRequest request,
         CancellationToken cancellationToken)
     {
@@ -37,29 +37,29 @@ public class DepartmentLocationsService : IDepartmentLocationsService
             .GetByFieldAsync(x => x.Id == request.departmentId, cancellationToken);
 
         if (department.Value is null)
-            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("department.not.found", "Подразделение не найдено") });
+            return UnitResult.Failure<Errors>(Error.Failure("department.not.found", "Подразделение не найдено"));
 
         var location = await _locationsRepository
             .GetByFieldAsync(x => x.Id == request.locationId, cancellationToken);
 
         if (location.Value is null)
-            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("location.not.found", "Расположение не найдено") });
+            return UnitResult.Failure<Errors>(Error.Failure("location.not.found", "Расположение не найдено"));
 
         var departmentLocation = await _departmentsLocationsRepository
             .GetByIdsAsync(DepartmentLocation.Create(request.departmentId, request.locationId).Value, cancellationToken);
 
         if (departmentLocation.Value is not null)
-            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("department.location.already.exists", "Подразделение с таким расположением уже существует") });
+            return UnitResult.Failure<Errors>(Error.Failure("department.location.already.exists", "Подразделение с таким расположением уже существует"));
 
         await _departmentsLocationsRepository
             .BindAsync(DepartmentLocation.Create(request.departmentId, request.locationId).Value, cancellationToken);
 
         await _departmentsLocationsRepository.SaveAsync(cancellationToken);
 
-        return Result.Success<(Guid, Guid)?, List<Error>>((request.departmentId, request.locationId));
+        return UnitResult.Success<Errors>();
     }
 
-    public async Task<Result<(Guid, Guid)?, List<Error>>> UnbindAsync(
+    public async Task<UnitResult<Errors>> UnbindAsync(
         UnbindDepartmentLocationRequest request,
         CancellationToken cancellationToken)
     {
@@ -67,25 +67,25 @@ public class DepartmentLocationsService : IDepartmentLocationsService
             GetByFieldAsync(x => x.Id == request.departmentId, cancellationToken);
 
         if (department.Value is null)
-            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("department.not.found", "Подразделение не найдено") });
+            return UnitResult.Failure<Errors>(Error.Failure("department.not.found", "Подразделение не найдено"));
 
         var location = await _locationsRepository
             .GetByFieldAsync(x => x.Id == request.locationId, cancellationToken);
 
         if (location.Value is null)
-            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("location.not.found", "Расположение не найдено") });
+            return UnitResult.Failure<Errors>(Error.Failure("location.not.found", "Расположение не найдено"));
 
         var departmentLocation = await _departmentsLocationsRepository
             .GetByIdsAsync(DepartmentLocation.Create(request.departmentId, request.locationId).Value, cancellationToken);
 
         if (departmentLocation.Value is not null)
-            return Result.Failure<(Guid, Guid)?, List<Error>>(new List<Error>() { Error.Failure("department.location.already.exists", "Подразделение с таким расположением уже существует") });
+            return UnitResult.Failure<Errors>(Error.Failure("department.location.already.exists", "Подразделение с таким расположением уже существует"));
 
         _departmentsLocationsRepository
             .Unbind(DepartmentLocation.Create(request.departmentId, request.locationId).Value, cancellationToken);
 
         await _departmentsLocationsRepository.SaveAsync(cancellationToken);
 
-        return Result.Success<(Guid, Guid)?, List<Error>>((request.departmentId, request.locationId));
+        return UnitResult.Success<Errors>();
     }
 }

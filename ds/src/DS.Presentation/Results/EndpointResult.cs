@@ -17,7 +17,7 @@ public sealed class EndpointResult<TValue> : IResult, IEndpointMetadataProvider
             : new ErrorResult(result.Error);
     }
 
-    public EndpointResult(Result<TValue, List<Error>> result)
+    public EndpointResult(Result<TValue, Errors> result)
     {
         _result = result.IsSuccess
            ? new SuccessResult<TValue>(result.Value)
@@ -29,7 +29,7 @@ public sealed class EndpointResult<TValue> : IResult, IEndpointMetadataProvider
 
     public static implicit operator EndpointResult<TValue>(Result<TValue, Error> result) => new(result);
 
-    public static implicit operator EndpointResult<TValue>(Result<TValue, List<Error>> result) => new(result);
+    public static implicit operator EndpointResult<TValue>(Result<TValue, Errors> result) => new(result);
 
     public static void PopulateMetadata(MethodInfo method, EndpointBuilder builder)
     {

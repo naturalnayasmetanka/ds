@@ -7,10 +7,10 @@ namespace DS.Application.Departments.Services;
 
 public interface IDepartmantsService
 {
-    Task<Result<Guid, List<Error>>> CreateAsync(
+    Task<Result<Guid, Errors>> CreateAsync(
         CreateDepartmentRequest request,
         CancellationToken cancellationToken = default);
-    Task<Result<Guid, List<Error>>> UpdateAsync(
+    Task<Result<Guid, Errors>> UpdateAsync(
         Guid id,
         UpdateDepartmentRequest request,
         CancellationToken cancellationToken = default);
