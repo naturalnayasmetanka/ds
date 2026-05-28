@@ -1,4 +1,6 @@
 ﻿using DS.Contracts.Departments.Create;
+using DS.Domain.Models.Departments;
+using DS.Domain.Validation;
 using FluentValidation;
 
 namespace DS.Application.Departments.Validations
@@ -8,9 +10,7 @@ namespace DS.Application.Departments.Validations
         public DepartmentsValidator()
         {
             RuleFor(x => x.Name)
-               .NotEmpty().WithMessage("Name cannot be null")
-               .MinimumLength(3).WithMessage("Name min length 3")
-               .MaximumLength(100).WithMessage("Name max length 100");
+                .MustBeValueObject(Name.Create);
         }
     }
 }

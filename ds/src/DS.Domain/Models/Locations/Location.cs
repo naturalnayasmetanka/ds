@@ -35,7 +35,7 @@ public class Location
     {
         if (string.IsNullOrEmpty(name.Value))
         {
-            return Result.Failure<Location, Errors>(Error.Validation("name.invalid", "Имя не может быть пустым"));
+            return Result.Failure<Location, Errors>(Error.Validation("name.invalid", "Name cannot be null", "Name"));
         }
 
         return Result.Success<Location, Errors>(new Location(id, name, adress, timezone));
@@ -46,7 +46,7 @@ public class Location
     {
         if (string.IsNullOrEmpty(name.Value))
         {
-            return Result.Failure<Location, Errors>(Error.Validation("name.invalid", "Имя не может быть пустым"));
+            return Result.Failure<Location, Errors>(Error.Validation("name.invalid", "Name cannot be null", "Name"));
         }
 
         existLocaiton.Name = name;
