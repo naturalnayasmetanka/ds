@@ -4,6 +4,7 @@ using DS.Application.Locations.Repositories;
 using DS.Infrastructure.Database.Abstractions;
 using DS.Infrastructure.Database.Emplementations;
 using DS.Infrastructure.Database.Emplementations.Repository;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DS.Infrastructure;
