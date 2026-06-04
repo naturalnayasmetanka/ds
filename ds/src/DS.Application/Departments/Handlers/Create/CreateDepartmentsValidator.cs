@@ -3,11 +3,11 @@ using DS.Domain.Models.Departments;
 using DS.Domain.Validation;
 using FluentValidation;
 
-namespace DS.Application.Departments.Validations
+namespace DS.Application.Departments.Handlers.Create
 {
-    public class DepartmentsValidator : AbstractValidator<CreateDepartmentRequest>
+    public class CreateDepartmentsValidator : AbstractValidator<CreateDepartmentRequest>
     {
-        public DepartmentsValidator()
+        public CreateDepartmentsValidator()
         {
             RuleFor(x => x.Name)
                 .MustBeValueObject(Name.Create);

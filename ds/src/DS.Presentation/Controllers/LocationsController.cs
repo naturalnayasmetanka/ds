@@ -1,4 +1,6 @@
-﻿using DS.Application.Locations.Services;
+﻿using DS.Application.Abstractions;
+using DS.Application.Locations.Handlers.Create;
+using DS.Application.Locations.Handlers.Update;
 using DS.Contracts.Locations.Create;
 using DS.Contracts.Locations.GetById;
 using DS.Contracts.Locations.Update;
@@ -10,13 +12,6 @@ namespace DS.Presentation.Controllers;
 [ApiController]
 public class LocationsController : ControllerBase
 {
-    private readonly ILocationsService _locationsService;
-
-    public LocationsController(ILocationsService locationsService)
-    {
-        _locationsService = locationsService;
-    }
-
     [HttpGet("locations")]
     public async Task<IActionResult> Get(
         CancellationToken cancellationToken)
@@ -34,11 +29,13 @@ public class LocationsController : ControllerBase
 
     [HttpPost("locations")]
     public async Task<IActionResult> Create(
+        [FromServices] ICommandHandler<Guid, CreateLocationCommand> handler,
         [FromBody] CreateLocationRequest request,
         CancellationToken cancellationToken)
     {
-        var createLocationResult =
-            await _locationsService.CreateAsync(request, cancellationToken);
+        var command = new CreateLocationCommand(request);
+
+        var createLocationResult = await handler.Handle(command, cancellationToken);
 
         if (createLocationResult.IsFailure)
             return BadRequest(createLocationResult.Error);
@@ -48,12 +45,14 @@ public class LocationsController : ControllerBase
 
     [HttpPatch("locations/{id:guid}")]
     public async Task<IActionResult> Update(
-       [FromRoute] Guid id,
-       [FromBody] UpdateLocationRequest request,
-       CancellationToken cancellationToken)
+        [FromServices] ICommandHandler<Guid, UpdateLocationCommand> handler,
+        [FromRoute] Guid id,
+        [FromBody] UpdateLocationRequest request,
+        CancellationToken cancellationToken)
     {
-        var updateLocationResult =
-            await _locationsService.UpdateAsync(id, request, cancellationToken);
+        var command = new UpdateLocationCommand(id, request);
+
+        var updateLocationResult = await handler.Handle(command, cancellationToken);
 
         if (updateLocationResult.IsFailure)
             return BadRequest(updateLocationResult.Error);

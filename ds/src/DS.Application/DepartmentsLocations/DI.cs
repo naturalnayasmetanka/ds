@@ -1,5 +1,6 @@
-﻿using DS.Application.DepartmentsLocations.Repositories;
-using DS.Application.DepartmentsLocations.Services;
+﻿using DS.Application.Abstractions;
+using DS.Application.DepartmentsLocations.Handlers.Bind;
+using DS.Application.DepartmentsLocations.Handlers.Unbind;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DS.Application.DepartmentsLocations;
@@ -10,7 +11,8 @@ public static class DI
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.AddScoped<IDepartmentLocationsService, DepartmentLocationsService>();
+        services.AddScoped<ICommandHandler<BindDepartmentLocationCommand>, BindDepartmentLocationHandler>();
+        services.AddScoped<ICommandHandler<UnBindDepartmentLocationCommand>, UnBindDepartmentLocationHandler>();
 
         return services;
     }

@@ -1,5 +1,6 @@
-﻿using DS.Application.Departments.Repositories;
-using DS.Application.Departments.Services;
+﻿using DS.Application.Abstractions;
+using DS.Application.Departments.Handlers.Create;
+using DS.Application.Departments.Handlers.Update;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,11 +12,11 @@ public static class DI
     {
         ArgumentNullException.ThrowIfNull(services);
 
-       
+
         services.AddValidatorsFromAssembly(typeof(DI).Assembly);
 
-        services.AddScoped<IDepartmantsService, DepartmentsService>();
-
+        services.AddScoped<ICommandHandler<Guid, CreateDepartmentCommand>, CreateDepartmentHandler>();
+        services.AddScoped<ICommandHandler<Guid, UpdateDepartmentCommand>, UpdateDepartmentHandler>();
 
         return services;
     }
