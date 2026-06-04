@@ -1,4 +1,6 @@
-﻿using DS.Application.Locations.Services;
+﻿using DS.Application.Abstractions;
+using DS.Application.Locations.Handlers.Create;
+using DS.Application.Locations.Handlers.Update;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +14,8 @@ public static class DI
 
         services.AddValidatorsFromAssembly(typeof(DI).Assembly);
 
-        services.AddScoped<ILocationsService, LocationsService>();
+        services.AddScoped<ICommandHandler<Guid, CreateLocationCommand>, CreateLocationHandler>();
+        services.AddScoped<ICommandHandler<Guid, UpdateLocationCommand>, UpdateLocationHandler>();
 
         return services;
     }

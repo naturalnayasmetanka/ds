@@ -1,4 +1,6 @@
-﻿using DS.Application.Departments.Services;
+﻿using DS.Application.Abstractions;
+using DS.Application.Departments.Handlers.Create;
+using DS.Application.Departments.Handlers.Update;
 using DS.Contracts.Departments.Create;
 using DS.Contracts.Departments.GetById;
 using DS.Contracts.Departments.Update;
@@ -10,13 +12,6 @@ namespace DS.Presentation.Controllers;
 [ApiController]
 public class DepartmentsController : ControllerBase
 {
-    private readonly IDepartmantsService _departmantsService;
-
-    public DepartmentsController(IDepartmantsService departmantsService)
-    {
-        _departmantsService = departmantsService;
-    }
-
     [HttpGet("departments")]
     public async Task<IActionResult> Get(
         CancellationToken cancellationToken)
@@ -34,23 +29,27 @@ public class DepartmentsController : ControllerBase
 
     [HttpPost("departments")]
     public async Task<EndpointResult<Guid>> Create(
+        [FromServices] ICommandHandler<Guid, CreateDepartmentCommand> handler,
         [FromBody] CreateDepartmentRequest request,
         CancellationToken cancellationToken)
     {
-        var createDepartmentResult =
-            await _departmantsService.CreateAsync(request, cancellationToken);
+        var command = new CreateDepartmentCommand(request);
+
+        var createDepartmentResult = await handler.Handle(command, cancellationToken);
 
         return createDepartmentResult;
     }
 
     [HttpPatch("departments/{id:guid}")]
     public async Task<EndpointResult<Guid>> Update(
+        [FromServices] ICommandHandler<Guid, UpdateDepartmentCommand> handler,
         [FromRoute] Guid id,
         [FromBody] UpdateDepartmentRequest request,
         CancellationToken cancellationToken)
     {
-        var updateDepartmentResult =
-            await _departmantsService.UpdateAsync(id, request, cancellationToken);
+        var command = new UpdateDepartmentCommand(id, request);
+
+        var updateDepartmentResult = await handler.Handle(command, cancellationToken);
 
         return updateDepartmentResult;
     }

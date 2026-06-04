@@ -1,7 +1,7 @@
 ﻿using DS.Contracts.Departments.Update;
 using FluentValidation;
 
-namespace DS.Application.Departments.Validations
+namespace DS.Application.Departments.Handlers.Update
 {
     public class UpdateDepartmentsValidator : AbstractValidator<UpdateDepartmentRequest>
     {
