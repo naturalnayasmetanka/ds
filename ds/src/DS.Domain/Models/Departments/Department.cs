@@ -70,4 +70,10 @@ public class Department
 
         return Result.Success<Department, Errors>(new Department(old.Id, name, old.Path, slug, old.ParentId, old.Depth, old.ChildrenCount));
     }
+
+    public void Deactivate()
+    {
+        IsActive = false;
+        UpdatedAt = DateTime.UtcNow;
+    }
 }

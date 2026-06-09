@@ -55,4 +55,10 @@ public class Location
 
         return Result.Success<Location, Errors>(existLocaiton);
     }
+
+    public void Deactivate()
+    {
+        IsActive = false;
+        UpdatedAt = DateTime.UtcNow;
+    }
 }

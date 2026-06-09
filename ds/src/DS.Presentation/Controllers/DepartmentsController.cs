@@ -1,6 +1,8 @@
 ﻿using DS.Application.Abstractions.Handlers;
 using DS.Application.Departments.Handlers.Create;
 using DS.Application.Departments.Handlers.Update;
+using DS.Application.DepartmentsPositions.Handlers.Bind;
+using DS.Application.DepartmentsPositions.Handlers.Unbind;
 using DS.Contracts.Departments.Create;
 using DS.Contracts.Departments.GetById;
 using DS.Contracts.Departments.Update;
@@ -60,5 +62,39 @@ public class DepartmentsController : ControllerBase
         CancellationToken cancellationToken)
     {
         return Ok();
+    }
+
+    [HttpPost("/departments/{departmentId:guid}/positions/{positionId:guid}")]
+    public async Task<IActionResult> BindPosition(
+        [FromServices] ICommandHandler<BindDepartmentPositionCommand> handler,
+        [FromRoute] Guid departmentId,
+        [FromRoute] Guid positionId,
+        CancellationToken cancellationToken)
+    {
+        var command = new BindDepartmentPositionCommand(new DS.Contracts.DepartmentsPositions.Bind.BindDepartmentPositionRequest(departmentId, positionId));
+
+        var result = await handler.Handle(command, cancellationToken);
+
+        if (result.IsFailure)
+            return BadRequest(result.Error);
+
+        return Ok(result);
+    }
+
+    [HttpDelete("/departments/{departmentId:guid}/positions/{positionId:guid}")]
+    public async Task<IActionResult> UnbindPosition(
+        [FromServices] ICommandHandler<UnbindDepartmentPositionCommand> handler,
+        [FromRoute] Guid departmentId,
+        [FromRoute] Guid positionId,
+        CancellationToken cancellationToken)
+    {
+        var command = new UnbindDepartmentPositionCommand(new DS.Contracts.DepartmentsPositions.Unbind.UnbindDepartmentPositionRequest(departmentId, positionId));
+
+        var result = await handler.Handle(command, cancellationToken);
+
+        if (result.IsFailure)
+            return BadRequest(result.Error);
+
+        return Ok(result);
     }
 }

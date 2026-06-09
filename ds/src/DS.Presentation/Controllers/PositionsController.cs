@@ -1,8 +1,11 @@
-﻿using DS.Contracts.Positions.Create;
-using DS.Contracts.Positions.GetById;
+﻿using DS.Application.Abstractions.Handlers;
+using DS.Application.Positions.Handlers.Create;
+using DS.Application.Positions.Handlers.Delete;
+using DS.Application.Positions.Handlers.Update;
+using DS.Contracts.Positions.Create;
 using DS.Contracts.Positions.Update;
+using DS.Presentation.Results;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace DS.Presentation.Controllers;
 
@@ -11,43 +14,43 @@ namespace DS.Presentation.Controllers;
 
 public class PositionsController : ControllerBase
 {
-    [HttpGet("positions")]
-    public async Task<IActionResult> Get(
-        CancellationToken cancellationToken)
-    {
-        return Ok();
-    }
-
-    [HttpGet("positions/{id:guid}")]
-    public async Task<IActionResult> GetById(
-        [FromRoute] GetPositionByIdRequest request,
-        CancellationToken cancellationToken)
-    {
-        return Ok(Guid.NewGuid());
-    }
-
     [HttpPost("positions")]
-    public async Task<IActionResult> Create(
+    public async Task<EndpointResult<Guid>> Create(
+        [FromServices] ICommandHandler<Guid, CreatePositionCommand> handler,
         [FromBody] CreatePositionRequest request,
         CancellationToken cancellationToken)
     {
-        return Created();
+        var command = new CreatePositionCommand(request);
+
+        var result = await handler.Handle(command, cancellationToken);
+
+        return result;
     }
 
-    [HttpPut("positions/{id:guid}")]
-    public async Task<IActionResult> Update(
+    [HttpPatch("positions/{id:guid}")]
+    public async Task<EndpointResult<Guid>> Update(
+       [FromServices] ICommandHandler<Guid, UpdatePositionCommand> handler,
        [FromRoute] Guid id,
        [FromBody] UpdatePositionRequest request,
        CancellationToken cancellationToken)
     {
-        return Ok("Position");
+        var command = new UpdatePositionCommand(id, request);
+
+        var result = await handler.Handle(command, cancellationToken);
+
+        return result;
     }
 
     [HttpDelete("positions/{id:guid}")]
-    public async Task<IActionResult> Delete(
+    public async Task<EndpointResult<Guid>> Delete(
+        [FromServices] ICommandHandler<Guid, DeletePositionCommand> handler,
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
-        return Ok();
+        var command = new DeletePositionCommand(id);
+
+        var result = await handler.Handle(command, cancellationToken);
+
+        return result;
     }
 }
