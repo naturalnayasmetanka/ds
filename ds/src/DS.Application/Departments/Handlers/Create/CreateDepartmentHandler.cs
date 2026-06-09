@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Application.Abstractions;
+using DS.Application.Abstractions.Database;
+using DS.Application.Abstractions.Handlers;
 using DS.Application.Departments.Repositories;
 using DS.Application.DepartmentsLocations.Repositories;
 using DS.Application.Extentions;
@@ -23,6 +24,8 @@ namespace DS.Application.Departments.Handlers.Create
         private readonly ILocationsRepository _locationsRepository;
         private readonly IDepartmentsLocationsRepository _departmentsLocationsRepository;
 
+        private readonly ITransactionManager _transactionManager;
+
         private readonly ILogger<CreateDepartmentHandler> _logger;
 
         public CreateDepartmentHandler(
@@ -30,12 +33,14 @@ namespace DS.Application.Departments.Handlers.Create
             IDepartmentsRepository departmentsRepository,
             ILocationsRepository locationsRepository,
             IDepartmentsLocationsRepository departmentsLocationsRepository,
+            ITransactionManager transactionManager,
             ILogger<CreateDepartmentHandler> logger)
         {
             _createDepartmentRequetValidator = createDepartmentRequetValidator;
             _departmentsRepository = departmentsRepository;
             _locationsRepository = locationsRepository;
             _departmentsLocationsRepository = departmentsLocationsRepository;
+            _transactionManager = transactionManager;
 
             _logger = logger;
         }
@@ -44,6 +49,13 @@ namespace DS.Application.Departments.Handlers.Create
             CreateDepartmentCommand command,
             CancellationToken cancellationToken = default)
         {
+            var transactionScopeResult = await _transactionManager.BeginTransactionAsync(cancellationToken);
+
+            if(transactionScopeResult.IsFailure)
+                return Result.Failure<Guid, Errors>(Error.Failure("transaction.failure", "Ошибка транзакции"));
+
+            using var transactionScope = transactionScopeResult.Value;
+
             var fullValidationResult =
               await _createDepartmentRequetValidator.ValidateAsync(command.request);
 
@@ -82,7 +94,12 @@ namespace DS.Application.Departments.Handlers.Create
 
             await _departmentsLocationsRepository.AddRangeAsync(newDepartmentsLocations, cancellationToken);
 
-            await _departmentsRepository.SaveAsync(cancellationToken);
+            var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
+
+            if(saveResult.IsFailure)
+                return Result.Failure<Guid, Errors>(Error.Failure("save.failure", "Ошибка сохранения"));
+
+            transactionScope.Commit();
 
             return Result.Success<Guid, Errors>(createDepartmentResult.Value);
         }

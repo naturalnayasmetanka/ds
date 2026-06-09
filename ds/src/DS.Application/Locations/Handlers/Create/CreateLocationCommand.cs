@@ -1,4 +1,4 @@
-﻿using DS.Application.Abstractions;
+﻿using DS.Application.Abstractions.Handlers;
 using DS.Contracts.Locations.Create;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿using DS.Application.Abstractions;
+﻿using DS.Application.Abstractions.Handlers;
 using DS.Application.DepartmentsLocations.Handlers.Bind;
 using DS.Application.DepartmentsLocations.Handlers.Unbind;
 using DS.Contracts.DepartmentsLocations.Bind;

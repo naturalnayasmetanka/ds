@@ -53,12 +53,4 @@ public class DepartmentsLocationsRepository : IDepartmentsLocationsRepository
 
         return Result.Success<DepartmentLocation?>(result);
     }
-
-    public async Task<UnitResult<Error>> SaveAsync(CancellationToken cancellationToken)
-    {
-        await _dbContext.SaveChangesAsync();
-
-        return UnitResult.Success<Error>();
-    }
-
 }

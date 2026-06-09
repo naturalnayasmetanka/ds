@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Application.Abstractions;
+using DS.Application.Abstractions.Database;
+using DS.Application.Abstractions.Handlers;
 using DS.Application.Departments.Repositories;
 using DS.Application.DepartmentsLocations.Repositories;
 using DS.Application.Locations.Repositories;
@@ -14,17 +15,20 @@ namespace DS.Application.DepartmentsLocations.Handlers.Unbind
         private readonly IDepartmentsLocationsRepository _departmentsLocationsRepository;
         private readonly IDepartmentsRepository _departmentsRepository;
         private readonly ILocationsRepository _locationsRepository;
+        private readonly ITransactionManager _transactionManager;
         private readonly ILogger<UnBindDepartmentLocationHandler> _logger;
 
         public UnBindDepartmentLocationHandler(
             IDepartmentsLocationsRepository departmentsLocationsRepository,
             IDepartmentsRepository departmentsRepository,
             ILocationsRepository locationsRepository,
+            ITransactionManager transactionManager,
             ILogger<UnBindDepartmentLocationHandler> logger)
         {
             _departmentsLocationsRepository = departmentsLocationsRepository;
             _departmentsRepository = departmentsRepository;
             _locationsRepository = locationsRepository;
+            _transactionManager = transactionManager;
             _logger = logger;
         }
 
@@ -53,7 +57,10 @@ namespace DS.Application.DepartmentsLocations.Handlers.Unbind
             _departmentsLocationsRepository
                 .Unbind(DepartmentLocation.Create(command.request.departmentId, command.request.locationId).Value, cancellationToken);
 
-            await _departmentsLocationsRepository.SaveAsync(cancellationToken);
+            var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
+
+            if (saveResult.IsFailure)
+                return Result.Failure<Guid, Errors>(Error.Failure("save.failure", "Ошибка сохранения"));
 
             return UnitResult.Success<Errors>();
         }

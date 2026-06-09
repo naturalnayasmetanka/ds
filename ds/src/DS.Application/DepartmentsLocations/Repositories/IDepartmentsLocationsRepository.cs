@@ -21,7 +21,4 @@ public interface IDepartmentsLocationsRepository
     UnitResult<Error> Unbind(
         DepartmentLocation departmentLocation,
         CancellationToken cancellationToken = default);
-
-    Task<UnitResult<Error>> SaveAsync(
-        CancellationToken cancellationToken = default);
 }

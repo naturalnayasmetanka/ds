@@ -1,4 +1,4 @@
-﻿using DS.Application.Abstractions;
+﻿using DS.Application.Abstractions.Handlers;
 using DS.Application.Departments.Handlers.Create;
 using DS.Application.Departments.Handlers.Update;
 using FluentValidation;
