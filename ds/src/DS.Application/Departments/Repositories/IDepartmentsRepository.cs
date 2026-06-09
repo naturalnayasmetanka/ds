@@ -11,9 +11,6 @@ public interface IDepartmentsRepository
         Department request,
         CancellationToken cancellationToken = default);
 
-    Task<UnitResult<Error>> SaveAsync(
-        CancellationToken cancellationToken = default);
-
     Task<Result<Department?>> GetByFieldAsync(
         Expression<Func<Department, bool>> predicate,
         CancellationToken cancellationToken = default);

@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Application.Abstractions;
+using DS.Application.Abstractions.Database;
+using DS.Application.Abstractions.Handlers;
 using DS.Application.Extentions;
 using DS.Application.Locations.Repositories;
 using DS.Contracts.Locations.Create;
@@ -14,6 +15,7 @@ namespace DS.Application.Locations.Handlers.Create;
 public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand>
 {
     private readonly ILocationsRepository _locationsRepository;
+    private readonly ITransactionManager _transactionManager;
     private readonly IValidator<CreateLocationRequest> _createLocationRequestValidator;
 
     private readonly ILogger<CreateLocationHandler> _logger;
@@ -21,10 +23,12 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
     public CreateLocationHandler(
         ILocationsRepository locationsRepository,
         IValidator<CreateLocationRequest> createLocationRequestValidator,
+        ITransactionManager transactionManager,
         ILogger<CreateLocationHandler> logger)
     {
         _locationsRepository = locationsRepository;
         _createLocationRequestValidator = createLocationRequestValidator;
+        _transactionManager = transactionManager;
         _logger = logger;
     }
 
@@ -67,7 +71,7 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
         await _locationsRepository
             .AddAsync(newLocation.Value, cancellationToken);
 
-        await _locationsRepository.SaveAsync(cancellationToken);
+        await _transactionManager.SaveChangesAsync(cancellationToken);
 
         return Result.Success<Guid, Errors>(newLocation.Value.Id);
     }

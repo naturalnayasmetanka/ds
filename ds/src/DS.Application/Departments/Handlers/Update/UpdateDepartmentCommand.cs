@@ -1,4 +1,4 @@
-﻿using DS.Application.Abstractions;
+﻿using DS.Application.Abstractions.Handlers;
 using DS.Contracts.Departments.Update;
 
 namespace DS.Application.Departments.Handlers.Update;

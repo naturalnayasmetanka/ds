@@ -1,4 +1,5 @@
-﻿using DS.Application.Departments.Repositories;
+﻿using DS.Application.Abstractions.Database;
+using DS.Application.Departments.Repositories;
 using DS.Application.DepartmentsLocations.Repositories;
 using DS.Application.Locations.Repositories;
 using DS.Infrastructure.Database.Abstractions;
@@ -16,6 +17,8 @@ public static class DI
         services.AddScoped<DsDbContext>();
 
         services.AddSingleton<IDbConnectionFactory, NpgSqlConnectionFactory>();
+
+        services.AddScoped<ITransactionManager, TransactionManager>();
 
         //services.AddScoped<ILocationsRepository, EfCoreLocationsRepository>();
         //services.AddScoped<ILocationsRepository, NpgSqlLocationsRepository>();

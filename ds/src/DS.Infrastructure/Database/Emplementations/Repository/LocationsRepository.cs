@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using DS.Application.Locations.Repositories;
-using DS.Domain.Exceptions;
 using DS.Domain.Models.Locations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -33,13 +32,6 @@ public class LocationsRepository : ILocationsRepository
         var result = ids.Count == existingCount;
 
         return Result.Success<bool>(result);
-    }
-
-    public async Task<UnitResult<Error>> SaveAsync(CancellationToken cancellationToken = default)
-    {
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return UnitResult.Success<Error>();
     }
 
     public async Task<Result<Location?>> GetByFieldAsync(Expression<Func<Location, bool>> predicate, CancellationToken cancellationToken = default)

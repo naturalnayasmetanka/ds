@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using DS.Domain.Exceptions;
 
-namespace DS.Application.Abstractions;
+namespace DS.Application.Abstractions.Handlers;
 
 public interface ICommandHandler<TResponse, in TCommand> where TCommand : ICommand
 {

@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using DS.Application.Departments.Repositories;
-using DS.Domain.Exceptions;
 using DS.Domain.Models.Departments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -40,12 +39,4 @@ public class DepartmentsRepository : IDepartmentsRepository
 
         return Result.Success<List<Department>>(result);
     }
-
-    public async Task<UnitResult<Error>> SaveAsync(CancellationToken cancellationToken = default)
-    {
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return UnitResult.Success<Error>();
-    }
-
 }

@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Application.Abstractions;
+using DS.Application.Abstractions.Database;
+using DS.Application.Abstractions.Handlers;
 using DS.Application.Departments.Repositories;
 using DS.Application.Extentions;
 using DS.Contracts.Departments.Update;
@@ -13,16 +14,19 @@ namespace DS.Application.Departments.Handlers.Update
     public class UpdateDepartmentHandler : ICommandHandler<Guid, UpdateDepartmentCommand>
     {
         private readonly IDepartmentsRepository _departmentsRepository;
+        private readonly ITransactionManager _transactionManager;
         private readonly IValidator<UpdateDepartmentRequest> _updateDepartmentRequetValidator;
 
         private readonly ILogger<UpdateDepartmentHandler> _logger;
 
         public UpdateDepartmentHandler(
             IDepartmentsRepository departmentsRepository,
+            ITransactionManager transactionManager,
             IValidator<UpdateDepartmentRequest> updateDepartmentRequetValidator,
             ILogger<UpdateDepartmentHandler> logger)
         {
             _departmentsRepository = departmentsRepository;
+            _transactionManager = transactionManager;
             _updateDepartmentRequetValidator = updateDepartmentRequetValidator;
 
             _logger = logger;
@@ -50,7 +54,7 @@ namespace DS.Application.Departments.Handlers.Update
                     Name.Create(command.request.Name).Value,
                     Identifier.Create(command.request.Slug).Value);
 
-            await _departmentsRepository.SaveAsync(cancellationToken);
+            await _transactionManager.SaveChangesAsync(cancellationToken);
 
             return Result.Success<Guid, Errors>(updatedDepartment.Value.Id);
         }

@@ -22,7 +22,4 @@ public interface ILocationsRepository
     Task<Result<List<Location>>> GetListByFieldAsync(
         Expression<Func<Location, bool>> predicate,
         CancellationToken cancellationToken = default);
-
-    Task<UnitResult<Error>> SaveAsync(
-        CancellationToken cancellationToken = default);
 }

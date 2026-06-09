@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
-using DS.Application.Abstractions;
+using DS.Application.Abstractions.Database;
+using DS.Application.Abstractions.Handlers;
 using DS.Application.Extentions;
 using DS.Application.Locations.Repositories;
 using DS.Contracts.Locations.Update;
@@ -13,17 +14,20 @@ namespace DS.Application.Locations.Handlers.Update;
 public class UpdateLocationHandler : ICommandHandler<Guid, UpdateLocationCommand>
 {
     private readonly ILocationsRepository _locationsRepository;
+    private readonly ITransactionManager _transactionManager;
     private readonly IValidator<UpdateLocationRequest> _updateLocationRequetValidator;
 
     private readonly ILogger<UpdateLocationHandler> _logger;
 
     public UpdateLocationHandler(
         ILocationsRepository locationsRepository,
+        ITransactionManager transactionManager,
         IValidator<UpdateLocationRequest> updateLocationRequetValidator,
         ILogger<UpdateLocationHandler> logger)
     {
         _locationsRepository = locationsRepository;
         _updateLocationRequetValidator = updateLocationRequetValidator;
+        _transactionManager = transactionManager;
         _logger = logger;
     }
 
@@ -63,7 +67,7 @@ public class UpdateLocationHandler : ICommandHandler<Guid, UpdateLocationCommand
                 command.request.Adress.Comment).Value,
             Timezone.Create(command.request.TimeZone).Value);
 
-        await _locationsRepository.SaveAsync(cancellationToken);
+        await _transactionManager.SaveChangesAsync(cancellationToken);
 
         return Result.Success<Guid, Errors>(updateLocation.Value.Id);
     }
