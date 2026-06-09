@@ -36,8 +36,7 @@ namespace DS.Application.Departments.Handlers.Update
             UpdateDepartmentCommand command,
             CancellationToken cancellationToken = default)
         {
-            var fullValidationResult =
-          await _updateDepartmentRequetValidator.ValidateAsync(command.request);
+            var fullValidationResult = await _updateDepartmentRequetValidator.ValidateAsync(command.request);
 
             if (!fullValidationResult.IsValid)
                 return Result.Failure<Guid, Errors>(fullValidationResult.ToErrorList());
@@ -54,7 +53,10 @@ namespace DS.Application.Departments.Handlers.Update
                     Name.Create(command.request.Name).Value,
                     Identifier.Create(command.request.Slug).Value);
 
-            await _transactionManager.SaveChangesAsync(cancellationToken);
+            var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
+
+            if (saveResult.IsFailure)
+                return Result.Failure<Guid, Errors>(Error.Failure("save.failure", "Ошибка сохранения"));
 
             return Result.Success<Guid, Errors>(updatedDepartment.Value.Id);
         }

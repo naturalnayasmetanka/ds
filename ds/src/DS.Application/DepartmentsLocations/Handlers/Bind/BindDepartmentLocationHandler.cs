@@ -57,7 +57,10 @@ namespace DS.Application.DepartmentsLocations.Handlers.Bind
             await _departmentsLocationsRepository
                 .BindAsync(DepartmentLocation.Create(command.request.departmentId, command.request.locationId).Value, cancellationToken);
 
-            await _transactionManager.SaveChangesAsync(cancellationToken);
+            var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
+
+            if (saveResult.IsFailure)
+                return Result.Failure<Guid, Errors>(Error.Failure("save.failure", "Ошибка сохранения"));
 
             return UnitResult.Success<Errors>();
         }

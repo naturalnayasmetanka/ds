@@ -67,7 +67,10 @@ public class UpdateLocationHandler : ICommandHandler<Guid, UpdateLocationCommand
                 command.request.Adress.Comment).Value,
             Timezone.Create(command.request.TimeZone).Value);
 
-        await _transactionManager.SaveChangesAsync(cancellationToken);
+        var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
+
+        if (saveResult.IsFailure)
+            return Result.Failure<Guid, Errors>(Error.Failure("save.failure", "Ошибка сохранения"));
 
         return Result.Success<Guid, Errors>(updateLocation.Value.Id);
     }

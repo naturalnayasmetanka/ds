@@ -51,6 +51,9 @@ namespace DS.Application.Departments.Handlers.Create
         {
             var transactionScopeResult = await _transactionManager.BeginTransactionAsync(cancellationToken);
 
+            if(transactionScopeResult.IsFailure)
+                return Result.Failure<Guid, Errors>(Error.Failure("transaction.failure", "Ошибка транзакции"));
+
             using var transactionScope = transactionScopeResult.Value;
 
             var fullValidationResult =
@@ -91,7 +94,10 @@ namespace DS.Application.Departments.Handlers.Create
 
             await _departmentsLocationsRepository.AddRangeAsync(newDepartmentsLocations, cancellationToken);
 
-            await _transactionManager.SaveChangesAsync(cancellationToken);
+            var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
+
+            if(saveResult.IsFailure)
+                return Result.Failure<Guid, Errors>(Error.Failure("save.failure", "Ошибка сохранения"));
 
             transactionScope.Commit();
 

@@ -71,7 +71,10 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
         await _locationsRepository
             .AddAsync(newLocation.Value, cancellationToken);
 
-        await _transactionManager.SaveChangesAsync(cancellationToken);
+        var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
+
+        if (saveResult.IsFailure)
+            return Result.Failure<Guid, Errors>(Error.Failure("save.failure", "Ошибка сохранения"));
 
         return Result.Success<Guid, Errors>(newLocation.Value.Id);
     }
