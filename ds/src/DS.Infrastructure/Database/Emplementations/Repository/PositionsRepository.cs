@@ -24,7 +24,7 @@ public class PositionsRepository : IPositionsRepository
     {
         await _dbContext.Positions.AddAsync(newPosition, cancellationToken);
 
-        return newPosition.Id;
+        return Result.Success<Guid>(newPosition.Id);
     }
 
     public async Task<Result<Position?>> GetByFieldAsync(Expression<Func<Position, bool>> predicate, CancellationToken cancellationToken = default)

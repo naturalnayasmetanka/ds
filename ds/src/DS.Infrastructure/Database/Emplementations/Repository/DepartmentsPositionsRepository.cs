@@ -20,11 +20,11 @@ public class DepartmentsPositionsRepository : IDepartmentsPositionsRepository
         _logger = logger;
     }
 
-    public async Task<Result<Guid>> AddAsync(DepartmentPosition newDepartmentPosition, CancellationToken cancellationToken = default)
+    public async Task<Result<DepartmentPosition>> AddAsync(DepartmentPosition newDepartmentPosition, CancellationToken cancellationToken = default)
     {
         await _dbContext.DepartmentsPositions.AddAsync(newDepartmentPosition, cancellationToken);
 
-        return newDepartmentPosition.PositionId;
+        return Result.Success<DepartmentPosition>(newDepartmentPosition);
     }
 
     public async Task<Result<DepartmentPosition?>> GetByFieldAsync(Expression<Func<DepartmentPosition, bool>> predicate, CancellationToken cancellationToken = default)

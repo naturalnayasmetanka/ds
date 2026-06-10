@@ -7,7 +7,7 @@ namespace DS.Application.DepartmentsPositions.Repositories;
 
 public interface IDepartmentsPositionsRepository
 {
-    Task<Result<Guid>> AddAsync(
+    Task<Result<DepartmentPosition>> AddAsync(
         DepartmentPosition newDepartmentPosition,
         CancellationToken cancellationToken = default);
 

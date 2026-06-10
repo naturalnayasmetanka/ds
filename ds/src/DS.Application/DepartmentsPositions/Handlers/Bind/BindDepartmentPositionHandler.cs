@@ -1,12 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using DS.Application.Abstractions.Database;
 using DS.Application.Abstractions.Handlers;
-using DS.Application.DepartmentsPositions.Repositories;
 using DS.Application.Departments.Repositories;
+using DS.Application.DepartmentsPositions.Repositories;
 using DS.Application.Positions.Repositories;
-using DS.Contracts.DepartmentsPositions.Bind;
-using DS.Domain.Models.DepartmentsPositions;
 using DS.Domain.Exceptions;
+using DS.Domain.Models.DepartmentsPositions;
 using Microsoft.Extensions.Logging;
 
 namespace DS.Application.DepartmentsPositions.Handlers.Bind;
@@ -56,7 +55,10 @@ public class BindDepartmentPositionHandler : ICommandHandler<BindDepartmentPosit
 
         var newBind = new DepartmentPosition(command.request.DepartmentId, command.request.PositionId);
 
-        await _departmentsPositionsRepository.AddAsync(newBind, cancellationToken);
+        var addResult = await _departmentsPositionsRepository.AddAsync(newBind, cancellationToken);
+
+        if (addResult.IsFailure)
+            return UnitResult.Failure<Errors>(Error.Failure("department.position.add.error", "Ошибка добавления"));
 
         var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
 
