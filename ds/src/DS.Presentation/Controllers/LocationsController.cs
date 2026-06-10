@@ -29,6 +29,9 @@ public class LocationsController : ControllerBase
         var query = new GetLocationQuery(request);
         var getLocationResult = await handler.Handle(query, cancellationToken);
 
+        if (getLocationResult.IsFailure)
+            return BadRequest(getLocationResult.Error);
+
         return Ok(getLocationResult.Value);
     }
 

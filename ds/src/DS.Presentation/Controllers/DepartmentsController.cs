@@ -29,7 +29,10 @@ public class DepartmentsController : ControllerBase
         CancellationToken cancellationToken)
     {
         var query = new GetDepartmentQuery(request);
-        var getDepartmentResult = handler.Handle(query, cancellationToken);
+        var getDepartmentResult = await handler.Handle(query, cancellationToken);
+
+        if (getDepartmentResult.IsFailure)
+            return BadRequest(getDepartmentResult.Error);
 
         return Ok(getDepartmentResult);
     }

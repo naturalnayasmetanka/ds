@@ -28,7 +28,7 @@ public class GetLocationHandler : IQueryHandler<GetLocationResponse?, GetLocatio
         var location = await _readDbContext.LocationsRead.FirstOrDefaultAsync(x => x.Id == query.request.Id);
 
         if (location is null)
-            return Result.Success<GetLocationResponse?, Errors>(null);
+            return Result.Failure<GetLocationResponse?, Errors>(Error.NotFound("location.not.found", "Локация не найдена", query.request.Id));
 
         var locationResponse = new GetLocationResponse()
         {

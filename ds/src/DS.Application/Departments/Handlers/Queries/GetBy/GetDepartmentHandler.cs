@@ -27,7 +27,7 @@ public class GetDepartmentHandler : IQueryHandler<GetDepartmentResponse?, GetDep
         var department = await _readDbContext.DepartmentsRead.FirstOrDefaultAsync(x => x.Id == query.request.Id);
 
         if (department is null)
-            return Result.Success<GetDepartmentResponse?, Errors>(null);
+            return Result.Failure<GetDepartmentResponse?, Errors>(Error.NotFound("department.not.found", "Подразделение не найдено", query.request.Id));
 
         var departmentResponse = new GetDepartmentResponse()
         {
