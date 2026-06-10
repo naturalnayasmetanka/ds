@@ -30,7 +30,7 @@ public class LocationsController : ControllerBase
         var getLocationResult = await handler.Handle(query, cancellationToken);
 
         if (getLocationResult.IsFailure)
-            return BadRequest(getLocationResult.Error);
+            return NotFound(getLocationResult.Error);
 
         return Ok(getLocationResult.Value);
     }

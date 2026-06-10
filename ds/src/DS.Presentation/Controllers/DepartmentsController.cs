@@ -32,7 +32,7 @@ public class DepartmentsController : ControllerBase
         var getDepartmentResult = await handler.Handle(query, cancellationToken);
 
         if (getDepartmentResult.IsFailure)
-            return BadRequest(getDepartmentResult.Error);
+            return NotFound(getDepartmentResult.Error);
 
         return Ok(getDepartmentResult);
     }
