@@ -34,7 +34,7 @@ public class DepartmentsController : ControllerBase
         if (getDepartmentResult.IsFailure)
             return NotFound(getDepartmentResult.Error);
 
-        return Ok(getDepartmentResult);
+        return Ok(getDepartmentResult.Value);
     }
 
     [HttpPost("departments")]
