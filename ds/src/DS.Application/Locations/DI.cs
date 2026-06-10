@@ -1,5 +1,6 @@
 ﻿using DS.Application.Abstractions.Handlers;
 using DS.Application.Locations.Handlers.Create;
+using DS.Application.Locations.Handlers.Delete;
 using DS.Application.Locations.Handlers.Update;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ public static class DI
 
         services.AddScoped<ICommandHandler<Guid, CreateLocationCommand>, CreateLocationHandler>();
         services.AddScoped<ICommandHandler<Guid, UpdateLocationCommand>, UpdateLocationHandler>();
+        services.AddScoped<ICommandHandler<Guid, DeleteLocationCommand>, DeleteLocationHandler>();
 
         return services;
     }

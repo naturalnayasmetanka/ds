@@ -25,4 +25,17 @@ public class Position
 
     public static Result<Position> Create(string name, string? description)
         => Result.Success<Position>(new Position(name, description));
+
+    public void Update(string name, string? description)
+    {
+        Name = name;
+        Description = description;
+        UpdateAt = DateTime.UtcNow;
+    }
+
+    public void Deactivate()
+    {
+        IsActive = false;
+        UpdateAt = DateTime.UtcNow;
+    }
 }

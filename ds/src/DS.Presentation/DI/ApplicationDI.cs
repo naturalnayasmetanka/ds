@@ -1,6 +1,8 @@
 ﻿using DS.Application.Departments;
 using DS.Application.DepartmentsLocations;
+using DS.Application.DepartmentsPositions;
 using DS.Application.Locations;
+using DS.Application.Positions;
 
 namespace DS.Presentation.DI
 {
@@ -13,6 +15,8 @@ namespace DS.Presentation.DI
             services.AddLocations();
             services.AddDepartments();
             services.AddDepartmentsLocations();
+            services.AddDepartmentsPositions();
+            services.AddPositions();
 
             return services;
         }

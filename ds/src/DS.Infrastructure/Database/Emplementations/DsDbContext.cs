@@ -1,5 +1,6 @@
 ﻿using DS.Domain.Models.Departments;
 using DS.Domain.Models.DepartmentsLocations;
+using DS.Domain.Models.DepartmentsPositions;
 using DS.Domain.Models.Locations;
 using DS.Domain.Models.Positions;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ public class DsDbContext : DbContext
     public DbSet<Location> Locations { get; set; }
     public DbSet<Position> Positions { get; set; }
     public DbSet<DepartmentLocation> DepartmentsLocations { get; set; }
+    public DbSet<DepartmentPosition> DepartmentsPositions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
