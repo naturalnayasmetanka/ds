@@ -1,3 +1,3 @@
 ﻿namespace DS.Contracts.Locations.Get;
 
-public record GetLocationsRequest();
+public record GetLocationsRequest(Guid Id);

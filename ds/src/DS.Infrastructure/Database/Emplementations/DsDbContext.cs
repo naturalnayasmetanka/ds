@@ -1,4 +1,5 @@
-﻿using DS.Domain.Models.Departments;
+﻿using DS.Application.Abstractions.Database;
+using DS.Domain.Models.Departments;
 using DS.Domain.Models.DepartmentsLocations;
 using DS.Domain.Models.DepartmentsPositions;
 using DS.Domain.Models.Locations;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DS.Infrastructure.Database.Emplementations;
 
-public class DsDbContext : DbContext
+public class DsDbContext : DbContext, IReadDbContext
 {
     private const string DS_CONNECTION_STRING = "DsDbConnection";
 
@@ -25,6 +26,9 @@ public class DsDbContext : DbContext
     public DbSet<Position> Positions { get; set; }
     public DbSet<DepartmentLocation> DepartmentsLocations { get; set; }
     public DbSet<DepartmentPosition> DepartmentsPositions { get; set; }
+
+    public IQueryable<Department> DepartmentsRead => Set<Department>().AsNoTracking();
+    public IQueryable<Location> LocationsRead => Set<Location>().AsNoTracking();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

@@ -7,7 +7,6 @@ using DS.Application.Positions.Repositories;
 using DS.Infrastructure.Database.Abstractions;
 using DS.Infrastructure.Database.Emplementations;
 using DS.Infrastructure.Database.Emplementations.Repository;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DS.Infrastructure;
@@ -17,6 +16,7 @@ public static class DI
     public static IServiceCollection AddInfrastractureDb(this IServiceCollection services)
     {
         services.AddScoped<DsDbContext>();
+        services.AddScoped<IReadDbContext, DsDbContext>();
 
         services.AddSingleton<IDbConnectionFactory, NpgSqlConnectionFactory>();
 

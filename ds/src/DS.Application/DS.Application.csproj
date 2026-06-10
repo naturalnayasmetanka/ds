@@ -16,4 +16,9 @@
     <ProjectReference Include="..\DS.Domain\DS.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Departments\Handlers\Queries\GetAll\" />
+    <Folder Include="Locations\Handlers\Queries\GetBy\" />
+  </ItemGroup>
+
 </Project>
