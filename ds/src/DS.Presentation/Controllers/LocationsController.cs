@@ -1,6 +1,7 @@
 ﻿using DS.Application.Abstractions.Handlers;
-using DS.Application.Locations.Handlers.Create;
-using DS.Application.Locations.Handlers.Update;
+using DS.Application.Locations.Handlers.Commands.Create;
+using DS.Application.Locations.Handlers.Commands.Update;
+using DS.Application.Locations.Handlers.Queries.Get;
 using DS.Contracts.Locations.Create;
 using DS.Contracts.Locations.GetById;
 using DS.Contracts.Locations.Update;
@@ -21,10 +22,17 @@ public class LocationsController : ControllerBase
 
     [HttpGet("locations/{id:guid}")]
     public async Task<IActionResult> GetById(
-        [FromRoute] GetLocationByIdRequest request,
+        [FromRoute] GetLocationRequest request,
+        [FromServices] IQueryHandler<GetLocationResponse?, GetLocationQuery> handler,
         CancellationToken cancellationToken)
     {
-        return Ok(Guid.NewGuid());
+        var query = new GetLocationQuery(request);
+        var getLocationResult = await handler.Handle(query, cancellationToken);
+
+        if (getLocationResult.IsFailure)
+            return NotFound(getLocationResult.Error);
+
+        return Ok(getLocationResult.Value);
     }
 
     [HttpPost("locations")]

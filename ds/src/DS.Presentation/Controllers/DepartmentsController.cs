@@ -1,6 +1,7 @@
 ﻿using DS.Application.Abstractions.Handlers;
-using DS.Application.Departments.Handlers.Create;
-using DS.Application.Departments.Handlers.Update;
+using DS.Application.Departments.Handlers.Commands.Create;
+using DS.Application.Departments.Handlers.Commands.Update;
+using DS.Application.Departments.Handlers.Queries.GetBy;
 using DS.Application.DepartmentsPositions.Handlers.Bind;
 using DS.Application.DepartmentsPositions.Handlers.Unbind;
 using DS.Contracts.Departments.Create;
@@ -23,10 +24,17 @@ public class DepartmentsController : ControllerBase
 
     [HttpGet("departments/{id:guid}")]
     public async Task<IActionResult> GetById(
-        [FromRoute] GetDepartmentByIdRequest request,
+        [FromRoute] GetDepartmentRequest request,
+        [FromServices] IQueryHandler<GetDepartmentResponse?, GetDepartmentQuery> handler,
         CancellationToken cancellationToken)
     {
-        return Ok(Guid.NewGuid());
+        var query = new GetDepartmentQuery(request);
+        var getDepartmentResult = await handler.Handle(query, cancellationToken);
+
+        if (getDepartmentResult.IsFailure)
+            return NotFound(getDepartmentResult.Error);
+
+        return Ok(getDepartmentResult.Value);
     }
 
     [HttpPost("departments")]

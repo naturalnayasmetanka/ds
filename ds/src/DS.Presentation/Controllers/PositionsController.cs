@@ -1,7 +1,7 @@
 ﻿using DS.Application.Abstractions.Handlers;
-using DS.Application.Positions.Handlers.Create;
-using DS.Application.Positions.Handlers.Delete;
-using DS.Application.Positions.Handlers.Update;
+using DS.Application.Positions.Handlers.Commands.Create;
+using DS.Application.Positions.Handlers.Commands.Delete;
+using DS.Application.Positions.Handlers.Commands.Update;
 using DS.Contracts.Positions.Create;
 using DS.Contracts.Positions.Update;
 using DS.Presentation.Results;
