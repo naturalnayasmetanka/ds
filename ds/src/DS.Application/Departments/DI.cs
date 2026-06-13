@@ -2,6 +2,9 @@
 using DS.Application.Departments.Handlers.Commands.Create;
 using DS.Application.Departments.Handlers.Commands.Update;
 using DS.Application.Departments.Handlers.Queries.GetBy;
+using DS.Application.Departments.Handlers.Queries.GetList;
+using DS.Contracts.Common;
+using DS.Contracts.Departments.Get;
 using DS.Contracts.Departments.GetById;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +24,7 @@ public static class DI
         services.AddScoped<ICommandHandler<Guid, UpdateDepartmentCommand>, UpdateDepartmentHandler>();
 
         services.AddScoped<IQueryHandler<GetDepartmentResponse?, GetDepartmentQuery>, GetDepartmentHandler>();
+        services.AddScoped<IQueryHandler<PagedResult<DepartmentListItemDto>, GetDepartmentsListQuery>, GetDepartmentsListHandler>();
 
         return services;
     }

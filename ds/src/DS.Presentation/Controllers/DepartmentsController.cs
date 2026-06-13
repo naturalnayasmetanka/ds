@@ -2,9 +2,12 @@
 using DS.Application.Departments.Handlers.Commands.Create;
 using DS.Application.Departments.Handlers.Commands.Update;
 using DS.Application.Departments.Handlers.Queries.GetBy;
+using DS.Application.Departments.Handlers.Queries.GetList;
 using DS.Application.DepartmentsPositions.Handlers.Bind;
 using DS.Application.DepartmentsPositions.Handlers.Unbind;
+using DS.Contracts.Common;
 using DS.Contracts.Departments.Create;
+using DS.Contracts.Departments.Get;
 using DS.Contracts.Departments.GetById;
 using DS.Contracts.Departments.Update;
 using DS.Presentation.Results;
@@ -17,9 +20,17 @@ public class DepartmentsController : ControllerBase
 {
     [HttpGet("departments")]
     public async Task<IActionResult> Get(
-        CancellationToken cancellationToken)
+        [FromServices] IQueryHandler<PagedResult<DepartmentListItemDto>, GetDepartmentsListQuery> handler,
+        [FromQuery] GetDepartmentsListRequest request,
+        CancellationToken cancellationToken = default)
     {
-        return Ok();
+        var query = new GetDepartmentsListQuery(request);
+        var getPagedListResult = await handler.Handle(query, cancellationToken);
+
+        if (getPagedListResult.IsFailure)
+            return BadRequest(getPagedListResult.Error);
+
+        return Ok(getPagedListResult.Value);
     }
 
     [HttpGet("departments/{id:guid}")]
