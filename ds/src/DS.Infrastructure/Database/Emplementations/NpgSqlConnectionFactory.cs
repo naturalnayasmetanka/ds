@@ -1,4 +1,4 @@
-﻿using DS.Infrastructure.Database.Abstractions;
+﻿using DS.Application.Abstractions.Database;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Npgsql;
