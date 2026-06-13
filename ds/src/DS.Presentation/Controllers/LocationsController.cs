@@ -2,8 +2,10 @@
 using DS.Application.Locations.Handlers.Commands.Create;
 using DS.Application.Locations.Handlers.Commands.Update;
 using DS.Application.Locations.Handlers.Queries.Get;
+using DS.Application.Locations.Handlers.Queries.GetTop;
 using DS.Contracts.Locations.Create;
 using DS.Contracts.Locations.GetById;
+using DS.Contracts.Locations.GetTop;
 using DS.Contracts.Locations.Update;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +20,19 @@ public class LocationsController : ControllerBase
         CancellationToken cancellationToken)
     {
         return Ok("Location");
+    }
+
+    [HttpGet("locations/top")]
+    public async Task<IActionResult> GetTop(
+        [FromServices] IQueryHandler<List<GetTopResponse>, UnitQuery> handler,
+        CancellationToken cancellationToken)
+    {
+        var getTopLocationsResult = await handler.Handle(new UnitQuery(), cancellationToken);
+
+        if (getTopLocationsResult.IsFailure)
+            return NotFound(getTopLocationsResult.Error);
+
+        return Ok(getTopLocationsResult.Value);
     }
 
     [HttpGet("locations/{id:guid}")]

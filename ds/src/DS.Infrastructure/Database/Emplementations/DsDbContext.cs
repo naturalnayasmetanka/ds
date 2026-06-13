@@ -29,6 +29,7 @@ public class DsDbContext : DbContext, IReadDbContext
 
     public IQueryable<Department> DepartmentsRead => Set<Department>().AsNoTracking();
     public IQueryable<Location> LocationsRead => Set<Location>().AsNoTracking();
+    public IQueryable<DepartmentLocation> DepartmentsLocationsRead => Set<DepartmentLocation>().AsNoTracking();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

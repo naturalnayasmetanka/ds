@@ -4,7 +4,6 @@ using DS.Application.DepartmentsLocations.Repositories;
 using DS.Application.DepartmentsPositions.Repositories;
 using DS.Application.Locations.Repositories;
 using DS.Application.Positions.Repositories;
-using DS.Infrastructure.Database.Abstractions;
 using DS.Infrastructure.Database.Emplementations;
 using DS.Infrastructure.Database.Emplementations.Repository;
 using Microsoft.Extensions.DependencyInjection;
