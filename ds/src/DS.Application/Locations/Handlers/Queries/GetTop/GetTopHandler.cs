@@ -41,9 +41,6 @@ public class GetTopHandler : IQueryHandler<List<GetTopResponse>, UnitQuery>
                            .Take(5)
                            .ToListAsync(cancellationToken);
 
-        if (result.Count == 0)
-            return Result.Failure<List<GetTopResponse>, Errors>(Error.NotFound("location.not.found", "Локация c подразделениями не найдена", Guid.Empty));
-
         return Result.Success<List<GetTopResponse>, Errors>(result);
     }
 }
