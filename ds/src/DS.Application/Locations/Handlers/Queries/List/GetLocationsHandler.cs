@@ -18,9 +18,9 @@ public class GetLocationsHandler : IQueryHandler<PagedResult<LocationListItemDto
 
     private static readonly Dictionary<string, string> AllowedSortExpressions = new(StringComparer.OrdinalIgnoreCase)
     {
-        ["name"] = "lower(l.name)",
-        ["address"] = "lower(l\".address_full\")",
-        ["createdAt"] = "l.created_at",
+        ["name"] = "lower(name)",
+        ["address"] = "lower(address)",
+        ["createdAt"] = "created_at",
         ["departmentCount"] = "dept_count"
     };
 
@@ -63,7 +63,7 @@ public class GetLocationsHandler : IQueryHandler<PagedResult<LocationListItemDto
             sql.AppendLine("    AND (lower(l.name) LIKE @Search OR lower(l.address_full) LIKE @Search)");
         }
 
-        sql.AppendLine("  GROUP BY l.id");
+        sql.AppendLine("  GROUP BY l.id, l.name, l.address_full, l.created_at");
 
         if (request.MinDepartmentCount.HasValue)
         {
