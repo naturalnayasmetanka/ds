@@ -1,33 +1,41 @@
 ﻿using CSharpFunctionalExtensions;
-using Dapper;
 using DS.Application.Abstractions.Handlers;
 using DS.Application.Abstractions.Database;
+using DS.Application.Extentions;
 using DS.Contracts.Common;
 using DS.Contracts.Locations.Get;
 using DS.Domain.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Data;
-using System.Text;
 
 namespace DS.Application.Locations.Handlers.Queries.List;
 
 public class GetLocationsHandler : IQueryHandler<PagedResult<LocationListItemDto>, GetLocationsQuery>
 {
-    private readonly IDbConnectionFactory _dbConnectionFactory;
+    private readonly IReadDbContext _readDbContext;
     private readonly ILogger<GetLocationsHandler> _logger;
 
-    private static readonly Dictionary<string, string> AllowedSortExpressions = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly HashSet<string> AllowedSortFields = new(StringComparer.OrdinalIgnoreCase)
     {
-        ["name"] = "lower(name)",
-        ["address"] = "lower(address)",
-        ["createdAt"] = "created_at",
-        ["departmentCount"] = "dept_count"
+        "name",
+        "address",
+        "createdAt",
+        "departmentCount"
     };
 
-    public GetLocationsHandler(IDbConnectionFactory dbConnectionFactory, ILogger<GetLocationsHandler> logger)
+    public GetLocationsHandler(IReadDbContext readDbContext, ILogger<GetLocationsHandler> logger)
     {
-        _dbConnectionFactory = dbConnectionFactory;
+        _readDbContext = readDbContext;
         _logger = logger;
+    }
+
+    private sealed record LocAgg
+    {
+        public Guid Id { get; init; }
+        public string Name { get; init; } = string.Empty;
+        public string Address { get; init; } = string.Empty;
+        public DateTime CreatedAt { get; init; }
+        public int DepartmentCount { get; init; }
     }
 
     public async Task<Result<PagedResult<LocationListItemDto>, Errors>> Handle(GetLocationsQuery query, CancellationToken cancellationToken = default)
@@ -35,77 +43,69 @@ public class GetLocationsHandler : IQueryHandler<PagedResult<LocationListItemDto
         var request = query.Request;
 
         if (request.PageNumber < 1)
-            return Result.Failure<PagedResult<LocationListItemDto>, Errors>(Error.Validation("pagination.invalid_page_number", "Page must be >= 1", "PageNumber"));
+            return Result.Failure<PagedResult<LocationListItemDto>, Errors>(Error.Validation("pagination.invalid_page_number", "Номер страницы должен быть >= 1", "PageNumber"));
 
         if (request.PageSize < 1 || request.PageSize > 100)
-            return Result.Failure<PagedResult<LocationListItemDto>, Errors>(Error.Validation("pagination.invalid_page_size", "PageSize must be between 1 and 100", "PageSize"));
+            return Result.Failure<PagedResult<LocationListItemDto>, Errors>(Error.Validation("pagination.invalid_page_size", "Размер страницы должен быть от 1 до 100", "PageSize"));
 
-        if (!AllowedSortExpressions.ContainsKey(request.SortBy))
-            return Result.Failure<PagedResult<LocationListItemDto>, Errors>(Error.Validation("sort.invalid_field", "SortBy is invalid", "SortBy"));
+        if (!AllowedSortFields.Contains(request.SortBy))
+            return Result.Failure<PagedResult<LocationListItemDto>, Errors>(Error.Validation("sort.invalid_field", $"Поле для сортировки должно быть одним из: {string.Join(", ", AllowedSortFields)}", "SortBy"));
 
-        var sortExpr = AllowedSortExpressions[request.SortBy];
-        var sortDir = request.SortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase) ? "DESC" : "ASC";
+        var AllowedSortDirections = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "asc", "desc" };
+
+        if (!AllowedSortDirections.Contains(request.SortDirection))
+            return Result.Failure<PagedResult<LocationListItemDto>, Errors>(Error.Validation("sort.invalid_direction", "Направление сортировки должно быть 'asc' или 'desc'", "SortDirection"));
 
         var page = request.PageNumber;
         var pageSize = request.PageSize;
-        var offset = (page - 1) * pageSize;
 
-        var sql = new StringBuilder();
-
-        sql.AppendLine("WITH filtered AS (");
-        sql.AppendLine("  SELECT l.id, l.name, l.address_full AS address, l.created_at, COALESCE(count(dl.location_id),0) AS dept_count");
-        sql.AppendLine("  FROM locations l");
-        sql.AppendLine("  LEFT JOIN departments_locations dl ON dl.location_id = l.id");
-        sql.AppendLine("  WHERE 1=1");
+        var baseQuery = _readDbContext.LocationsRead;
 
         if (!string.IsNullOrWhiteSpace(request.Search))
         {
-            sql.AppendLine("    AND (lower(l.name) LIKE @Search OR lower(l.address_full) LIKE @Search)");
+            var searchTerm = request.Search.ToLower().Trim();
+            baseQuery = baseQuery.Where(l => l.Name.Value.ToLower().Contains(searchTerm) || l.Address.FullAddress.ToLower().Contains(searchTerm));
         }
-
-        sql.AppendLine("  GROUP BY l.id, l.name, l.address_full, l.created_at");
 
         if (request.MinDepartmentCount.HasValue)
         {
-            sql.AppendLine("  HAVING COALESCE(count(dl.location_id),0) >= @MinDepartmentCount");
+            var minCount = request.MinDepartmentCount.Value;
+            baseQuery = baseQuery.Where(l => _readDbContext.DepartmentsLocationsRead.Count(dl => dl.LocationId == l.Id) >= minCount);
         }
 
-        sql.AppendLine(")");
-        sql.AppendLine("SELECT COUNT(*) FROM filtered;");
-        sql.AppendLine($"SELECT id AS Id, name AS Name, address AS Address, created_at AS CreatedAt, dept_count AS DepartmentCount FROM filtered ORDER BY {sortExpr} {sortDir} LIMIT @PageSize OFFSET @Offset;");
-
-        try
-        {
-            using var conn = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken) as IDbConnection;
-            var parameters = new DynamicParameters();
-            parameters.Add("PageSize", pageSize, DbType.Int32);
-            parameters.Add("Offset", offset, DbType.Int32);
-
-            if (!string.IsNullOrWhiteSpace(request.Search))
+        var sortedAndPagedQuery = baseQuery.WithPaginationAndSorting(
+            request,
+            (queryable, sortField, isDesc) => sortField switch
             {
-                parameters.Add("Search", $"%{request.Search.Trim().ToLowerInvariant()}%", DbType.String);
-            }
+                "name" => isDesc ? queryable.OrderByDescending(l => l.Name.Value) : queryable.OrderBy(l => l.Name.Value),
+                "address" => isDesc ? queryable.OrderByDescending(l => l.Address.FullAddress) : queryable.OrderBy(l => l.Address.FullAddress),
+                "createdat" => isDesc ? queryable.OrderByDescending(l => l.CreatedAt) : queryable.OrderBy(l => l.CreatedAt),
+                "departmentcount" => isDesc ? queryable.OrderByDescending(l => _readDbContext.DepartmentsLocationsRead.Count(dl => dl.LocationId == l.Id)) : queryable.OrderBy(l => _readDbContext.DepartmentsLocationsRead.Count(dl => dl.LocationId == l.Id)),
+                _ => isDesc ? queryable.OrderByDescending(l => l.Name.Value) : queryable.OrderBy(l => l.Name.Value)
+            });
 
-            if (request.MinDepartmentCount.HasValue)
-            {
-                parameters.Add("MinDepartmentCount", request.MinDepartmentCount.Value, DbType.Int32);
-            }
+        var countTask = baseQuery.CountAsync(cancellationToken);
 
-            _logger.LogDebug("Executing SQL: {Sql}", sql.ToString());
+        var itemsTask = sortedAndPagedQuery
+            .Select(l => new LocationListItemDto(
+                l.Id,
+                l.Name.Value,
+                l.Address.FullAddress,
+                l.CreatedAt,
+                _readDbContext.DepartmentsLocationsRead.Count(dl => dl.LocationId == l.Id)))
+            .ToListAsync(cancellationToken);
 
-            using var multi = await conn.QueryMultipleAsync(sql.ToString(), parameters);
+        await Task.WhenAll(countTask, itemsTask).ConfigureAwait(false);
 
-            var total = await multi.ReadFirstAsync<int>();
-            var items = (await multi.ReadAsync<LocationListItemDto>()).ToList();
+        var totalCount = await countTask;
+        var items = await itemsTask;
 
-            var paged = new PagedResult<LocationListItemDto>(items, total, page, pageSize);
+        var pagedResult = new PagedResult<LocationListItemDto>(
+            Items: items,
+            TotalCount: totalCount,
+            PageNumber: request.PageNumber,
+            PageSize: request.PageSize);
 
-            return Result.Success<PagedResult<LocationListItemDto>, Errors>(paged);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "GetLocations query failed");
-            return Result.Failure<PagedResult<LocationListItemDto>, Errors>(Error.Failure("get.locations.failed", "Failed to get locations"));
-        }
+        return Result.Success<PagedResult<LocationListItemDto>, Errors>(pagedResult);
     }
 }
