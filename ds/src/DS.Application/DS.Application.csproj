@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Departments\Extentions\" />
     <Folder Include="Departments\Handlers\Queries\GetAll\" />
     <Folder Include="Locations\Handlers\Queries\GetBy\" />
   </ItemGroup>
