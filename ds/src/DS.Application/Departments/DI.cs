@@ -1,5 +1,6 @@
 ﻿using DS.Application.Abstractions.Handlers;
 using DS.Application.Departments.Handlers.Commands.Create;
+using DS.Application.Departments.Handlers.Commands.Delete;
 using DS.Application.Departments.Handlers.Commands.Update;
 using DS.Application.Departments.Handlers.Queries.GetBy;
 using DS.Application.Departments.Handlers.Queries.GetList;
@@ -22,6 +23,7 @@ public static class DI
 
         services.AddScoped<ICommandHandler<Guid, CreateDepartmentCommand>, CreateDepartmentHandler>();
         services.AddScoped<ICommandHandler<Guid, UpdateDepartmentCommand>, UpdateDepartmentHandler>();
+        services.AddScoped<ICommandHandler<DeleteDepartmentCommand>, DeleteDepartmentHandler>();
 
         services.AddScoped<IQueryHandler<GetDepartmentResponse?, GetDepartmentQuery>, GetDepartmentHandler>();
         services.AddScoped<IQueryHandler<PagedResult<DepartmentListItemDto>, GetDepartmentsListQuery>, GetDepartmentsListHandler>();

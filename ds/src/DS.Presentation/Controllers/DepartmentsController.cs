@@ -1,6 +1,7 @@
 ﻿using DS.Application.Abstractions.Handlers;
 using DS.Application.Departments.Handlers.Commands.Create;
 using DS.Application.Departments.Handlers.Commands.Update;
+using DS.Application.Departments.Handlers.Commands.Delete;
 using DS.Application.Departments.Handlers.Queries.GetBy;
 using DS.Application.Departments.Handlers.Queries.GetList;
 using DS.Application.DepartmentsPositions.Handlers.Bind;
@@ -77,9 +78,16 @@ public class DepartmentsController : ControllerBase
 
     [HttpDelete("departments/{id:guid}")]
     public async Task<IActionResult> Delete(
+        [FromServices] ICommandHandler<DeleteDepartmentCommand> handler,
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
+        var command = new DeleteDepartmentCommand(id);
+        var result = await handler.Handle(command, cancellationToken);
+
+        if (result.IsFailure)
+            return BadRequest(result.Error);
+
         return Ok();
     }
 
