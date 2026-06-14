@@ -2,8 +2,8 @@
 using DS.Application.Abstractions.Database;
 using DS.Application.Abstractions.Handlers;
 using DS.Application.Extentions;
-using DS.Contracts.Departments.Get;
 using DS.Contracts.Common;
+using DS.Contracts.Departments.Get;
 using DS.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -20,7 +20,6 @@ public class GetDepartmentsListHandler : IQueryHandler<PagedResult<DepartmentLis
         "name",
         "path",
         "dateFrom",
-        "dateTo",
         "dateTo",
         "identifier"
     };
@@ -81,7 +80,7 @@ public class GetDepartmentsListHandler : IQueryHandler<PagedResult<DepartmentLis
             request,
             (query, sortField, isDescending) => sortField switch
             {
-                "name" => isDescending 
+                "name" => isDescending
                     ? query.OrderByDescending(d => d.Name.Value)
                     : query.OrderBy(d => d.Name.Value),
 
@@ -117,8 +116,8 @@ public class GetDepartmentsListHandler : IQueryHandler<PagedResult<DepartmentLis
 
         await Task.WhenAll(countTask, itemsTask).ConfigureAwait(false);
 
-        var totalCount = countTask.Result;
-        var items = itemsTask.Result;
+        var totalCount = await countTask;
+        var items = await itemsTask;
 
         var pagedResult = new PagedResult<DepartmentListItemDto>(
             Items: items,
