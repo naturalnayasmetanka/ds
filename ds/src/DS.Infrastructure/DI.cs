@@ -1,8 +1,11 @@
 ﻿using DS.Application.Abstractions.Database;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using DS.Application.Departments.Repositories;
 using DS.Application.DepartmentsLocations.Repositories;
 using DS.Application.DepartmentsPositions.Repositories;
 using DS.Application.Locations.Repositories;
+using DS.Infrastructure.Background;
 using DS.Application.Positions.Repositories;
 using DS.Infrastructure.Database.Emplementations;
 using DS.Infrastructure.Database.Emplementations.Repository;
@@ -12,7 +15,7 @@ namespace DS.Infrastructure;
 
 public static class DI
 {
-    public static IServiceCollection AddInfrastractureDb(this IServiceCollection services)
+    public static IServiceCollection AddInfrastractureDb(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<DsDbContext>();
         services.AddScoped<IReadDbContext, DsDbContext>();
@@ -30,6 +33,10 @@ public static class DI
 
         services.AddScoped<IPositionsRepository, PositionsRepository>();
         services.AddScoped<IDepartmentsPositionsRepository, DepartmentsPositionsRepository>();
+
+        // configure cleanup options and hosted background cleanup service
+        services.Configure<CleanupOptions>(configuration.GetSection("Cleanup"));
+        services.AddHostedService<CleanupBackgroundService>();
 
         return services;
     }

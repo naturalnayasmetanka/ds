@@ -23,7 +23,7 @@ public class Program
 
             builder.Services.AddLogging(builder.Configuration);
             builder.Services.AddWebDI();
-            builder.Services.AddInfrastructureDI();
+            builder.Services.AddInfrastructureDI(builder.Configuration);
             builder.Services.AddApplicationDI();
 
             var app = builder.Build();
