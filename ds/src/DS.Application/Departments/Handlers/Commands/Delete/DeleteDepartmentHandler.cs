@@ -22,16 +22,24 @@ namespace DS.Application.Departments.Handlers.Commands.Delete
             DeleteDepartmentCommand command,
             CancellationToken cancellationToken = default)
         {
-            var department = await _departmentsRepository.GetByFieldAsync(x => x.Id == command.Id, cancellationToken);
+            var departmentResult = await _departmentsRepository.GetByFieldAsync(x => x.Id == command.Id, cancellationToken);
 
-            if (department.Value is null)
-                return Result.Failure<Guid, Errors>(Error.NotFound("department.not.found", "Подразделение не найдено", command.Id));
+            if (departmentResult.IsFailure)
+                return UnitResult.Failure<Errors>(Error.Failure("department.get.failure", "Ошибка получения подразделения"));
 
-            department.Value.Deactivate();
+            var department = departmentResult.Value;
 
-            await _transactionManager.SaveChangesAsync(cancellationToken);
+            if (department is null)
+                return UnitResult.Failure<Errors>(Error.NotFound("department.not.found", "Подразделение не найдено", command.Id));
 
-            return Result.Success<Errors>();
+            department.Deactivate();
+
+            var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
+
+            if (saveResult.IsFailure)
+                return UnitResult.Failure<Errors>(Error.Failure("save.failure", "Ошибка сохранения"));
+
+            return UnitResult.Success<Errors>();
         }
     }
 }
