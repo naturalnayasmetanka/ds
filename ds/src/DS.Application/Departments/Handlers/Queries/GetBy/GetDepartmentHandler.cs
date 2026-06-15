@@ -24,7 +24,7 @@ public class GetDepartmentHandler : IQueryHandler<GetDepartmentResponse?, GetDep
         GetDepartmentQuery query,
         CancellationToken cancellationToken = default)
     {
-        var department = await _readDbContext.DepartmentsRead.FirstOrDefaultAsync(x => x.Id == query.request.Id);
+        var department = await _readDbContext.DepartmentsRead.FirstOrDefaultAsync(x => x.Id == query.request.Id && x.IsActive);
 
         if (department is null)
             return Result.Failure<GetDepartmentResponse?, Errors>(Error.NotFound("department.not.found", "Подразделение не найдено", query.request.Id));

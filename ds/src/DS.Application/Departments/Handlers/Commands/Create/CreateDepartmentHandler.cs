@@ -51,7 +51,7 @@ namespace DS.Application.Departments.Handlers.Commands.Create
         {
             var transactionScopeResult = await _transactionManager.BeginTransactionAsync(cancellationToken);
 
-            if(transactionScopeResult.IsFailure)
+            if (transactionScopeResult.IsFailure)
                 return Result.Failure<Guid, Errors>(Error.Failure("transaction.failure", "Ошибка транзакции"));
 
             using var transactionScope = transactionScopeResult.Value;
@@ -71,7 +71,7 @@ namespace DS.Application.Departments.Handlers.Commands.Create
             var departmentId = Id.Create();
 
             var existParentDepartment = await _departmentsRepository
-                .GetByFieldAsync(x => x.Id == command.request.ParentId, cancellationToken);
+                .GetByFieldAsync(x => x.Id == command.request.ParentId && x.IsActive, cancellationToken);
 
             var path = existParentDepartment.Value is null ?
                 Path.Create(command.request.Slug).Value :
@@ -96,7 +96,7 @@ namespace DS.Application.Departments.Handlers.Commands.Create
 
             var saveResult = await _transactionManager.SaveChangesAsync(cancellationToken);
 
-            if(saveResult.IsFailure)
+            if (saveResult.IsFailure)
                 return Result.Failure<Guid, Errors>(Error.Failure("save.failure", "Ошибка сохранения"));
 
             transactionScope.Commit();

@@ -31,6 +31,7 @@ public class GetTopHandler : IQueryHandler<List<GetTopResponse>, UnitQuery>
                             group dl by dl.LocationId into g
                             join l in _readDbContext.LocationsRead on g.Key equals l.Id
                             orderby g.Count() descending
+                            where l.IsActive
                             select new GetTopResponse
                             {
                                 Id = l.Id,

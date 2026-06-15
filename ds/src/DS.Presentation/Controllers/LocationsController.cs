@@ -1,6 +1,7 @@
 ﻿using DS.Application.Abstractions.Handlers;
 using DS.Application.Locations.Handlers.Commands.Create;
 using DS.Application.Locations.Handlers.Commands.Update;
+using DS.Application.Locations.Handlers.Commands.Delete;
 using DS.Application.Locations.Handlers.Queries.Get;
 using DS.Application.Locations.Handlers.Queries.GetTop;
 using DS.Application.Locations.Handlers.Queries.List;
@@ -96,9 +97,17 @@ public class LocationsController : ControllerBase
 
     [HttpDelete("locations/{id:guid}")]
     public async Task<IActionResult> Delete(
+        [FromServices] ICommandHandler<Guid, DeleteLocationCommand> handler,
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
-        return Ok();
+        var command = new DeleteLocationCommand(id);
+
+        var deleteResult = await handler.Handle(command, cancellationToken);
+
+        if (deleteResult.IsFailure)
+            return BadRequest(deleteResult.Error);
+
+        return Ok(deleteResult.Value);
     }
 }

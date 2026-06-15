@@ -42,7 +42,7 @@ public class UpdateLocationHandler : ICommandHandler<Guid, UpdateLocationCommand
             return Result.Failure<Guid, Errors>(fullValidationResult.ToErrorList());
 
         var existLocation = await _locationsRepository
-          .GetByFieldAsync(x => x.Id == command.locationId, cancellationToken);
+          .GetByFieldAsync(x => x.Id == command.locationId && x.IsActive, cancellationToken);
 
         if (existLocation.Value is null)
             return Result.Failure<Guid, Errors>(Error.Failure("location.not.found", "Локация не найдена"));

@@ -42,7 +42,7 @@ namespace DS.Application.Departments.Handlers.Commands.Update
                 return Result.Failure<Guid, Errors>(fullValidationResult.ToErrorList());
 
             var existDepartment =
-               await _departmentsRepository.GetByFieldAsync(x => x.Id == command.departmentId, cancellationToken);
+               await _departmentsRepository.GetByFieldAsync(x => x.Id == command.departmentId && x.IsActive, cancellationToken);
 
             if (existDepartment.Value is null)
                 return Result.Failure<Guid, Errors>(Error.Failure("department.not.found", "Подразделение не найдена"));

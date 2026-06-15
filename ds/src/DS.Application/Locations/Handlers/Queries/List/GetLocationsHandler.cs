@@ -57,6 +57,7 @@ public class GetLocationsHandler : IQueryHandler<PagedResult<LocationListItemDto
         sql.AppendLine("  FROM locations l");
         sql.AppendLine("  LEFT JOIN departments_locations dl ON dl.location_id = l.id");
         sql.AppendLine("  WHERE 1=1");
+        sql.AppendLine("    AND l.is_active = TRUE");
 
         if (!string.IsNullOrWhiteSpace(request.Search))
         {

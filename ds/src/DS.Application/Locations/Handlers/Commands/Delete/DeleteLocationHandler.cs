@@ -27,15 +27,8 @@ public class DeleteLocationHandler : ICommandHandler<Guid, DeleteLocationCommand
         DeleteLocationCommand command,
         CancellationToken cancellationToken = default)
     {
-        var transactionScopeResult = await _transactionManager.BeginTransactionAsync(cancellationToken);
-
-        if (transactionScopeResult.IsFailure)
-            return Result.Failure<Guid, Errors>(Error.Failure("transaction.failure", "Ошибка транзакции"));
-
-        using var transactionScope = transactionScopeResult.Value;
-
         var getLocationResult = await _locationsRepository
-            .GetByFieldAsync(x => x.Id == command.Id, cancellationToken);
+            .GetByFieldAsync(x => x.Id == command.Id && x.IsActive, cancellationToken);
 
         if (getLocationResult.Value is null)
             return Result.Failure<Guid, Errors>(Error.Failure("location.not.found", "Локация не найдена"));
