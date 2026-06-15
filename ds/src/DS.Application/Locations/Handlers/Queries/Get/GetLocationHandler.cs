@@ -25,7 +25,7 @@ public class GetLocationHandler : IQueryHandler<GetLocationResponse?, GetLocatio
         GetLocationQuery query,
         CancellationToken cancellationToken = default)
     {
-        var location = await _readDbContext.LocationsRead.FirstOrDefaultAsync(x => x.Id == query.request.Id);
+        var location = await _readDbContext.LocationsRead.FirstOrDefaultAsync(x => x.Id == query.request.Id && x.IsActive);
 
         if (location is null)
             return Result.Failure<GetLocationResponse?, Errors>(Error.NotFound("location.not.found", "Локация не найдена", query.request.Id));
