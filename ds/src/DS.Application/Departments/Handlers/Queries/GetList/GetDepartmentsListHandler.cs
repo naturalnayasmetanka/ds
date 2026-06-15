@@ -56,7 +56,7 @@ public class GetDepartmentsListHandler : IQueryHandler<PagedResult<DepartmentLis
         if (!AllowedSortDirections.Contains(request.SortDirection))
             return Result.Failure<PagedResult<DepartmentListItemDto>, Errors>(Error.Validation("sort.invalid_direction", "Направление сортировки должно быть 'asc' или 'desc'", "SortDirection"));
 
-        var baseQuery = _readDbContext.DepartmentsRead.AsNoTracking();
+        var baseQuery = _readDbContext.DepartmentsRead;
 
         if (request.OnlyActive)
             baseQuery = baseQuery.Where(d => d.IsActive);

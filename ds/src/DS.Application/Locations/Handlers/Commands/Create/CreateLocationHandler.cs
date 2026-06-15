@@ -43,7 +43,7 @@ public class CreateLocationHandler : ICommandHandler<Guid, CreateLocationCommand
             return Result.Failure<Guid, Errors>(fullValidationResult.ToErrorList());
 
         var isAlreadyExistsByName =
-            await _locationsRepository.GetByFieldAsync(x => x.Name == Name.Create(command.request.Name).Value, cancellationToken);
+            await _locationsRepository.GetByFieldAsync(x => x.Name == Name.Create(command.request.Name).Value && x.IsActive, cancellationToken);
 
         if (isAlreadyExistsByName.Value is not null)
             return Result.Failure<Guid, Errors>(Error.Failure("location.already.exists", "Локация с таким именем уже существует"));

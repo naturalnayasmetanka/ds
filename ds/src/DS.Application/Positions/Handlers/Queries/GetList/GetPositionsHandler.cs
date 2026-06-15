@@ -26,12 +26,10 @@ public class GetPositionsHandler : IQueryHandler<PagedResult<PositionListItemDto
     {
         var request = query.Request;
 
-        // simple validation and defaults
         var page = request?.PageNumber ?? 1;
         var pageSize = request?.PageSize ?? 50;
 
-        // base query - only active positions
-        var baseQuery = _readDbContext.PositionsRead.AsNoTracking().Where(p => p.IsActive);
+        var baseQuery = _readDbContext.PositionsRead.Where(p => p.IsActive);
 
         var countTask = baseQuery.CountAsync(cancellationToken);
 

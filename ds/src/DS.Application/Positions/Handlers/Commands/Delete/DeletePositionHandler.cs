@@ -35,7 +35,7 @@ public class DeletePositionHandler : ICommandHandler<Guid, DeletePositionCommand
         using var transactionScope = transactionScopeResult.Value;
 
         var getPositionResult = await _positionsRepository
-            .GetByFieldAsync(x => x.Id == command.Id, cancellationToken);
+            .GetByFieldAsync(x => x.Id == command.Id && x.IsActive, cancellationToken);
 
         if (getPositionResult.Value is null)
             return Result.Failure<Guid, Errors>(Error.Failure("position.not.found", "Должность не найдена"));

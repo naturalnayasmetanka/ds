@@ -22,7 +22,7 @@ namespace DS.Application.Departments.Handlers.Commands.Delete
             DeleteDepartmentCommand command,
             CancellationToken cancellationToken = default)
         {
-            var departmentResult = await _departmentsRepository.GetByFieldAsync(x => x.Id == command.Id, cancellationToken);
+            var departmentResult = await _departmentsRepository.GetByFieldAsync(x => x.Id == command.Id && x.IsActive, cancellationToken);
 
             if (departmentResult.IsFailure)
                 return UnitResult.Failure<Errors>(Error.Failure("department.get.failure", "Ошибка получения подразделения"));
