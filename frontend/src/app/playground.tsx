@@ -27,6 +27,10 @@ export default function Playground() {
     setInputValue("");
   };
 
+  const deleteItem = (id: string) => {
+    setItems((items) => items.filter((item) => item.id !== id));
+  };
+
   const markComplete = (id: string) => {
     setItems((prev) =>
       prev.map((item) => {
@@ -58,6 +62,7 @@ export default function Playground() {
               checked={item.is_complited}
               onChange={() => markComplete(item.id)}
             />
+            <button onClick={() => deleteItem(item.id)}>Удалить</button>
           </div>
         ))}
       </div>
