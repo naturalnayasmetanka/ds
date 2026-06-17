@@ -1,0 +1,267 @@
+[33mcommit 2fee508497379960a9a569a2b41dfe64b0337ef7[m[33m ([m[1;36mHEAD -> [m[1;32mDS-F-1[m[33m, [m[1;31morigin/DS-F-1[m[33m)[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Wed Jun 17 16:28:53 2026 +0300
+
+    add todo
+
+[33mcommit ea6f222f615e748c7fcd79640d2220e7d7f736ee[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Sun Jun 14 20:28:59 2026 +0300
+
+    Update sol structure
+
+[33mcommit e923de37b92a6f5891d033007931a329a44ec4f1[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Sun Jun 14 20:25:33 2026 +0300
+
+    Add frontend and UpdateStructure
+
+[33mcommit 6218e9a34b1279bb22d51ad1552e9d5af88a01d0[m
+Merge: 000b494 99abe77
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Sun Jun 14 14:28:41 2026 +0300
+
+    Merge pull request #17 from naturalnayasmetanka/DS-B-18
+    
+    Add dapper location filter
+
+[33mcommit 99abe77880df0d8bc08afd001da5ed2202392678[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Sun Jun 14 14:26:56 2026 +0300
+
+    Fix AllowedSortExpressions
+
+[33mcommit ec0ed4a701273e5adcf90d0190d3ed98799aa1b8[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Sun Jun 14 14:21:11 2026 +0300
+
+    Add dapper location filter
+
+[33mcommit 000b494c63d5892b5a8c2e8a375beb622baeae0f[m
+Merge: f551c1b 503df98
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Sun Jun 14 11:54:52 2026 +0300
+
+    Merge pull request #16 from naturalnayasmetanka/DS-B-17
+    
+    Add filtering&pagination
+
+[33mcommit 503df98b9338c9f375fcca9c2b876f9b59e8a7f5[m[33m ([m[1;31morigin/DS-B-17[m[33m)[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Sun Jun 14 11:54:36 2026 +0300
+
+    Add some chores
+
+[33mcommit dbb7e46388c712c78e9675cec1ebff4f852233ee[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Sun Jun 14 00:07:03 2026 +0300
+
+    Add filtering&pagination
+
+[33mcommit f551c1b768b2bcc51c684ebf8e7b21ce6e996aba[m
+Merge: 316e2b2 6b67c99
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Sat Jun 13 17:06:31 2026 +0300
+
+    Merge pull request #15 from naturalnayasmetanka/DS-B-16
+    
+    Add top-5
+
+[33mcommit 6b67c9924a84b9241ae0ac181e8198d647fb9407[m[33m ([m[1;31morigin/DS-B-16[m[33m)[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Sat Jun 13 17:05:32 2026 +0300
+
+    Add some chores
+
+[33mcommit d9ac1c30261b91b53224e32ac54c186d88441c1a[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Sat Jun 13 17:03:11 2026 +0300
+
+    Add top-5
+
+[33mcommit 316e2b2b322aa933084a087d551fc151e20d4b0b[m
+Merge: 2128de7 bb4eebc
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu Jun 11 00:19:48 2026 +0300
+
+    Merge pull request #14 from naturalnayasmetanka/DS-B-15
+    
+    Add IReadDbContext&Id logic
+
+[33mcommit bb4eebc05851686eae55013f2dbc9a81c2fddc56[m[33m ([m[1;31morigin/DS-B-15[m[33m)[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu Jun 11 00:16:54 2026 +0300
+
+    Add value result
+
+[33mcommit 3db1a01bb4ed4d2ecfe59eafc1e486735c87a00a[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu Jun 11 00:16:33 2026 +0300
+
+    Add NotFound
+
+[33mcommit 10c19a3f8232181af652ab655903ee7345b98659[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu Jun 11 00:14:57 2026 +0300
+
+    Add some chores
+
+[33mcommit 1bdacb0ed4cc56f7cb4bf8c38efb500f63b0681a[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu Jun 11 00:09:18 2026 +0300
+
+    Add IReadDbContext&Id logic
+
+[33mcommit 2128de7e1105a3773c14c02054c07eb5a5aa958f[m
+Merge: d3fd76d 094a439
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Wed Jun 10 12:58:04 2026 +0300
+
+    Merge pull request #13 from naturalnayasmetanka/DS-B-14
+    
+    Add AI features
+
+[33mcommit 094a439311c44d33742a0620c4e1d9eb5760cbd9[m[33m ([m[1;31morigin/DS-B-14[m[33m)[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Wed Jun 10 11:59:06 2026 +0300
+
+    Add some chores
+
+[33mcommit 864224645a573890b6899ba7e1d0edacaac3b708[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Wed Jun 10 02:37:59 2026 +0300
+
+    Add AI features
+
+[33mcommit d3fd76dc4309d179fb51309128d4a8afd9af2c0f[m
+Merge: f90378b ceb0f66
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Wed Jun 10 01:37:23 2026 +0300
+
+    Merge pull request #12 from naturalnayasmetanka/DS-12a
+    
+    Add transactionManager
+
+[33mcommit ceb0f661baae282af642096fd863f7d2402f18be[m[33m ([m[1;31morigin/DS-12a[m[33m)[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Wed Jun 10 01:30:45 2026 +0300
+
+    Add some chores
+
+[33mcommit 02cef311249a932bcd82543a80dfff9212f931f7[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Wed Jun 10 01:23:02 2026 +0300
+
+    Add transactionManager
+
+[33mcommit f90378bc46717bf4e0416de49b247d1159ca9619[m
+Merge: dfad13b 1519540
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Fri Jun 5 01:33:13 2026 +0300
+
+    Merge pull request #11 from naturalnayasmetanka/DS-12a
+    
+    Add Handlers, ICommandHandler/IQueryHandler
+
+[33mcommit 1519540b418be613fd77e8d5ab9c6150a8c117f2[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Fri Jun 5 01:31:05 2026 +0300
+
+    Add Handlers, ICommandHandler/IQueryHandler
+
+[33mcommit dfad13b12e971da8fea8a792550ca7e6a72c1267[m
+Merge: 2f74e1c 64b9afd
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu Jun 4 23:28:35 2026 +0300
+
+    Merge pull request #10 from naturalnayasmetanka/DS-12
+    
+    Add Serilog&Seq
+
+[33mcommit 64b9afd481e78d85da3b3fcfa720b0e4d6abe635[m[33m ([m[1;31morigin/DS-12[m[33m)[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu Jun 4 23:01:54 2026 +0300
+
+    Add Serilog&Seq
+
+[33mcommit 2f74e1ce02f58ddd3530065a2c4292433174bda4[m
+Merge: 32ade01 0a4a16a
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu May 28 23:43:13 2026 +0300
+
+    Merge pull request #9 from naturalnayasmetanka/DS-8
+    
+    CustomExceptions&Errors&ResultPattern
+
+[33mcommit 0a4a16a308083103d1edb5a8f05eaf6767b271eb[m[33m ([m[1;31morigin/DS-8[m[33m)[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu May 28 22:03:45 2026 +0300
+
+    Fix name
+
+[33mcommit fed7010305eebb5aba50a6fc4d473371b84ae0e5[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu May 28 22:01:56 2026 +0300
+
+    Fix condition
+
+[33mcommit 2cfdde4941277261fb1afec4a84dcae88f7cef34[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu May 28 21:59:18 2026 +0300
+
+    Fix message
+
+[33mcommit d26592feae2b8c17f39be47fdc22e48e00fbec3f[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu May 28 21:54:07 2026 +0300
+
+    Add VO&FluentValidation
+
+[33mcommit b4e875fc320a1241e6f8b4a6bc5db396f8dc037a[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu May 28 13:37:34 2026 +0300
+
+    Add some fixes
+
+[33mcommit de9cf4ee1bef19871dd1901c36dfde645d583648[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu May 28 13:13:47 2026 +0300
+
+    Add fix
+
+[33mcommit 3d945cc7deee0ecb7a6a58d2c8a3d5c814f1c566[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Thu May 28 00:38:12 2026 +0300
+
+    Add unified api response
+
+[33mcommit 239c0fc7d512b868ec2e3c52aca686ce2acc7037[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Wed May 27 12:27:57 2026 +0300
+
+    Add result responses
+
+[33mcommit dfdefb2ff81b2d06c7d63dfa8874d39776db6ec6[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Wed May 27 12:25:55 2026 +0300
+
+    Add result Controllers
+
+[33mcommit 4aa093eabd1a4c040d9612393fcd3a0a5e3f6bb6[m
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Wed May 27 12:25:37 2026 +0300
+
+    Add Exceptions
+
+[33mcommit 32ade0157e7a321546ca87c1efc12ed9d1c5d8a1[m
+Merge: 796d0a4 539e6c7
+Author: naturalnayasmetanka <marksmentina@gmail.com>
+Date:   Mon May 25 17:45:21 2026 +0300
+
+    Merge pull request #8 from naturalnayasmetanka/DS-B-6d
+    
+    Departments&Locations
+
+[33mcommit 539e6c7994e760b2ce6077de93ea47401df2a500[m[33m ([m[1;31morigin/DS-B-6d[m[33m)[m
+Merge: 96e0b14 796d0a4
+Author: natu
