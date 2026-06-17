@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 type Item = {
-  id: number;
+  id: string;
   text: string;
   is_complited: boolean;
 };
@@ -11,21 +11,23 @@ type Item = {
 export default function Playground() {
   const [items, setItems] = useState<Item[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
-  const [countUnfulfilled, setCountUnfulfilled] = useState<number>(0);
+  const countUnfulfilled = items.filter((item) => !item.is_complited).length;
 
   const addItems = () => {
+    if (!inputValue.trim()) return;
+
     const newItem: Item = {
-      id: items.length + 1,
+      id: crypto.randomUUID(),
       text: inputValue,
       is_complited: false,
     };
 
-    setCountUnfulfilled((prev) => prev + 1);
-
     setItems((items) => [...items, newItem]);
+
+    setInputValue("");
   };
 
-  const markComplete = (id: number) => {
+  const markComplete = (id: string) => {
     setItems((prev) =>
       prev.map((item) => {
         if (item.id == id) {
@@ -48,7 +50,7 @@ export default function Playground() {
 
       <div>
         {items.map((item) => (
-          <div key={crypto.randomUUID()}>
+          <div key={item.id}>
             <h1>{item.text}</h1>
             <div>{item.is_complited ? "ok" : "ne ok"}</div>
             <input
