@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 
 import type { Metadata } from "next";
+import { routes } from "@/shared/routes";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -16,19 +17,19 @@ export const metadata: Metadata = {
 
 const sections = [
   {
-    href: "/departments",
+    href: routes.departments,
     title: "Отделы",
     description: "Структура компании и список подразделений",
     icon: Building2,
   },
   {
-    href: "/locations",
+    href: routes.locations,
     title: "Локации",
     description: "Офисы и точки присутствия компании",
     icon: MapPin,
   },
   {
-    href: "/positions",
+    href: routes.positions,
     title: "Должности",
     description: "Справочник должностей и грейдов",
     icon: Briefcase,
@@ -37,7 +38,7 @@ const sections = [
 
 export default function AdminPage() {
   return (
-    <div className="min-h-screen bg-slate-50 px-6 py-12">
+    <div className="bg-slate-50 px-6 py-12">
       <div className="mx-auto max-w-5xl">
         <header className="mb-10">
           <p className="mb-2 text-sm font-medium text-indigo-600">
