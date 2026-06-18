@@ -2,8 +2,10 @@
 using DS.Application.Locations.Handlers.Commands.Create;
 using DS.Application.Locations.Handlers.Commands.Update;
 using DS.Application.Locations.Handlers.Queries.Get;
+using DS.Application.Locations.Handlers.Queries.GetAll;
 using DS.Application.Locations.Handlers.Queries.GetTop;
 using DS.Contracts.Locations.Create;
+using DS.Contracts.Locations.Get;
 using DS.Contracts.Locations.GetById;
 using DS.Contracts.Locations.GetTop;
 using DS.Contracts.Locations.Update;
@@ -17,9 +19,12 @@ public class LocationsController : ControllerBase
 {
     [HttpGet("locations")]
     public async Task<IActionResult> Get(
+        IQueryHandler<List<GetLocationsResponse>, GetAllLocationsQuery> handler,
         CancellationToken cancellationToken)
     {
-        return Ok("Location");
+        var result = await handler.Handle(new GetAllLocationsQuery(), cancellationToken);
+
+        return Ok(result.Value);
     }
 
     [HttpGet("locations/top")]
