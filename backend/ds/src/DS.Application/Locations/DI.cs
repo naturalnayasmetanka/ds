@@ -3,7 +3,9 @@ using DS.Application.Locations.Handlers.Commands.Create;
 using DS.Application.Locations.Handlers.Commands.Delete;
 using DS.Application.Locations.Handlers.Commands.Update;
 using DS.Application.Locations.Handlers.Queries.Get;
+using DS.Application.Locations.Handlers.Queries.GetAll;
 using DS.Application.Locations.Handlers.Queries.GetTop;
+using DS.Contracts.Locations.Get;
 using DS.Contracts.Locations.GetById;
 using DS.Contracts.Locations.GetTop;
 using FluentValidation;
@@ -25,6 +27,7 @@ public static class DI
 
         services.AddScoped<IQueryHandler<GetLocationResponse?, GetLocationQuery>, GetLocationHandler>();
         services.AddScoped<IQueryHandler<List<GetTopResponse>, UnitQuery>, GetTopHandler>();
+        services.AddScoped<IQueryHandler<List<GetLocationsResponse>, GetAllLocationsQuery>, GetAllLocationsHandler>();
 
         return services;
     }

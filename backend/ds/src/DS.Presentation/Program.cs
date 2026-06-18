@@ -21,12 +21,23 @@ public class Program
 
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddCors();
+
             builder.Services.AddLogging(builder.Configuration);
             builder.Services.AddWebDI();
             builder.Services.AddInfrastructureDI();
             builder.Services.AddApplicationDI();
 
             var app = builder.Build();
+
+
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:3000", "https://localhost:7242")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+            });
 
             app.UseExceptionMiddleware();
 
