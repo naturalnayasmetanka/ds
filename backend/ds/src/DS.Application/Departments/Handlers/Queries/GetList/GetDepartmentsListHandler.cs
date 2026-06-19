@@ -103,9 +103,9 @@ public class GetDepartmentsListHandler : IQueryHandler<PagedResult<DepartmentLis
                 _ => query.OrderByDescending(d => d.CreatedAt)
             });
 
-        var countTask = baseQuery.CountAsync(cancellationToken);
+        var totalCount = await baseQuery.CountAsync(cancellationToken);
 
-        var itemsTask = sortedAndPagedQuery
+        var items = await sortedAndPagedQuery
             .Select(d => new DepartmentListItemDto(
                 d.Id,
                 d.Name.Value,
@@ -113,11 +113,6 @@ public class GetDepartmentsListHandler : IQueryHandler<PagedResult<DepartmentLis
                 d.CreatedAt,
                 d.UpdatedAt))
             .ToListAsync(cancellationToken);
-
-        await Task.WhenAll(countTask, itemsTask).ConfigureAwait(false);
-
-        var totalCount = await countTask;
-        var items = await itemsTask;
 
         var pagedResult = new PagedResult<DepartmentListItemDto>(
             Items: items,

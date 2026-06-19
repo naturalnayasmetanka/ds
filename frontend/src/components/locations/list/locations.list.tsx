@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { Clock, Inbox, MapPin, MoreHorizontal, Search } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -22,31 +22,28 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { locaitonsAPI } from "@/entities/locations/api";
 import { Spinner } from "@/components/ui/spinner";
+import { useQuery } from "@tanstack/react-query";
 
 type StatusFilter = "all" | "active" | "inactive";
 
 export function LocationsList() {
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<StatusFilter>("all");
-  const [loading, setLoading] = useState<boolean>(true);
-  const [locationsData, setLocations] = useState<LocationDTO[]>([]);
+  const [query, setQuery] = useState("");
+  const {
+    data: locationsData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryFn: () => locaitonsAPI.getLocations(),
+    queryKey: ["locations"],
+  });
 
-  useEffect(() => {
-    locaitonsAPI
-      .getLocations()
-      .then((data) => setLocations(data))
-      .finally(() => setLoading(false))
-      .catch((error) => setError(error));
-  }, [page]);
-
-  if (loading) {
+  if (isLoading) {
     return <Spinner />;
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return <div>{error.message}</div>;
   }
 
   return (
@@ -74,11 +71,7 @@ export function LocationsList() {
         </Tabs>
       </div>
 
-      <p className="text-sm text-muted-foreground">
-        {locationsData.length} из {locationsData.length} локаций
-      </p>
-
-      {locationsData.length === 0 ? (
+      {locationsData == undefined ? (
         <EmptyState hasQuery={query.length > 0} />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

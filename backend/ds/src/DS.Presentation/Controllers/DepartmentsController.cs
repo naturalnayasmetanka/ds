@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DS.Presentation.Controllers;
 
-[ApiController]
+[Route("api/")]
 public class DepartmentsController : ControllerBase
 {
     [HttpGet("departments")]
