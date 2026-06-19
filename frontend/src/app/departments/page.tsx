@@ -1,3 +1,4 @@
+import DepartmentsList from "@/components/departments/delartments.list";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,8 +8,6 @@ export const metadata: Metadata = {
 
 export default function Departments() {
   return (
-    <div>
-      <h2>Departments</h2>
-    </div>
+    <DepartmentsList/>
   );
 }

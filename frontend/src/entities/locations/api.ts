@@ -1,9 +1,10 @@
 import { apiClient } from "@/shared/api/axios.instance";
+import { PaginationResponse } from "@/shared/api/types";
 
 export const locaitonsAPI = {
   getLocations: async (): Promise<LocationDTO[]> => {
     const locations = await apiClient.get<LocationDTO[]>(
-      "/Locations/locations",
+      "/locations",
     );
 
     return locations.data;
@@ -11,9 +12,11 @@ export const locaitonsAPI = {
 
   createLocation: (newLocation: CreateLocationDTO) => {
     const createLocation = apiClient
-      .post("/Locations/locations", newLocation)
+      .post("/locations", newLocation)
       .then((res) => res.data);
 
     return createLocation;
   },
 };
+
+

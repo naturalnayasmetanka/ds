@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DS.Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/")]
 [ApiController]
 public class LocationsController : ControllerBase
 {
