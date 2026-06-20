@@ -1,7 +1,3 @@
-import { Plus } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-
 import { LocationsList } from "@/components/locations/list/locations.list";
 
 export default function LocationsPage() {
@@ -14,13 +10,9 @@ export default function LocationsPage() {
             Управление точками обслуживания и их адресами
           </p>
         </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Добавить локацию
-        </Button>
       </div>
 
-      <LocationsList/>
+      <LocationsList />
     </div>
   );
 }

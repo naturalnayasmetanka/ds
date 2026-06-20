@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Clock, Inbox, MapPin, MoreHorizontal, Search } from "lucide-react";
+import {
+  Clock,
+  Inbox,
+  MapPin,
+  MoreHorizontal,
+  Plus,
+  Search,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,10 +30,12 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { locaitonsAPI } from "@/entities/locations/api";
 import { Spinner } from "@/components/ui/spinner";
 import { useQuery } from "@tanstack/react-query";
+import CreateLocationDialog from "@/features/locations/create-location-dialog";
 
 type StatusFilter = "all" | "active" | "inactive";
 
 export function LocationsList() {
+  const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
   const [status, setStatus] = useState<StatusFilter>("all");
   const [query, setQuery] = useState("");
   const {
@@ -48,6 +57,10 @@ export function LocationsList() {
 
   return (
     <div className="space-y-4">
+      <Button onClick={() => setDialogOpen(true)}>
+        <Plus className="mr-2 h-4 w-4" />
+        Добавить локацию
+      </Button>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative w-full sm:max-w-sm">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -80,6 +93,11 @@ export function LocationsList() {
           ))}
         </div>
       )}
+
+      <CreateLocationDialog
+        isDialogOpen={isDialogOpen}
+        setDialogOpen={setDialogOpen}
+      />
     </div>
   );
 }
