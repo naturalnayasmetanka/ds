@@ -28,7 +28,7 @@ type AddressDTO = {
 type CreateLocationDTO = {
   name: string;
   timezone: string;
-  adress: {
+  address: {
     country: string;
     region: string;
     settlementName: string;
