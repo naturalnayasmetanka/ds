@@ -34,7 +34,7 @@ type CreateLocationDialogProps = {
 const formSchema = z.object({
   name: z.string().min(1, "Укажите название"),
   timezone: z.string().min(1, "Выберите часовой пояс"),
-  adress: z.object({
+  address: z.object({
     country: z.string().min(1, "Укажите страну"),
     region: z.string().min(1, "Укажите регион"),
     settlementName: z.string().min(1, "Укажите населённый пункт"),
@@ -55,7 +55,7 @@ const formSchema = z.object({
 const defaultValues: FormValues = {
   name: "",
   timezone: "",
-  adress: {
+  address: {
     country: "",
     region: "",
     settlementName: "",
@@ -197,11 +197,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                   <Input
                     id="country"
                     placeholder="Россия"
-                    {...register("adress.country")}
+                    {...register("address.country")}
                   />
-                  {errors.adress?.country && (
+                  {errors.address?.country && (
                     <p className="text-sm text-destructive">
-                      {errors.adress?.country?.message}
+                      {errors.address?.country?.message}
                     </p>
                   )}
                 </div>
@@ -211,11 +211,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                   <Input
                     id="region"
                     placeholder="Московская область"
-                    {...register("adress.region")}
+                    {...register("address.region")}
                   />
-                  {errors.adress?.region && (
+                  {errors.address?.region && (
                     <p className="text-sm text-destructive">
-                      {errors.adress?.region?.message}
+                      {errors.address?.region?.message}
                     </p>
                   )}
                 </div>
@@ -225,7 +225,7 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="settlementType">Тип н.п. *</Label>
                   <Controller
-                    name="adress.settlementType"
+                    name="address.settlementType"
                     control={control}
                     render={({ field, fieldState }) => (
                       <>
@@ -259,11 +259,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                   <Input
                     id="settlementName"
                     placeholder="Пушкино"
-                    {...register("adress.settlementName")}
+                    {...register("address.settlementName")}
                   />
-                  {errors.adress?.settlementName && (
+                  {errors.address?.settlementName && (
                     <p className="text-sm text-destructive">
-                      {errors.adress?.settlementName?.message}
+                      {errors.address?.settlementName?.message}
                     </p>
                   )}
                 </div>
@@ -274,11 +274,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                 <Input
                   id="street"
                   placeholder="ул. Ленина"
-                  {...register("adress.street")}
+                  {...register("address.street")}
                 />
-                {errors.adress?.street && (
+                {errors.address?.street && (
                   <p className="text-sm text-destructive">
-                    {errors.adress?.street?.message}
+                    {errors.address?.street?.message}
                   </p>
                 )}
               </div>
@@ -289,11 +289,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                   <Input
                     id="buildingNumber"
                     placeholder="12"
-                    {...register("adress.buildingNumber")}
+                    {...register("address.buildingNumber")}
                   />
-                  {errors.adress?.buildingNumber && (
+                  {errors.address?.buildingNumber && (
                     <p className="text-sm text-destructive">
-                      {errors.adress?.buildingNumber?.message}
+                      {errors.address?.buildingNumber?.message}
                     </p>
                   )}
                 </div>
@@ -303,11 +303,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                   <Input
                     id="buildingBlock"
                     placeholder="А"
-                    {...register("adress.buildingBlock")}
+                    {...register("address.buildingBlock")}
                   />
-                  {errors.adress?.buildingBlock && (
+                  {errors.address?.buildingBlock && (
                     <p className="text-sm text-destructive">
-                      {errors.adress?.buildingBlock?.message}
+                      {errors.address?.buildingBlock?.message}
                     </p>
                   )}
                 </div>
@@ -317,11 +317,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                   <Input
                     id="entrance"
                     placeholder="2"
-                    {...register("adress.entrance")}
+                    {...register("address.entrance")}
                   />
-                  {errors.adress?.entrance && (
+                  {errors.address?.entrance && (
                     <p className="text-sm text-destructive">
-                      {errors.adress?.entrance?.message}
+                      {errors.address?.entrance?.message}
                     </p>
                   )}
                 </div>
@@ -333,11 +333,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                   <Input
                     id="floor"
                     placeholder="3"
-                    {...register("adress.floor")}
+                    {...register("address.floor")}
                   />
-                  {errors.adress?.floor && (
+                  {errors.address?.floor && (
                     <p className="text-sm text-destructive">
-                      {errors.adress?.floor?.message}
+                      {errors.address?.floor?.message}
                     </p>
                   )}
                 </div>
@@ -346,7 +346,7 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                   <Label htmlFor="premiseType">Тип помещения *</Label>
 
                   <Controller
-                    name="adress.premiseType"
+                    name="address.premiseType"
                     control={control}
                     render={({ field, fieldState }) => (
                       <>
@@ -380,11 +380,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                   <Input
                     id="premiseNumber"
                     placeholder="305"
-                    {...register("adress.premiseNumber")}
+                    {...register("address.premiseNumber")}
                   />
-                  {errors.adress?.premiseNumber && (
+                  {errors.address?.premiseNumber && (
                     <p className="text-sm text-destructive">
-                      {errors.adress?.premiseNumber?.message}
+                      {errors.address?.premiseNumber?.message}
                     </p>
                   )}
                 </div>
@@ -395,11 +395,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                 <Input
                   id="postCode"
                   placeholder="141207"
-                  {...register("adress.postCode")}
+                  {...register("address.postCode")}
                 />
-                {errors.adress?.postCode && (
+                {errors.address?.postCode && (
                   <p className="text-sm text-destructive">
-                    {errors.adress?.postCode?.message}
+                    {errors.address?.postCode?.message}
                   </p>
                 )}
               </div>
@@ -409,11 +409,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                 <Input
                   id="fullAddress"
                   placeholder="Россия, Московская область, г. Пушкино, ул. Ленина, д. 12"
-                  {...register("adress.fullAddress")}
+                  {...register("address.fullAddress")}
                 />
-                {errors.adress?.fullAddress && (
+                {errors.address?.fullAddress && (
                   <p className="text-sm text-destructive">
-                    {errors.adress?.fullAddress?.message}
+                    {errors.address?.fullAddress?.message}
                   </p>
                 )}
               </div>
@@ -423,11 +423,11 @@ export default function CreateLocationDialog(props: CreateLocationDialogProps) {
                 <Textarea
                   id="comment"
                   placeholder="Дополнительная информация по адресу"
-                  {...register("adress.comment")}
+                  {...register("address.comment")}
                 />
-                {errors.adress?.comment && (
+                {errors.address?.comment && (
                   <p className="text-sm text-destructive">
-                    {errors.adress?.comment?.message}
+                    {errors.address?.comment?.message}
                   </p>
                 )}
               </div>
