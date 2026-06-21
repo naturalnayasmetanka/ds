@@ -15,10 +15,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DS.Presentation.Controllers;
 
-[Route("api/")]
+[Route("departments")]
 public class DepartmentsController : ControllerBase
 {
-    [HttpGet("departments")]
+    [HttpGet]
     public async Task<IActionResult> Get(
         [FromServices] IQueryHandler<PagedResult<DepartmentListItemDto>, GetDepartmentsListQuery> handler,
         [FromQuery] GetDepartmentsListRequest request,
@@ -33,7 +33,7 @@ public class DepartmentsController : ControllerBase
         return Ok(getPagedListResult.Value);
     }
 
-    [HttpGet("departments/{id:guid}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(
         [FromRoute] GetDepartmentRequest request,
         [FromServices] IQueryHandler<GetDepartmentResponse?, GetDepartmentQuery> handler,
@@ -48,7 +48,7 @@ public class DepartmentsController : ControllerBase
         return Ok(getDepartmentResult.Value);
     }
 
-    [HttpPost("departments")]
+    [HttpPost]
     public async Task<EndpointResult<Guid>> Create(
         [FromServices] ICommandHandler<Guid, CreateDepartmentCommand> handler,
         [FromBody] CreateDepartmentRequest request,
@@ -61,7 +61,7 @@ public class DepartmentsController : ControllerBase
         return createDepartmentResult;
     }
 
-    [HttpPatch("departments/{id:guid}")]
+    [HttpPatch("{id:guid}")]
     public async Task<EndpointResult<Guid>> Update(
         [FromServices] ICommandHandler<Guid, UpdateDepartmentCommand> handler,
         [FromRoute] Guid id,
@@ -75,7 +75,7 @@ public class DepartmentsController : ControllerBase
         return updateDepartmentResult;
     }
 
-    [HttpDelete("departments/{id:guid}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
@@ -83,7 +83,7 @@ public class DepartmentsController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("/departments/{departmentId:guid}/positions/{positionId:guid}")]
+    [HttpPost("{departmentId:guid}/positions/{positionId:guid}")]
     public async Task<IActionResult> BindPosition(
         [FromServices] ICommandHandler<BindDepartmentPositionCommand> handler,
         [FromRoute] Guid departmentId,
@@ -100,7 +100,7 @@ public class DepartmentsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpDelete("/departments/{departmentId:guid}/positions/{positionId:guid}")]
+    [HttpDelete("{departmentId:guid}/positions/{positionId:guid}")]
     public async Task<IActionResult> UnbindPosition(
         [FromServices] ICommandHandler<UnbindDepartmentPositionCommand> handler,
         [FromRoute] Guid departmentId,

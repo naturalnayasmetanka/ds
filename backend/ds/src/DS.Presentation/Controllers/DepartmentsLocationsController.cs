@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DS.Presentation.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("departments-locations")]
     public class DepartmentsLocationsController : ControllerBase
     {
         [HttpPost("/departments/{departmentId:guid}/locations/{locationId:guid}")]
