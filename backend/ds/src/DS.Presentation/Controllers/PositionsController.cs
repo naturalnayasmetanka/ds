@@ -9,12 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DS.Presentation.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-
+[Route("positions")]
 public class PositionsController : ControllerBase
 {
-    [HttpPost("positions")]
+    [HttpPost]
     public async Task<EndpointResult<Guid>> Create(
         [FromServices] ICommandHandler<Guid, CreatePositionCommand> handler,
         [FromBody] CreatePositionRequest request,
@@ -27,7 +25,7 @@ public class PositionsController : ControllerBase
         return result;
     }
 
-    [HttpPatch("positions/{id:guid}")]
+    [HttpPatch("{id:guid}")]
     public async Task<EndpointResult<Guid>> Update(
        [FromServices] ICommandHandler<Guid, UpdatePositionCommand> handler,
        [FromRoute] Guid id,
@@ -41,7 +39,7 @@ public class PositionsController : ControllerBase
         return result;
     }
 
-    [HttpDelete("positions/{id:guid}")]
+    [HttpDelete("{id:guid}")]
     public async Task<EndpointResult<Guid>> Delete(
         [FromServices] ICommandHandler<Guid, DeletePositionCommand> handler,
         [FromRoute] Guid id,

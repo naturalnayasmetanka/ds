@@ -13,13 +13,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DS.Presentation.Controllers;
 
-[Route("api/")]
-[ApiController]
+[Route("locations")]
 public class LocationsController : ControllerBase
 {
-    [HttpGet("locations")]
+    [HttpGet]
     public async Task<IActionResult> Get(
-        IQueryHandler<List<GetLocationsResponse>, GetAllLocationsQuery> handler,
+        [FromServices]IQueryHandler<List<GetLocationsResponse>, GetAllLocationsQuery> handler,
         CancellationToken cancellationToken)
     {
         var result = await handler.Handle(new GetAllLocationsQuery(), cancellationToken);
@@ -27,7 +26,7 @@ public class LocationsController : ControllerBase
         return Ok(result.Value);
     }
 
-    [HttpGet("locations/top")]
+    [HttpGet("top")]
     public async Task<IActionResult> GetTop(
         [FromServices] IQueryHandler<List<GetTopResponse>, UnitQuery> handler,
         CancellationToken cancellationToken)
@@ -40,7 +39,7 @@ public class LocationsController : ControllerBase
         return Ok(getTopLocationsResult.Value);
     }
 
-    [HttpGet("locations/{id:guid}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(
         [FromRoute] GetLocationRequest request,
         [FromServices] IQueryHandler<GetLocationResponse?, GetLocationQuery> handler,
@@ -55,7 +54,7 @@ public class LocationsController : ControllerBase
         return Ok(getLocationResult.Value);
     }
 
-    [HttpPost("locations")]
+    [HttpPost]
     public async Task<IActionResult> Create(
         [FromServices] ICommandHandler<Guid, CreateLocationCommand> handler,
         [FromBody] CreateLocationRequest request,
@@ -71,7 +70,7 @@ public class LocationsController : ControllerBase
         return Ok(createLocationResult.Value);
     }
 
-    [HttpPatch("locations/{id:guid}")]
+    [HttpPatch("{id:guid}")]
     public async Task<IActionResult> Update(
         [FromServices] ICommandHandler<Guid, UpdateLocationCommand> handler,
         [FromRoute] Guid id,
@@ -88,7 +87,7 @@ public class LocationsController : ControllerBase
         return Ok(updateLocationResult.Value);
     }
 
-    [HttpDelete("locations/{id:guid}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(
         [FromRoute] Guid id,
         CancellationToken cancellationToken)

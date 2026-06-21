@@ -33,7 +33,7 @@ public class Program
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:3000", "https://localhost:7242")
+                builder.WithOrigins("http://localhost:3000", "https://localhost:7242", "http://localhost:3001")
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
