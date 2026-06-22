@@ -2,7 +2,6 @@ import Link from "next/link";
 
 const year = new Date().getFullYear();
 
-// Серверный компонент: контент статический, "use client" не нужен.
 export default function Footer() {
   return (
     <footer className="border-t border-stone-200 bg-white">
@@ -15,11 +14,11 @@ export default function Footer() {
             Все системы работают
           </span>
           <span className="text-stone-300">·</span>
-          <Link href="/admin/docs" className="hover:text-stone-900">
+          <Link href="#" className="hover:text-stone-900">
             Документация
           </Link>
           <span className="text-stone-300">·</span>
-          <Link href="/admin/support" className="hover:text-stone-900">
+          <Link href="#" className="hover:text-stone-900">
             Поддержка
           </Link>
         </div>
