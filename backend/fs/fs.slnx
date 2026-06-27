@@ -5,4 +5,5 @@
   <Project Path="src/FS.Infrastructure.S3/FS.Infrastructure.S3.csproj" Id="b0594257-e14e-495a-906a-24162e038e50" />
   <Project Path="src/FS.Infrastructure/FS.Infrastructure.Postgres.csproj" Id="3e95f0a9-8499-442f-b5ea-a352631bb873" />
   <Project Path="src/fs.Presentation/fs.Presentation.csproj" Id="9475be65-b556-48c4-bad9-79d66978ff37" />
+  <Project Path="tests/FS.Tests/FS.Tests.csproj" Id="28b5c5c5-81cd-4f8f-9a4a-bf6b28e2a38c" />
 </Solution>
