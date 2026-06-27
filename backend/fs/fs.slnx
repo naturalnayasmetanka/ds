@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="src/FS.Application/FS.Application.csproj" Id="1f46d76a-f5c9-49f3-be72-3bbd6da5f0d0" />
+  <Project Path="src/FS.Contracts/FS.Contracts.csproj" Id="0518c9f5-af5f-427e-9dda-4ac18ea8da81" />
+  <Project Path="src/fs.Core/FS.Core.csproj" Id="bac34899-629d-47db-bf18-c7c0ad226a6c" />
+  <Project Path="src/FS.Infrastructure.S3/FS.Infrastructure.S3.csproj" Id="b0594257-e14e-495a-906a-24162e038e50" />
+  <Project Path="src/FS.Infrastructure/FS.Infrastructure.Postgres.csproj" Id="3e95f0a9-8499-442f-b5ea-a352631bb873" />
+  <Project Path="src/fs.Presentation/fs.Presentation.csproj" Id="9475be65-b556-48c4-bad9-79d66978ff37" />
+</Solution>
