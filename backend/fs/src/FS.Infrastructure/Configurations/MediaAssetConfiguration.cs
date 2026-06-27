@@ -47,7 +47,7 @@ public class MediaAssetConfiguration : IEntityTypeConfiguration<MediaAsset>
 
             mb.OwnsOne(md => md.FileName, fb =>
             {
-                fb.Property(x => x.Extention).HasJsonPropertyName("extension");
+                fb.Property(x => x.Extension).HasJsonPropertyName("extension");
                 fb.Property(x => x.Name).HasJsonPropertyName("name");
             });
 

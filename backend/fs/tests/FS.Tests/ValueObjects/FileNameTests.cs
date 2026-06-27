@@ -16,7 +16,7 @@ public class FileNameTests
 
         result.IsSuccess.Should().BeTrue();
         result.Value.Name.Should().Be("photo");
-        result.Value.Extention.Should().Be("jpg");
+        result.Value.Extension.Should().Be("jpg");
     }
 
     [Fact]
@@ -59,6 +59,6 @@ public class FileNameTests
         var result = FileName.Create("photo.JPG");
 
         result.IsSuccess.Should().BeTrue();
-        result.Value.Extention.Should().Be("jpg");
+        result.Value.Extension.Should().Be("jpg");
     }
 }

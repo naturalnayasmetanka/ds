@@ -43,7 +43,7 @@ public sealed record StorageKey
     private static Result<string, Error> NormalizePrefix(string? prefix)
     {
         if (string.IsNullOrWhiteSpace(prefix))
-            return string.Empty;
+            return Result.Success<string, Error>(string.Empty);
 
         string[] parts = prefix.Trim().Replace('\\', '/')
             .Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
@@ -61,7 +61,7 @@ public sealed record StorageKey
                 normalizedParts.Add(normalizedPart.Value);
         }
 
-        return string.Join("/", normalizedParts);
+        return Result.Success<string, Error>(string.Join("/", normalizedParts));
     }
 
     private static Result<string, Error> NormalizeSegment(string? value)
@@ -74,6 +74,6 @@ public sealed record StorageKey
         if (trimmed.Contains('/', StringComparison.Ordinal) || trimmed.Contains('\\', StringComparison.Ordinal))
             return Result.Failure<string, Error>(Error.Failure("invalid.key", "invalid.key"));
 
-        return trimmed;
+        return Result.Success<string, Error>(trimmed);
     }
 }

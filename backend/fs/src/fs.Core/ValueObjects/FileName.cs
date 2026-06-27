@@ -6,7 +6,7 @@ namespace FS.Core.ValueObjects;
 public sealed record FileName
 {
     public string Name { get; }
-    public string Extention { get; }
+    public string Extension{ get; }
     protected FileName()
     {
 
@@ -15,7 +15,7 @@ public sealed record FileName
     private FileName(string name, string extention)
     {
         Name = name;
-        Extention = extention;
+        Extension= extention;
     }
 
     public static Result<FileName, Error> Create(string fileName)
