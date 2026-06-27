@@ -1,4 +1,6 @@
-﻿using FS.Core.Enums;
+﻿using CSharpFunctionalExtensions;
+using FS.Core.Enums;
+using FS.Core.Exceptions;
 using FS.Core.ValueObjects;
 
 namespace FS.Core.Entities;
@@ -34,5 +36,47 @@ public abstract class MediaAsset
     public StorageKey Key { get; protected set; }
     public MediaOwner MediaOwner { get; protected set; } = null!;
     public MediaStatus MediaStatus { get; protected set; }
+
+
+    public UnitResult<Error> MarkUploaded()
+    {
+        if (MediaStatus != MediaStatus.UPLOADING)
+            return Error.Failure("invalid.transition", $"Cannot mark as uploaded from {MediaStatus}");
+
+        MediaStatus = MediaStatus.UPLOADED;
+        UpdatedAt = DateTime.UtcNow;
+        return UnitResult.Success<Error>();
+    }
+
+    public UnitResult<Error> MarkReady(StorageKey key)
+    {
+        if (MediaStatus != MediaStatus.UPLOADED)
+            return Error.Failure("invalid.transition", $"Cannot mark as ready from {MediaStatus}");
+
+        Key = key;
+        MediaStatus = MediaStatus.READY;
+        UpdatedAt = DateTime.UtcNow;
+        return UnitResult.Success<Error>();
+    }
+
+    public UnitResult<Error> MarkFailed()
+    {
+        if (MediaStatus is not (MediaStatus.UPLOADING or MediaStatus.UPLOADED))
+            return Error.Failure("invalid.transition", $"Cannot mark as failed from {MediaStatus}");
+
+        MediaStatus = MediaStatus.FAILED;
+        UpdatedAt = DateTime.UtcNow;
+        return UnitResult.Success<Error>();
+    }
+
+    public UnitResult<Error> Delete()
+    {
+        if (MediaStatus == MediaStatus.DELETED)
+            return Error.Failure("invalid.transition", "Already deleted");
+
+        MediaStatus = MediaStatus.DELETED;
+        UpdatedAt = DateTime.UtcNow;
+        return UnitResult.Success<Error>();
+    }
 
 }
