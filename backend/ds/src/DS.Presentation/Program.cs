@@ -51,7 +51,7 @@ public class Program
                 });
                 app.MapScalarApiReference(opt =>
                 {
-                    opt.Title = "Scalar Example";
+                    opt.Title = "Department service";
                     opt.Theme = ScalarTheme.Mars;
                     opt.DefaultHttpClient = new(ScalarTarget.Http, ScalarClient.Http11);
                 });
