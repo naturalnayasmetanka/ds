@@ -16,6 +16,11 @@ public sealed record MediaOwner
 
     public Guid EntityId { get; }
 
+    protected MediaOwner()
+    {
+
+    }
+
     private MediaOwner(string context, Guid entityId)
     {
         Context = context;

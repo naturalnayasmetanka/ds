@@ -7,6 +7,8 @@ namespace FS.Core.Entities;
 
 public class ImageAsset : MediaAsset
 {
+    protected ImageAsset() { }
+
     public ImageAsset(Guid id, MediaData mediaData, MediaStatus mediaStatus, MediaOwner mediaOwner)
         : base(id, mediaData, mediaStatus, AssetType.IMAGE, mediaOwner)
     {

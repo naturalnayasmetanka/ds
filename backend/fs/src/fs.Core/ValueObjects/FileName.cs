@@ -7,6 +7,10 @@ public sealed record FileName
 {
     public string Name { get; }
     public string Extention { get; }
+    protected FileName()
+    {
+
+    }
 
     private FileName(string name, string extention)
     {
@@ -29,6 +33,6 @@ public sealed record FileName
         if (string.IsNullOrWhiteSpace(name))
             return Result.Failure<FileName, Error>(Error.Failure("empty.filename", "file name cannot be empty"));
 
-        return Result.Success<FileName, Error>(new FileName(fileName, extension));
+        return Result.Success<FileName, Error>(new FileName(name, extension));
     }
 }

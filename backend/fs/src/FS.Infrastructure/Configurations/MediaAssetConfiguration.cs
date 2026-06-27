@@ -12,13 +12,13 @@ public class MediaAssetConfiguration : IEntityTypeConfiguration<MediaAsset>
     {
         builder.ToTable("media_assets");
         builder.HasKey(x => x.Id);
+        builder.Ignore(x => x.AssetType);
 
         builder.HasDiscriminator<string>("asset_type")
             .HasValue<ImageAsset>("image");
 
         builder.Property(x => x.Id).HasColumnName("id");
-        builder.Property(x => x.MediaStatus).HasConversion<string>();
-        builder.Property(x => x.AssetType).HasConversion<string>();
+        builder.Property(x => x.MediaStatus).HasConversion<string>().HasColumnName("media_status");
         builder.Property(x => x.CreatedAt).HasColumnName("created_at");
         builder.Property(x => x.UpdatedAt).HasColumnName("updated_at");
 
@@ -41,18 +41,24 @@ public class MediaAssetConfiguration : IEntityTypeConfiguration<MediaAsset>
 
             mb.OwnsOne(md => md.ContentType, cb =>
             {
-                cb.Property(x => x.Category).HasConversion<string>().HasColumnName("category");
-                cb.Property(x => x.Value).HasColumnName("value");
+                cb.Property(x => x.Category).HasConversion<string>().HasJsonPropertyName("category");
+                cb.Property(x => x.Value).HasJsonPropertyName("value");
             });
 
             mb.OwnsOne(md => md.FileName, fb =>
             {
-                fb.Property(x => x.Extention).HasColumnName("extension");
-                fb.Property(x => x.Name).HasColumnName("value");
+                fb.Property(x => x.Extention).HasJsonPropertyName("extension");
+                fb.Property(x => x.Name).HasJsonPropertyName("name");
             });
 
-            mb.Property(md => md.Size).HasColumnName("size");
-            mb.Property(md => md.ExpectedChunksCount).HasColumnName("expected_chunks_count");
+            mb.Property(md => md.Size).HasJsonPropertyName("size");
+            mb.Property(md => md.ExpectedChunksCount).HasJsonPropertyName("expected_chunks_count");
+        });
+
+        builder.OwnsOne(m => m.MediaOwner, ob =>
+        {
+            ob.Property(x => x.Context).HasColumnName("owner_context");
+            ob.Property(x => x.EntityId).HasColumnName("owner_entity_id");
         });
     }
 }

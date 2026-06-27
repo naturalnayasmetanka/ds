@@ -1,4 +1,5 @@
 ﻿using fs.Presentation.DI;
+using FS.Infrastructure.Postgres;
 using Scalar.AspNetCore;
 using Serilog;
 using System.Globalization;
@@ -17,6 +18,8 @@ namespace fs.Presentation
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddLogging();
+
+            builder.Services.AddInfrastructurePostgres(builder.Configuration);
             builder.Services.AddWebDI();
 
             builder.Services.AddControllers();

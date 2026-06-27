@@ -10,6 +10,10 @@ public sealed record MediaData
     public long Size { get; }
     public int ExpectedChunksCount { get; }
 
+    protected MediaData()
+    {
+
+    }
     public MediaData(FileName fileName, ContentType contentType, long size, int expectedChunksCount)
     {
         FileName = fileName;
