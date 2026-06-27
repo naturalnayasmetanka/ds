@@ -14,7 +14,7 @@ public sealed record StorageKey
         Prefix = prefix;
         Location = location;
         Value = string.IsNullOrEmpty(Prefix) ? Key : $"{Prefix}/{Key}";
-        FullPath = string.IsNullOrEmpty(Prefix) ? Key : $"{Location}/{Prefix}/{Key}";
+        FullPath = string.IsNullOrEmpty(Prefix) ? $"{Location}/{Key}" : $"{Location}/{Prefix}/{Key}";
     }
 
     public string Key { get; }
@@ -26,18 +26,18 @@ public sealed record StorageKey
     public static Result<StorageKey, Error> Create(string location, string? prefix, string key)
     {
         if (string.IsNullOrEmpty(location))
-            return Result.Failure<StorageKey, Error>(Error.Failure("empty.location", "connot be empty"));
+            return Result.Failure<StorageKey, Error>(Error.Failure("empty.location", "cannot be empty"));
 
-        var normalizedPrefixRezult = NormalizeSegment(prefix);
-        if (normalizedPrefixRezult.IsFailure)
-            return Result.Failure<StorageKey, Error>(Error.Failure("unnormalized.prefix", "unnormalized.prefix"));
+        var normalizedPrefixResult = NormalizePrefix(prefix);
+        if (normalizedPrefixResult.IsFailure)
+            return Result.Failure<StorageKey, Error>(normalizedPrefixResult.Error);
 
-        var normalizedKeyRezult = NormalizeSegment(key);
-        if (normalizedKeyRezult.IsFailure)
-            return Result.Failure<StorageKey, Error>(Error.Failure("unnormalized.key", "unnormalized.key"));
+        var normalizedKeyResult = NormalizeSegment(key);
+        if (normalizedKeyResult.IsFailure)
+            return Result.Failure<StorageKey, Error>(normalizedKeyResult.Error);
 
-        return Result.Success<StorageKey, Error>
-            (new StorageKey(location.Trim(), normalizedPrefixRezult.Value, normalizedKeyRezult.Value));
+        return Result.Success<StorageKey, Error>(
+            new StorageKey(location.Trim(), normalizedPrefixResult.Value, normalizedKeyResult.Value));
     }
 
     private static Result<string, Error> NormalizePrefix(string? prefix)
@@ -66,10 +66,10 @@ public sealed record StorageKey
 
     private static Result<string, Error> NormalizeSegment(string? value)
     {
-        if (!string.IsNullOrWhiteSpace(value))
-            return Result.Failure<string, Error>(Error.Failure("empty.value", "connot be empty"));
+        if (string.IsNullOrWhiteSpace(value))
+            return Result.Failure<string, Error>(Error.Failure("empty.value", "cannot be empty"));
 
-        string trimmed = value.Trim();
+        string trimmed = value!.Trim();
 
         if (trimmed.Contains('/', StringComparison.Ordinal) || trimmed.Contains('\\', StringComparison.Ordinal))
             return Result.Failure<string, Error>(Error.Failure("invalid.key", "invalid.key"));

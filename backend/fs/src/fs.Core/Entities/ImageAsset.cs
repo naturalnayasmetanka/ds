@@ -30,7 +30,7 @@ public class ImageAsset : MediaAsset
 
         if (mediaData.ContentType.Category != MediaType.IMAGE)
         {
-            return Error.Validation("image.invalid.content-type", $"File content type must be {ALLOWED_CONTENT_TYPE}");
+            return Error.Validation("image.invalid.content-type", $"File content type must be {MediaType.IMAGE}");
         }
 
         if (mediaData.Size > MAX_SIZE)

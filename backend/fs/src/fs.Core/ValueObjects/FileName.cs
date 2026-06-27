@@ -17,14 +17,18 @@ public sealed record FileName
     public static Result<FileName, Error> Create(string fileName)
     {
         if (string.IsNullOrWhiteSpace(fileName))
-            return Result.Failure<FileName, Error>(Error.Failure("empty.filename", "connot be empty"));
+            return Result.Failure<FileName, Error>(Error.Failure("empty.filename", "cannot be empty"));
 
         int lastDot = fileName.LastIndexOf('.');
-        if (lastDot == -1 || lastDot == fileName.Length - 1)
-            return Result.Failure<FileName, Error>(Error.Failure("empty.extention", "must have extention"));
+        if (lastDot <= 0 || lastDot == fileName.Length - 1)
+            return Result.Failure<FileName, Error>(Error.Failure("empty.extension", "must have extension"));
 
-        string extention = fileName[(lastDot + 1)..].ToLowerInvariant();
+        string name = fileName[..lastDot];
+        string extension = fileName[(lastDot + 1)..].ToLowerInvariant();
 
-        return Result.Success<FileName, Error>(new FileName(fileName, extention));
+        if (string.IsNullOrWhiteSpace(name))
+            return Result.Failure<FileName, Error>(Error.Failure("empty.filename", "file name cannot be empty"));
+
+        return Result.Success<FileName, Error>(new FileName(fileName, extension));
     }
 }

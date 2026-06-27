@@ -18,19 +18,36 @@ public sealed record ContentType
     public static Result<ContentType, Error> Create(string contentType)
     {
         if (string.IsNullOrWhiteSpace(contentType))
-            return Result.Failure<ContentType, Error>(Error.Failure("empty.contenttype", "connot be empty"));
+            return Result.Failure<ContentType, Error>(Error.Failure("empty.contenttype", "cannot be empty"));
 
-        MediaType category = contentType switch
-        {
-            var ct when ct.Contains("video", StringComparison.InvariantCultureIgnoreCase) => MediaType.VIDEO,
-            var ct when ct.Contains("image", StringComparison.InvariantCultureIgnoreCase) => MediaType.IMAGE,
-            var ct when ct.Contains("audio", StringComparison.InvariantCultureIgnoreCase) => MediaType.AUDIO,
-            var ct when ct.Contains("document", StringComparison.InvariantCultureIgnoreCase) => MediaType.DOCUMENT,
+        var normalized = contentType.Trim().ToLowerInvariant();
 
-            _ => MediaType.UNKNOWN
+        var category = _mimeToCategory.TryGetValue(normalized, out var mediaType)
+            ? mediaType
+            : MediaType.UNKNOWN;
 
-        };
-
-        return Result.Success<ContentType, Error>(new ContentType(contentType, category));
+        return Result.Success<ContentType, Error>(new ContentType(normalized, category));
     }
+
+    private static readonly Dictionary<string, MediaType> _mimeToCategory = new()
+    {
+        ["video/mp4"] = MediaType.VIDEO,
+        ["video/x-matroska"] = MediaType.VIDEO,
+        ["video/x-msvideo"] = MediaType.VIDEO,
+        ["video/quicktime"] = MediaType.VIDEO,
+
+        ["image/jpeg"] = MediaType.IMAGE,
+        ["image/png"] = MediaType.IMAGE,
+        ["image/gif"] = MediaType.IMAGE,
+        ["image/webp"] = MediaType.IMAGE,
+        ["image/svg+xml"] = MediaType.IMAGE,
+
+        ["audio/mpeg"] = MediaType.AUDIO,
+        ["audio/ogg"] = MediaType.AUDIO,
+        ["audio/wav"] = MediaType.AUDIO,
+
+        ["application/pdf"] = MediaType.DOCUMENT,
+        ["application/msword"] = MediaType.DOCUMENT,
+        ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"] = MediaType.DOCUMENT,
+    };
 }
