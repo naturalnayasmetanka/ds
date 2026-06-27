@@ -49,6 +49,6 @@ public class ImageAsset : MediaAsset
         if (validationResult.IsFailure)
             return validationResult.Error;
 
-        return Result.Success<ImageAsset, Error>(new ImageAsset(id, mediaData, MediaStatus.UPLOADED, owner));
+        return Result.Success<ImageAsset, Error>(new ImageAsset(id, mediaData, MediaStatus.UPLOADING, owner));
     }
 }
