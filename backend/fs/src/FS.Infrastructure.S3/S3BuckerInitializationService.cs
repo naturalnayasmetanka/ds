@@ -43,7 +43,7 @@ public class S3BuckerInitializationService : BackgroundService
         catch (OperationCanceledException ex)
         {
 
-            _logger.LogInformation(ex, "S3 bucket initialization service is stopping due to cancellation.");
+            _logger.LogCritical(ex, "S3 bucket initialization service failed to start.");
         }
         catch (Exception)
         {

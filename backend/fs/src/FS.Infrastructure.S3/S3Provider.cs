@@ -1,6 +1,7 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 using CSharpFunctionalExtensions;
+using FS.Contracts;
 using FS.Core.Abstractions;
 using FS.Core.Exceptions;
 using Microsoft.Extensions.Logging;
@@ -130,8 +131,8 @@ public class S3Provider : IS3Provider, IDisposable
         return response;
     }
 
-    public async Task<Result<CompleteMultipartUploadResponse?, Error>> CompleteMultipartUploadAsync(
-        string bucketName, string key, string uploadId, List<PartETag> partETags, CancellationToken cancellationToken)
+    public async Task<Result<string?, Error>> CompleteMultipartUploadAsync(
+        string bucketName, string key, string uploadId, List<PartEtagDto> partETags, CancellationToken cancellationToken)
     {
         try
         {
@@ -140,17 +141,18 @@ public class S3Provider : IS3Provider, IDisposable
                 BucketName = bucketName,
                 Key = key,
                 UploadId = uploadId,
-                PartETags = partETags
+                PartETags = partETags.Select(x => new PartETag { ETag = x.ETag, PartNumber = x.PartNumber }).ToList()
             };
 
             var result = await _amazonS3.CompleteMultipartUploadAsync(request, cancellationToken);
 
-            return Result.Success<CompleteMultipartUploadResponse?, Error>(result);
+
+            return Result.Success<string?, Error>(result.Key);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error completing multipart uploading");
-            return Result.Failure<CompleteMultipartUploadResponse?, Error>(Error.Failure("multipart.upload.error", ex.Message));
+            return Result.Failure<string?, Error>(Error.Failure("multipart.upload.error", ex.Message));
         }
     }
 
