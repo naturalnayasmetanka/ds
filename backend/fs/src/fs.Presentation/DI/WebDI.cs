@@ -1,4 +1,6 @@
-﻿namespace fs.Presentation.DI;
+﻿using Microsoft.OpenApi;
+
+namespace fs.Presentation.DI;
 
 public static class WebDI
 {
@@ -7,8 +9,6 @@ public static class WebDI
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddControllers();
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
 
         return services;
     }
