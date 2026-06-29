@@ -9,15 +9,26 @@ namespace fs.Presentation.Controllers;
 [ApiController]
 public class UploadController : ControllerBase
 {
-    [HttpPost("files/multipart")]
-    public async Task<IActionResult> UploadMultipartFile(
+    [HttpPost("files/start-multipart")]
+    public async Task<IActionResult> StartUploadMultipartFile(
         [FromBody] StartMultipartUploadRequest request,
         [FromServices] StartMultipartUploadHandler handler,
         CancellationToken cancellationToken)
     {
         var response = await handler.Handle(new StartMultipartUploadCommand(request), cancellationToken);
 
-        return Ok();
+        return Ok(response.Value);
+    }
+
+    [HttpPost("files/complete-multipart")]
+    public async Task<IActionResult> CompleteUploadMultipartFile(
+       [FromBody] CompleteMultipartUploadRequest request,
+       [FromServices] CompleteMultipartUploadHandler handler,
+       CancellationToken cancellationToken)
+    {
+        var response = await handler.Handle(new CompleteMultipartUploadCommand(request), cancellationToken);
+
+        return Ok(response.Value);
     }
 
     [HttpPost("files")]
@@ -29,25 +40,5 @@ public class UploadController : ControllerBase
             file.OpenReadStream(), "images", $"raw/{Guid.CreateVersion7()}", file.ContentType, cancellationToken);
 
         return Ok();
-    }
-
-    [HttpGet("files/url")]
-    public async Task<IActionResult> DawnloadFile(
-       string bucket, string key, [FromServices] IS3Provider s3Provider, CancellationToken cancellationToken)
-    {
-
-        var result = await s3Provider.GenerateDownloadUrl(bucket, key);
-
-        return Ok(result);
-    }
-
-    [HttpPut("files/url")]
-    public async Task<IActionResult> UploadFile(
-       string bucket, string key, [FromServices] IS3Provider s3Provider, CancellationToken cancellationToken)
-    {
-
-        var result = await s3Provider.GenerateUploadUrlAsync(bucket, key);
-
-        return Ok(result);
     }
 }

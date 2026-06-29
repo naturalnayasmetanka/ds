@@ -9,8 +9,8 @@ public class ImageAsset : MediaAsset
 {
     protected ImageAsset() { }
 
-    public ImageAsset(Guid id, MediaData mediaData, MediaStatus mediaStatus, MediaOwner mediaOwner)
-        : base(id, mediaData, mediaStatus, AssetType.IMAGE, mediaOwner)
+    public ImageAsset(Guid id, MediaData mediaData, MediaStatus mediaStatus)
+        : base(id, mediaData, mediaStatus, AssetType.IMAGE)
     {
 
     }
@@ -43,12 +43,12 @@ public class ImageAsset : MediaAsset
         return UnitResult.Success<Error>();
     }
 
-    public static Result<ImageAsset, Error> CreateForUpload(Guid id, MediaData mediaData, MediaOwner owner)
+    public static Result<ImageAsset, Error> CreateForUpload(Guid id, MediaData mediaData)
     {
         var validationResult = Validate(mediaData);
         if (validationResult.IsFailure)
             return validationResult.Error;
 
-        return Result.Success<ImageAsset, Error>(new ImageAsset(id, mediaData, MediaStatus.UPLOADING, owner));
+        return Result.Success<ImageAsset, Error>(new ImageAsset(id, mediaData, MediaStatus.UPLOADING));
     }
 }

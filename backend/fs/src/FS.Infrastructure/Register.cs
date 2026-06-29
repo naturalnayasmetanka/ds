@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FS.Core.Abstractions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +21,8 @@ namespace FS.Infrastructure.Postgres
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(connectionString));
+
+            services.AddScoped<IMediaAssetRepository, MediaAssetRepository>();
 
             return services;
         }

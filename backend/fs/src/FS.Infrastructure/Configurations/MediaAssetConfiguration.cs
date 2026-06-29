@@ -55,10 +55,10 @@ public class MediaAssetConfiguration : IEntityTypeConfiguration<MediaAsset>
             mb.Property(md => md.ExpectedChunksCount).HasJsonPropertyName("expected_chunks_count");
         });
 
-        builder.OwnsOne(m => m.MediaOwner, ob =>
-        {
-            ob.Property(x => x.Context).HasColumnName("owner_context");
-            ob.Property(x => x.EntityId).HasColumnName("owner_entity_id");
-        });
+        //builder.OwnsOne(m => m.MediaOwner, ob =>
+        //{
+        //    ob.Property(x => x.Context).HasColumnName("owner_context");
+        //    ob.Property(x => x.EntityId).HasColumnName("owner_entity_id");
+        //});
     }
 }

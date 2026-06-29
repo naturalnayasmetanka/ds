@@ -16,15 +16,13 @@ public abstract class MediaAsset
         Guid id,
         MediaData mediaData,
         MediaStatus mediaStatus,
-        AssetType assetType,
-        MediaOwner mediaOwner)
+        AssetType assetType)
     {
         Id = id;
         MediaData = mediaData;
         AssetType = assetType;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
-        MediaOwner = mediaOwner;
         MediaStatus = mediaStatus;
     }
 
@@ -34,9 +32,23 @@ public abstract class MediaAsset
     public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; protected set; } = DateTime.UtcNow;
     public StorageKey Key { get; protected set; }
-    public MediaOwner MediaOwner { get; protected set; } = null!;
     public MediaStatus MediaStatus { get; protected set; }
 
+
+    public static Result<MediaAsset, Error> CreateForUpload(MediaData mediaData, AssetType assetType)
+    {
+        switch (assetType)
+        {
+            case AssetType.IMAGE:
+                var result = ImageAsset.CreateForUpload(Guid.CreateVersion7(), mediaData);
+                return result.IsFailure
+                    ? Result.Failure<MediaAsset, Error>(Error.Failure("create.error", "image asset create error"))
+                    : Result.Success<MediaAsset, Error>(result.Value);
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(assetType), assetType, null);
+        }
+    }
 
     public UnitResult<Error> MarkUploaded()
     {
