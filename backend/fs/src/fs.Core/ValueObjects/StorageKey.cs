@@ -23,6 +23,9 @@ public sealed record StorageKey
     public string Value { get; }
     public string FullPath { get; }
 
+    public static StorageKey GenerateForAsset(string location, string prefix)
+        => new(location, prefix, Guid.CreateVersion7().ToString());
+
     public static Result<StorageKey, Error> Create(string location, string? prefix, string key)
     {
         if (string.IsNullOrEmpty(location))

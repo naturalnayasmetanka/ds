@@ -55,6 +55,15 @@ public class MediaAssetConfiguration : IEntityTypeConfiguration<MediaAsset>
             mb.Property(md => md.ExpectedChunksCount).HasJsonPropertyName("expected_chunks_count");
         });
 
+        builder.OwnsOne(m => m.ActualData, ab =>
+        {
+            ab.ToJson("actual_media_data");
+
+            ab.Property(a => a.Size).HasJsonPropertyName("size");
+            ab.Property(a => a.ContentType).HasJsonPropertyName("content_type");
+            ab.Property(a => a.ETag).HasJsonPropertyName("etag");
+        });
+
         //builder.OwnsOne(m => m.MediaOwner, ob =>
         //{
         //    ob.Property(x => x.Context).HasColumnName("owner_context");

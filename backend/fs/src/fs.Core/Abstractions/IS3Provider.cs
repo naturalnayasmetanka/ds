@@ -19,4 +19,15 @@ public interface IS3Provider
     Task<string> GenerateDownloadUrl(StorageKey storageKey);
 
     Task UploadFileAsync(Stream stream, string bucketName, string key, string contentType, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Генерирует presigned PUT URL для прямой (non-multipart) загрузки одного объекта.
+    /// </summary>
+    Task<string> GenerateSimpleUploadUrlAsync(StorageKey storageKey, string contentType, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Читает фактические метаданные объекта из storage provider (HEAD).
+    /// Возвращает NotFound-ошибку, если объект не был загружен.
+    /// </summary>
+    Task<Result<ObjectMetadataDto, Error>> GetObjectMetadataAsync(StorageKey storageKey, CancellationToken cancellationToken);
 }

@@ -142,6 +142,51 @@ public class S3Provider : IS3Provider, IDisposable
         }
     }
 
+    public async Task<string> GenerateSimpleUploadUrlAsync(
+        StorageKey storageKey, string contentType, CancellationToken cancellationToken)
+    {
+        var request = new GetPreSignedUrlRequest
+        {
+            BucketName = storageKey.Location,
+            Key = storageKey.Value,
+            Verb = HttpVerb.PUT,
+            ContentType = contentType,
+            Expires = DateTime.UtcNow.AddHours(_s3Options.Value.UploadUrlExpirationHours),
+            Protocol = _s3Options.Value.WithSsl ? Protocol.HTTPS : Protocol.HTTP
+        };
+
+        return await _amazonS3.GetPreSignedURLAsync(request);
+    }
+
+    public async Task<Result<ObjectMetadataDto, Error>> GetObjectMetadataAsync(
+        StorageKey storageKey, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await _amazonS3.GetObjectMetadataAsync(new GetObjectMetadataRequest
+            {
+                BucketName = storageKey.Location,
+                Key = storageKey.Value,
+            }, cancellationToken);
+
+            return Result.Success<ObjectMetadataDto, Error>(new ObjectMetadataDto(
+                response.ContentLength,
+                response.Headers.ContentType ?? string.Empty,
+                response.ETag?.Trim('"') ?? string.Empty));
+        }
+        catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return Result.Failure<ObjectMetadataDto, Error>(
+                Error.NotFound("storage.object.not-uploaded", "Object was not found in storage. Upload may not have completed.", null));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error reading object metadata");
+
+            return Result.Failure<ObjectMetadataDto, Error>(Error.Failure("storage.metadata.error", ex.Message));
+        }
+    }
+
     public void Dispose()
     {
         _requestsSemaphore.Dispose();

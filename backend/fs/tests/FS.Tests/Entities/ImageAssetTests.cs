@@ -65,11 +65,11 @@ public class ImageAssetTests
     public void CreateForUpload_WithValidData_ShouldReturnUploadingStatus()
     {
         var mediaData = CreateValidMediaData();
-        var owner = MediaOwner.Create("lesson", Guid.NewGuid()).Value;
 
-        var result = ImageAsset.CreateForUpload(Guid.NewGuid(), mediaData, owner);
+        var result = ImageAsset.CreateForUpload(Guid.NewGuid(), mediaData);
 
         result.IsSuccess.Should().BeTrue();
         result.Value.MediaStatus.Should().Be(MediaStatus.UPLOADING);
+        result.Value.Key.Should().NotBeNull();
     }
 }

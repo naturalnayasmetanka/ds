@@ -12,9 +12,9 @@ public class MediaAssetStateMachineTests
         var fileName = FileName.Create("photo.jpg").Value;
         var contentType = ContentType.Create("image/jpeg").Value;
         var mediaData = MediaData.Create(fileName, contentType, 1024, 1).Value;
-        var owner = MediaOwner.Create("lesson", Guid.NewGuid()).Value;
+        var key = new StorageKey("images", "raw", "file123");
 
-        var asset = new ImageAsset(Guid.NewGuid(), mediaData, MediaStatus.UPLOADING, owner);
+        var asset = new ImageAsset(Guid.NewGuid(), mediaData, MediaStatus.UPLOADING, key);
 
         switch (status)
         {
@@ -140,5 +140,57 @@ public class MediaAssetStateMachineTests
 
         result.IsFailure.Should().BeTrue();
         result.Error.Code.Should().Be("invalid.transition");
+    }
+
+    [Fact]
+    public void CompleteUpload_WithMatchingActualData_ShouldTransitionToReady()
+    {
+        var asset = CreateAssetWithStatus(MediaStatus.UPLOADING);
+        var actual = ActualMediaData.Create(1024, "image/jpeg", "etag-1").Value;
+
+        var result = asset.CompleteUpload(actual);
+
+        result.IsSuccess.Should().BeTrue();
+        asset.MediaStatus.Should().Be(MediaStatus.READY);
+        asset.ActualData.Should().Be(actual);
+    }
+
+    [Fact]
+    public void CompleteUpload_WithMismatchedSize_ShouldFailAndMarkFailed()
+    {
+        var asset = CreateAssetWithStatus(MediaStatus.UPLOADING);
+        var actual = ActualMediaData.Create(2048, "image/jpeg", "etag-1").Value;
+
+        var result = asset.CompleteUpload(actual);
+
+        result.IsFailure.Should().BeTrue();
+        result.Error.Code.Should().Be("image.mismatch.size");
+        asset.MediaStatus.Should().Be(MediaStatus.FAILED);
+    }
+
+    [Fact]
+    public void CompleteUpload_WithMismatchedContentType_ShouldFailAndMarkFailed()
+    {
+        var asset = CreateAssetWithStatus(MediaStatus.UPLOADING);
+        var actual = ActualMediaData.Create(1024, "image/png", "etag-1").Value;
+
+        var result = asset.CompleteUpload(actual);
+
+        result.IsFailure.Should().BeTrue();
+        result.Error.Code.Should().Be("image.mismatch.content-type");
+        asset.MediaStatus.Should().Be(MediaStatus.FAILED);
+    }
+
+    [Fact]
+    public void CompleteUpload_WhenAlreadyReady_ShouldFailWithoutChangingState()
+    {
+        var asset = CreateAssetWithStatus(MediaStatus.READY);
+        var actual = ActualMediaData.Create(1024, "image/jpeg", "etag-1").Value;
+
+        var result = asset.CompleteUpload(actual);
+
+        result.IsFailure.Should().BeTrue();
+        result.Error.Code.Should().Be("invalid.transition");
+        asset.MediaStatus.Should().Be(MediaStatus.READY);
     }
 }

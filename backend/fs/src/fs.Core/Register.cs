@@ -11,7 +11,11 @@ public static class Register
     {
         services.AddScoped<ICommandHandler<StartMultipartUploadResponse, StartMultipartUploadCommand>, StartMultipartUploadHandler>();
         services.AddScoped<ICommandHandler<CompleteMultipartUploadResponse, CompleteMultipartUploadCommand>, CompleteMultipartUploadHandler>();
-        
+
+        services.AddScoped<ICommandHandler<InitUploadResponse, InitUploadCommand>, InitUploadHandler>();
+        services.AddScoped<ICommandHandler<CompleteUploadResponse, CompleteUploadCommand>, CompleteUploadHandler>();
+        services.AddScoped<IQueryHandler<GetMediaAssetUrlResponse, GetMediaAssetUrlQuery>, GetMediaAssetUrlHandler>();
+
         return services;
     }
 }
