@@ -6,9 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace fs.Presentation.Controllers;
 
-/// <summary>
-/// Простая (single PUT, не multipart) загрузка файла: init -> прямой PUT в storage -> complete -> url.
-/// </summary>
 [Route("api/upload/files")]
 [ApiController]
 public class SimpleUploadController : ControllerBase
