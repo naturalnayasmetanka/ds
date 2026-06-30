@@ -4,3 +4,32 @@ GET {{fs.Presentation_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+# Шаг 1: регистрация загрузки
+POST {{fs.Presentation_HostAddress}}/api/upload/files/init
+Content-Type: application/json
+
+{
+  "fileName": "photo.jpg",
+  "assetType": "image",
+  "contentType": "image/jpeg",
+  "size": 1024,
+  "context": "lesson",
+  "contextId": "00000000-0000-0000-0000-000000000001"
+}
+
+###
+
+# Шаг 2: прямой PUT по UploadUrl из ответа шага 1 (выполняется фронтендом напрямую в storage)
+
+###
+
+# Шаг 3: подтверждение загрузки
+POST {{fs.Presentation_HostAddress}}/api/upload/files/{{mediaAssetId}}/complete
+
+###
+
+# Шаг 4: получение свежей ссылки на готовый файл
+GET {{fs.Presentation_HostAddress}}/api/upload/files/{{mediaAssetId}}/url
+
+###

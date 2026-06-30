@@ -1,4 +1,4 @@
-﻿namespace FS.Infrastructure.S3;
+﻿namespace FS.Core.Options;
 
 public record S3Options
 {
@@ -16,4 +16,6 @@ public record S3Options
     public double UploadUrlExpirationHours { get; init; } = 1;
 
     public int MaxCuncurrentRequests { get; init; } = 20;
+    public long ChunkSize { get; init; } = 100 * 1024 * 1024;
+    public int MaxChunks { get; init; } = 1000;
 }

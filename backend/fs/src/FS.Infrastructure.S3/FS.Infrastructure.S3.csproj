@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FS.Application\FS.Application.csproj" />
     <ProjectReference Include="..\FS.Contracts\FS.Contracts.csproj" />
     <ProjectReference Include="..\fs.Core\FS.Core.csproj" />
   </ItemGroup>

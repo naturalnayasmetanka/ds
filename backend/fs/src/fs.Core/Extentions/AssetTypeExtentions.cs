@@ -6,7 +6,7 @@ public static class AssetTypeExtentions
 {
     public static AssetType ToAssetType(this string value)
     {
-        return value switch
+        return value.ToLowerInvariant() switch
         {
             "video" => AssetType.VIDEO,
             "preview" => AssetType.PREVIEW,

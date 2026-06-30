@@ -4,6 +4,8 @@ using CSharpFunctionalExtensions;
 using FS.Contracts;
 using FS.Core.Abstractions;
 using FS.Core.Exceptions;
+using FS.Core.Options;
+using FS.Core.ValueObjects;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -40,15 +42,15 @@ public class S3Provider : IS3Provider, IDisposable
     }
 
     public async Task<Result<string, Error>> StartMultipartUploadAsync(
-        string bucketName, string key, string contentType, CancellationToken cancellationToken)
+        StorageKey storageKey, MediaData mediaData, CancellationToken cancellationToken)
     {
         try
         {
             var request = new InitiateMultipartUploadRequest
             {
-                BucketName = bucketName,
-                Key = key,
-                ContentType = contentType
+                BucketName = storageKey.Location,
+                Key = storageKey.Value,
+                ContentType = mediaData.ContentType.Value,
             };
 
             var result = await _amazonS3.InitiateMultipartUploadAsync(request, cancellationToken);
@@ -63,8 +65,8 @@ public class S3Provider : IS3Provider, IDisposable
         }
     }
 
-    public async Task<Result<IReadOnlyList<string>, Error>> GenerateAllChunksUploadAsync(
-        string bucketName, string key, string uploadId, int totalChunks, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyList<ChunkUploadUrl>, Error>> GenerateAllChunksUploadAsync(
+        StorageKey storageKey, string uploadId, int totalChunks, CancellationToken cancellationToken)
     {
         var tasks = Enumerable.Range(1, totalChunks)
             .Select(async partNumber =>
@@ -75,8 +77,8 @@ public class S3Provider : IS3Provider, IDisposable
                 {
                     var request = new GetPreSignedUrlRequest
                     {
-                        BucketName = bucketName,
-                        Key = key,
+                        BucketName = storageKey.Location,
+                        Key = storageKey.Value,
                         Verb = HttpVerb.PUT,
                         UploadId = uploadId,
                         PartNumber = partNumber,
@@ -86,7 +88,7 @@ public class S3Provider : IS3Provider, IDisposable
 
                     var url = await _amazonS3.GetPreSignedURLAsync(request);
 
-                    return url;
+                    return new ChunkUploadUrl(partNumber, url);
                 }
                 finally
                 {
@@ -96,15 +98,15 @@ public class S3Provider : IS3Provider, IDisposable
 
         var results = await Task.WhenAll(tasks);
 
-        return Result.Success<IReadOnlyList<string>, Error>(results);
+        return Result.Success<IReadOnlyList<ChunkUploadUrl>, Error>(results);
     }
 
-    public async Task<string> GenerateDownloadUrl(string bucketName, string key)
+    public async Task<string> GenerateDownloadUrl(StorageKey storageKey)
     {
         var request = new GetPreSignedUrlRequest
         {
-            BucketName = bucketName,
-            Key = key,
+            BucketName = storageKey.Location,
+            Key = storageKey.Value,
             Verb = HttpVerb.GET,
             Expires = DateTime.UtcNow.AddHours(_s3Options.Value.DownloadUrlExpirationHours),
             Protocol = _s3Options.Value.WithSsl ? Protocol.HTTPS : Protocol.HTTP
@@ -115,31 +117,15 @@ public class S3Provider : IS3Provider, IDisposable
         return response;
     }
 
-    public async Task<string> GenerateUploadUrlAsync(string bucketName, string key)
-    {
-        var request = new GetPreSignedUrlRequest
-        {
-            BucketName = bucketName,
-            Key = key,
-            Verb = HttpVerb.PUT,
-            Expires = DateTime.UtcNow.AddHours(_s3Options.Value.UploadUrlExpirationHours),
-            Protocol = _s3Options.Value.WithSsl ? Protocol.HTTPS : Protocol.HTTP
-        };
-
-        var response = await _amazonS3.GetPreSignedURLAsync(request);
-
-        return response;
-    }
-
     public async Task<Result<string?, Error>> CompleteMultipartUploadAsync(
-        string bucketName, string key, string uploadId, List<PartEtagDto> partETags, CancellationToken cancellationToken)
+        StorageKey storageKey, string uploadId, List<PartEtagDto> partETags, CancellationToken cancellationToken)
     {
         try
         {
-            var request = new CompleteMultipartUploadRequest
+            var request = new Amazon.S3.Model.CompleteMultipartUploadRequest
             {
-                BucketName = bucketName,
-                Key = key,
+                BucketName = storageKey.Location,
+                Key = storageKey.Value,
                 UploadId = uploadId,
                 PartETags = partETags.Select(x => new PartETag { ETag = x.ETag, PartNumber = x.PartNumber }).ToList()
             };
@@ -153,6 +139,51 @@ public class S3Provider : IS3Provider, IDisposable
         {
             _logger.LogError(ex, "Error completing multipart uploading");
             return Result.Failure<string?, Error>(Error.Failure("multipart.upload.error", ex.Message));
+        }
+    }
+
+    public async Task<string> GenerateSimpleUploadUrlAsync(
+        StorageKey storageKey, string contentType, CancellationToken cancellationToken)
+    {
+        var request = new GetPreSignedUrlRequest
+        {
+            BucketName = storageKey.Location,
+            Key = storageKey.Value,
+            Verb = HttpVerb.PUT,
+            ContentType = contentType,
+            Expires = DateTime.UtcNow.AddHours(_s3Options.Value.UploadUrlExpirationHours),
+            Protocol = _s3Options.Value.WithSsl ? Protocol.HTTPS : Protocol.HTTP
+        };
+
+        return await _amazonS3.GetPreSignedURLAsync(request);
+    }
+
+    public async Task<Result<ObjectMetadataDto, Error>> GetObjectMetadataAsync(
+        StorageKey storageKey, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await _amazonS3.GetObjectMetadataAsync(new GetObjectMetadataRequest
+            {
+                BucketName = storageKey.Location,
+                Key = storageKey.Value,
+            }, cancellationToken);
+
+            return Result.Success<ObjectMetadataDto, Error>(new ObjectMetadataDto(
+                response.ContentLength,
+                response.Headers.ContentType ?? string.Empty,
+                response.ETag?.Trim('"') ?? string.Empty));
+        }
+        catch (AmazonS3Exception ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return Result.Failure<ObjectMetadataDto, Error>(
+                Error.NotFound("storage.object.not-uploaded", "Object was not found in storage. Upload may not have completed.", null));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error reading object metadata");
+
+            return Result.Failure<ObjectMetadataDto, Error>(Error.Failure("storage.metadata.error", ex.Message));
         }
     }
 

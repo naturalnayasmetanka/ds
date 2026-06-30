@@ -1,5 +1,6 @@
 ﻿using Amazon.S3;
 using FS.Core.Abstractions;
+using FS.Core.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -29,6 +30,8 @@ public static class Register
         });
 
         services.AddHostedService<S3BuckerInitializationService>();
+
+        services.AddTransient<IChunkSizeCalculator, ChunkSizeCalculator>();
 
         return services;
     }

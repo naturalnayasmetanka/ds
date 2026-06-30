@@ -17,15 +17,15 @@ public abstract class MediaAsset
         MediaData mediaData,
         MediaStatus mediaStatus,
         AssetType assetType,
-        MediaOwner mediaOwner)
+        StorageKey key)
     {
         Id = id;
         MediaData = mediaData;
         AssetType = assetType;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
-        MediaOwner = mediaOwner;
         MediaStatus = mediaStatus;
+        Key = key;
     }
 
     public Guid Id { get; protected set; }
@@ -34,9 +34,24 @@ public abstract class MediaAsset
     public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; protected set; } = DateTime.UtcNow;
     public StorageKey Key { get; protected set; }
-    public MediaOwner MediaOwner { get; protected set; } = null!;
     public MediaStatus MediaStatus { get; protected set; }
+    public ActualMediaData? ActualData { get; protected set; }
 
+
+    public static Result<MediaAsset, Error> CreateForUpload(MediaData mediaData, AssetType assetType)
+    {
+        switch (assetType)
+        {
+            case AssetType.IMAGE:
+                var result = ImageAsset.CreateForUpload(Guid.CreateVersion7(), mediaData);
+                return result.IsFailure
+                    ? Result.Failure<MediaAsset, Error>(Error.Failure("create.error", "image asset create error"))
+                    : Result.Success<MediaAsset, Error>(result.Value);
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(assetType), assetType, null);
+        }
+    }
 
     public UnitResult<Error> MarkUploaded()
     {
@@ -68,6 +83,34 @@ public abstract class MediaAsset
         UpdatedAt = DateTime.UtcNow;
         return UnitResult.Success<Error>();
     }
+
+    /// <summary>
+    /// Завершает простую (single PUT) загрузку: проверяет, что asset находится
+    /// в ожидаемом состоянии, сверяет фактические метаданные объекта в storage
+    /// с заявленными при инициации/политикой типа asset'а, и переводит asset в READY.
+    /// Не изменяет состояние при конфликте статуса (повторный/чужой/неуместный вызов),
+    /// но помечает asset как FAILED, если объект загружен, но не прошёл проверку соответствия.
+    /// </summary>
+    public UnitResult<Error> CompleteUpload(ActualMediaData actual)
+    {
+        if (MediaStatus != MediaStatus.UPLOADING)
+            return Error.Conflict("invalid.transition", $"Cannot complete upload from {MediaStatus}");
+
+        var policyResult = ValidateActual(actual);
+        if (policyResult.IsFailure)
+        {
+            MediaStatus = MediaStatus.FAILED;
+            UpdatedAt = DateTime.UtcNow;
+            return policyResult.Error;
+        }
+
+        ActualData = actual;
+        MediaStatus = MediaStatus.READY;
+        UpdatedAt = DateTime.UtcNow;
+        return UnitResult.Success<Error>();
+    }
+
+    protected abstract UnitResult<Error> ValidateActual(ActualMediaData actual);
 
     public UnitResult<Error> Delete()
     {
